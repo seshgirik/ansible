@@ -1,0 +1,11 @@
+- hosts: localhost
+  vars:
+    hello:
+    - one
+    - two
+    - three
+
+  tasks:
+    - name: welcome to ansible script
+      debug: 
+      msg: "{{ hello[0] }}"

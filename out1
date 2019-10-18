@@ -1,0 +1,2145 @@
+
+PLAY [all] ************************************************************************************************************************************************************
+
+TASK [Checking if cscf is pingable] ***********************************************************************************************************************************
+changed: [sc2 -> None] => (item=10.10.233.139)
+changed: [gtre1 -> None] => (item=10.10.233.139)
+changed: [gtre2 -> None] => (item=10.10.233.139)
+changed: [sc3 -> None] => (item=10.10.233.139)
+changed: [sc1 -> None] => (item=10.10.233.139)
+changed: [sc2 -> None] => (item=10.10.233.160)
+changed: [sc3 -> None] => (item=10.10.233.160)
+changed: [gtre2 -> None] => (item=10.10.233.160)
+changed: [gtre1 -> None] => (item=10.10.233.160)
+changed: [sc1 -> None] => (item=10.10.233.160)
+changed: [sc2 -> None] => (item=10.10.233.164)
+changed: [sc3 -> None] => (item=10.10.233.164)
+changed: [gtre2 -> None] => (item=10.10.233.164)
+changed: [gtre1 -> None] => (item=10.10.233.164)
+changed: [sc1 -> None] => (item=10.10.233.164)
+failed: [sc1 -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.254221", "end": "2019-07-07 13:38:03.815049", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:00.560828", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+failed: [sc2 -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.659777", "end": "2019-07-07 13:38:03.815122", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:00.155345", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+...ignoring
+failed: [sc3 -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.506356", "end": "2019-07-07 13:38:03.815018", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:00.308662", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+...ignoring
+...ignoring
+failed: [gtre2 -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.467762", "end": "2019-07-07 13:38:03.815013", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:00.347251", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+...ignoring
+failed: [gtre1 -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.288763", "end": "2019-07-07 13:38:03.815013", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:00.526250", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+...ignoring
+changed: [mp1 -> None] => (item=10.10.233.139)
+changed: [sipre1 -> None] => (item=10.10.233.139)
+changed: [mp2 -> None] => (item=10.10.233.139)
+changed: [fe -> None] => (item=10.10.233.139)
+changed: [sipre2 -> None] => (item=10.10.233.139)
+changed: [sipre1 -> None] => (item=10.10.233.160)
+changed: [mp1 -> None] => (item=10.10.233.160)
+changed: [mp2 -> None] => (item=10.10.233.160)
+changed: [fe -> None] => (item=10.10.233.160)
+changed: [sipre2 -> None] => (item=10.10.233.160)
+changed: [mp1 -> None] => (item=10.10.233.164)
+changed: [sipre1 -> None] => (item=10.10.233.164)
+changed: [fe -> None] => (item=10.10.233.164)
+changed: [mp2 -> None] => (item=10.10.233.164)
+changed: [sipre2 -> None] => (item=10.10.233.164)
+failed: [sipre2 -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.254760", "end": "2019-07-07 13:38:14.735224", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:11.480464", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+...ignoring
+failed: [mp1 -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.625351", "end": "2019-07-07 13:38:14.735589", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:11.110238", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+...ignoring
+failed: [sipre1 -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.597581", "end": "2019-07-07 13:38:14.735608", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:11.138027", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+...ignoring
+failed: [fe -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.406002", "end": "2019-07-07 13:38:14.735776", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:11.329774", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+...ignoring
+failed: [mp2 -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.419562", "end": "2019-07-07 13:38:14.735656", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:11.316094", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+...ignoring
+changed: [upc2 -> None] => (item=10.10.233.139)
+changed: [upc1 -> None] => (item=10.10.233.139)
+changed: [upc2 -> None] => (item=10.10.233.160)
+changed: [upc1 -> None] => (item=10.10.233.160)
+changed: [upc2 -> None] => (item=10.10.233.164)
+changed: [upc1 -> None] => (item=10.10.233.164)
+failed: [upc2 -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.615954", "end": "2019-07-07 13:38:25.662973", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:22.047019", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+...ignoring
+failed: [upc1 -> None] (item=110.10.233.164) => {"changed": true, "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", "delta": "0:00:03.566579", "end": "2019-07-07 13:38:25.663004", "failed": true, "item": "110.10.233.164", "msg": "non-zero return code", "rc": 1, "start": "2019-07-07 13:38:22.096425", "stderr": "", "stderr_lines": [], "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", "stdout_lines": ["PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", "", "--- 110.10.233.164 ping statistics ---", "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", "pipe 2"]}
+...ignoring
+
+TASK [print pingstatus] ***********************************************************************************************************************************************
+ok: [gtre1] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:01.948237", 
+            "end": "2019-07-07 13:37:54.986763", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:53.038526", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.134/231.159/231.185/0.481 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.134/231.159/231.185/0.481 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:02.011556", 
+            "end": "2019-07-07 13:37:57.470938", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:55.459382", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=234 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.590/232.810/234.031/1.312 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=234 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.590/232.810/234.031/1.312 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:01.998237", 
+            "end": "2019-07-07 13:38:00.089327", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:58.091090", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=232 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 999ms\nrtt min/avg/max/mdev = 231.393/231.815/232.237/0.422 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=232 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 999ms", 
+                "rtt min/avg/max/mdev = 231.393/231.815/232.237/0.422 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.288763", 
+            "end": "2019-07-07 13:38:03.815013", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:00.526250", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+ok: [gtre2] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:01.887197", 
+            "end": "2019-07-07 13:37:54.982397", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:53.095200", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.183/231.274/231.366/0.489 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.183/231.274/231.366/0.489 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:01.872257", 
+            "end": "2019-07-07 13:37:57.307953", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:55.435696", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.417/231.438/231.459/0.021 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.417/231.438/231.459/0.021 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:01.996811", 
+            "end": "2019-07-07 13:37:59.890154", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:57.893343", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=233 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.297/232.544/233.792/1.337 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=233 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.297/232.544/233.792/1.337 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.467762", 
+            "end": "2019-07-07 13:38:03.815013", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:00.347251", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+ok: [sc1] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:01.985916", 
+            "end": "2019-07-07 13:37:55.037835", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:53.051919", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.308/231.312/231.317/0.480 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.308/231.312/231.317/0.480 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:01.981778", 
+            "end": "2019-07-07 13:37:57.549205", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:55.567427", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1002ms\nrtt min/avg/max/mdev = 231.437/231.486/231.536/0.483 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1002ms", 
+                "rtt min/avg/max/mdev = 231.437/231.486/231.536/0.483 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:01.996363", 
+            "end": "2019-07-07 13:38:00.126411", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:58.130048", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.331/231.371/231.411/0.040 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.331/231.371/231.411/0.040 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.254221", 
+            "end": "2019-07-07 13:38:03.815049", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:00.560828", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+ok: [sc2] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:01.872052", 
+            "end": "2019-07-07 13:37:54.876076", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:53.004024", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.457/231.554/231.651/0.097 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.457/231.554/231.651/0.097 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:01.858488", 
+            "end": "2019-07-07 13:37:57.238432", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:55.379944", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=240 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.520/236.100/240.680/4.580 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=240 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.520/236.100/240.680/4.580 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:01.976650", 
+            "end": "2019-07-07 13:37:59.727063", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:57.750413", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=232 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.379/231.783/232.187/0.404 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=232 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.379/231.783/232.187/0.404 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.659777", 
+            "end": "2019-07-07 13:38:03.815122", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:00.155345", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+ok: [sc3] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:01.878232", 
+            "end": "2019-07-07 13:37:54.967347", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:53.089115", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.315/231.361/231.407/0.046 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.315/231.361/231.407/0.046 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:01.848991", 
+            "end": "2019-07-07 13:37:57.309482", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:55.460491", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.360/231.360/231.361/0.481 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.360/231.360/231.361/0.481 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:02.042118", 
+            "end": "2019-07-07 13:37:59.886575", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:37:57.844457", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.435/231.523/231.612/0.489 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.435/231.523/231.612/0.489 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.506356", 
+            "end": "2019-07-07 13:38:03.815018", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:00.308662", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+ok: [fe] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:01.949569", 
+            "end": "2019-07-07 13:38:06.291619", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:04.342050", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.313/231.321/231.329/0.008 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.313/231.321/231.329/0.008 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:01.888597", 
+            "end": "2019-07-07 13:38:08.608631", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:06.720034", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=234 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.527/232.919/234.312/1.473 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=234 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.527/232.919/234.312/1.473 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:01.889526", 
+            "end": "2019-07-07 13:38:10.888025", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:08.998499", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.359/231.388/231.418/0.481 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.359/231.388/231.418/0.481 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.406002", 
+            "end": "2019-07-07 13:38:14.735776", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:11.329774", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+ok: [sipre1] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:01.880659", 
+            "end": "2019-07-07 13:38:06.210599", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:04.329940", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.317/231.580/231.844/0.548 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.317/231.580/231.844/0.548 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:01.866467", 
+            "end": "2019-07-07 13:38:08.465002", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:06.598535", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.441/231.495/231.550/0.484 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.441/231.495/231.550/0.484 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:01.903232", 
+            "end": "2019-07-07 13:38:10.776653", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:08.873421", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.395/231.420/231.446/0.481 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.395/231.420/231.446/0.481 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.597581", 
+            "end": "2019-07-07 13:38:14.735608", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:11.138027", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+ok: [sipre2] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:02.035667", 
+            "end": "2019-07-07 13:38:06.396907", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:04.361240", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.324/231.333/231.343/0.481 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.324/231.333/231.343/0.481 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:01.917812", 
+            "end": "2019-07-07 13:38:08.747440", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:06.829628", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=233 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.563/232.286/233.010/0.869 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=233 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.563/232.286/233.010/0.869 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:01.872731", 
+            "end": "2019-07-07 13:38:11.034191", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:09.161460", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.439/231.463/231.487/0.024 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.439/231.463/231.487/0.024 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.254760", 
+            "end": "2019-07-07 13:38:14.735224", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:11.480464", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+ok: [mp1] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:01.856043", 
+            "end": "2019-07-07 13:38:06.196665", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:04.340622", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=232 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.353/231.860/232.368/0.699 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=232 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.353/231.860/232.368/0.699 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:01.893288", 
+            "end": "2019-07-07 13:38:08.465198", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:06.571910", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.398/231.425/231.453/0.481 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.398/231.425/231.453/0.481 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:01.890754", 
+            "end": "2019-07-07 13:38:10.739853", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:08.849099", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.438/231.497/231.556/0.059 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.438/231.497/231.556/0.059 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.625351", 
+            "end": "2019-07-07 13:38:14.735589", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:11.110238", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+ok: [mp2] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:01.872844", 
+            "end": "2019-07-07 13:38:06.254914", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:04.382070", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.368/231.450/231.533/0.488 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.368/231.450/231.533/0.488 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:01.851071", 
+            "end": "2019-07-07 13:38:08.507820", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:06.656749", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.473/231.616/231.759/0.143 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.473/231.616/231.759/0.143 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:01.990528", 
+            "end": "2019-07-07 13:38:10.871598", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:08.881070", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.435/231.445/231.455/0.010 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.435/231.445/231.455/0.010 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.419562", 
+            "end": "2019-07-07 13:38:14.735656", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:11.316094", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+ok: [upc1] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:02.002898", 
+            "end": "2019-07-07 13:38:17.146900", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:15.144002", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 999ms\nrtt min/avg/max/mdev = 231.300/231.315/231.331/0.481 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 999ms", 
+                "rtt min/avg/max/mdev = 231.300/231.315/231.331/0.481 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:01.920946", 
+            "end": "2019-07-07 13:38:19.504053", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:17.583107", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.711/231.760/231.809/0.049 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.711/231.760/231.809/0.049 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:01.876108", 
+            "end": "2019-07-07 13:38:21.743730", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:19.867622", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.417/231.526/231.635/0.109 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.417/231.526/231.635/0.109 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.566579", 
+            "end": "2019-07-07 13:38:25.663004", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:22.096425", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+ok: [upc2] => {
+    "ping_cscf_res.results": [
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+            "delta": "0:00:01.887838", 
+            "end": "2019-07-07 13:38:17.061140", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.139 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.139", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:15.173302", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.139 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.441/231.465/231.489/0.024 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.139 (10.10.233.139) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.139: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.139: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.139 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.441/231.465/231.489/0.024 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+            "delta": "0:00:01.856212", 
+            "end": "2019-07-07 13:38:19.341328", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.160 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.160", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:17.485116", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.160 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 231.452/231.566/231.681/0.494 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.160 (10.10.233.160) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.160: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.160: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.160 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1001ms", 
+                "rtt min/avg/max/mdev = 231.452/231.566/231.681/0.494 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_ignore_errors": true, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+            "delta": "0:00:01.974540", 
+            "end": "2019-07-07 13:38:21.696015", 
+            "failed": false, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 10.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "10.10.233.164", 
+            "rc": 0, 
+            "start": "2019-07-07 13:38:19.721475", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\n64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms\n64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms\n\n--- 10.10.233.164 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 231.407/231.532/231.657/0.125 ms", 
+            "stdout_lines": [
+                "PING 10.10.233.164 (10.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "64 bytes from 10.10.233.164: icmp_seq=1 ttl=61 time=231 ms", 
+                "64 bytes from 10.10.233.164: icmp_seq=2 ttl=61 time=231 ms", 
+                "", 
+                "--- 10.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 2 received, 0% packet loss, time 1000ms", 
+                "rtt min/avg/max/mdev = 231.407/231.532/231.657/0.125 ms"
+            ]
+        }, 
+        {
+            "_ansible_delegated_vars": {
+                "ansible_delegated_host": "fe", 
+                "ansible_host": null
+            }, 
+            "_ansible_item_result": true, 
+            "_ansible_no_log": false, 
+            "_ansible_parsed": true, 
+            "changed": true, 
+            "cmd": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+            "delta": "0:00:03.615954", 
+            "end": "2019-07-07 13:38:25.662973", 
+            "failed": true, 
+            "invocation": {
+                "module_args": {
+                    "_raw_params": "ping -c 2 -W 10 110.10.233.164 -I fpeth2", 
+                    "_uses_shell": true, 
+                    "chdir": null, 
+                    "creates": null, 
+                    "executable": null, 
+                    "removes": null, 
+                    "stdin": null, 
+                    "warn": true
+                }
+            }, 
+            "item": "110.10.233.164", 
+            "msg": "non-zero return code", 
+            "rc": 1, 
+            "start": "2019-07-07 13:38:22.047019", 
+            "stderr": "", 
+            "stderr_lines": [], 
+            "stdout": "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.\nFrom 10.69.23.189 icmp_seq=1 Destination Host Unreachable\nFrom 10.69.23.189 icmp_seq=2 Destination Host Unreachable\n\n--- 110.10.233.164 ping statistics ---\n2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms\npipe 2", 
+            "stdout_lines": [
+                "PING 110.10.233.164 (110.10.233.164) from 10.69.23.189 fpeth2: 56(84) bytes of data.", 
+                "From 10.69.23.189 icmp_seq=1 Destination Host Unreachable", 
+                "From 10.69.23.189 icmp_seq=2 Destination Host Unreachable", 
+                "", 
+                "--- 110.10.233.164 ping statistics ---", 
+                "2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 999ms", 
+                "pipe 2"
+            ]
+        }
+    ]
+}
+
+PLAY RECAP ************************************************************************************************************************************************************
+fe                         : ok=2    changed=1    unreachable=0    failed=0   
+gtre1                      : ok=2    changed=1    unreachable=0    failed=0   
+gtre2                      : ok=2    changed=1    unreachable=0    failed=0   
+mp1                        : ok=2    changed=1    unreachable=0    failed=0   
+mp2                        : ok=2    changed=1    unreachable=0    failed=0   
+sc1                        : ok=2    changed=1    unreachable=0    failed=0   
+sc2                        : ok=2    changed=1    unreachable=0    failed=0   
+sc3                        : ok=2    changed=1    unreachable=0    failed=0   
+sipre1                     : ok=2    changed=1    unreachable=0    failed=0   
+sipre2                     : ok=2    changed=1    unreachable=0    failed=0   
+upc1                       : ok=2    changed=1    unreachable=0    failed=0   
+upc2                       : ok=2    changed=1    unreachable=0    failed=0   
+

@@ -1,0 +1,22 @@
+- name: print the date
+  hosts: all
+  tasks: 
+
+    - name: create array reversed
+      #set_fact: peers_count=[]
+      set_fact: peers_count="[ 'zero' ]"
+      run_once: true
+
+
+    - shell: "netstat -anp|grep emx| awk '{print $5;}'|sed -e 's/:.*//'|sort|uniq|grep -v 0.0|grep -v DGRAM|wc -l"
+      register: peers 
+    #- debug: var=peers.stdout_lines
+
+    - name: Set peers_count fact
+      #set_fact: peers_count="peers_count+peers.stdout_lines"
+#      set_fact: peers_count={{ peers_count }}+{{ peers.stdout_lines }}
+      set_fact: peers_count="{{ peers_count }} + [ '{{ peers.stdout_lines }}' ]"
+
+    - debug: var=peers_count
+
+#    set_fact: peers_count="{{ peers_count }} + [ 'one' ]"

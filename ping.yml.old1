@@ -1,0 +1,66 @@
+---
+- hosts: all
+  gather_facts: no
+  vars:
+    iplist:
+      - 10.10.233.139
+      - 10.10.233.160
+      - 10.10.233.164
+      - 110.10.233.164
+      - 210.10.233.164
+    total: 0
+    peers_sum: []
+
+  connection: local
+
+
+  tasks:
+
+#
+    - name: "peers on sc"
+      #shell: "netstat -anp|egrep \"8082|3030 \""
+      shell: "netstat -anp|grep emx| awk '{print $5;}'|sed -e 's/:.*//'|sort|uniq|grep -v 0.0|grep -v DGRAM|wc -l"
+      #shell: "ping -c 2 -W 10 10.10.233.139 -I fpeth2"
+      run_once: yes
+      register: peers_sc
+      ignore_errors: yes
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups.peers }}"
+      #with_items: "{{ groups.gtres }}"
+      tags:
+        - peers
+
+    #- debug: msg="{{ item.stdout }}"
+    #- debug: var=item.stdout
+    - name: Build a list of all the security group names.
+      set_fact:
+        peers_sum: "{{ peers_sum }} + [ '{{ item.stdout }}']"
+        #peers_sum: "{{ peers_sum }} + [ '{{ item.stdout  | map('int') }}']"
+     #- set_fact: peers_sum: "{{ peers_sum }} + [ '{{ item.stdout | map('int') }}' ]"
+    #- debug: msg="sum is {{ item.stdout |  map('int') | sum(start=10) }}"
+    #- debug: msg="sum is {{ item.stdout |  map('int') | sum }}"
+    #- debug: msg="{{  sum }}"
+    #- debug: msg="{{ item.stdout | map(attribute='stdout') | map('int') | sum(start=0) }}"
+      with_items: "{{ peers_sc.results }}"
+
+    - name: Print the security group names to the console.
+      debug: var=peers_sum
+      run_once: yes
+      delegate_to: localhost
+
+    - name: Print the security group names to the console.
+      debug: msg="sum is {{ item |  map('int') | sum(start=10) }}"
+      with_items: "{{ peers_sum }}"
+      run_once: yes
+      delegate_to: localhost
+
+    - name: uild a list of all the security group names.
+      set_fact:
+        total: "{{ total|default(0)|int + item|int }}"
+      run_once: yes
+      delegate_to: localhost
+      with_items: "{{ peers_sum }}"
+
+    - debug: var=total
+      run_once: yes
+      delegate_to: localhost

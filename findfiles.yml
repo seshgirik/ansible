@@ -1,0 +1,15 @@
+---
+- hosts: scs
+  gather_facts: no
+  vars:
+  tasks:
+    - name: Recursively find /tmp files older than 4 weeks and equal or greater than 1 megabyte
+      find:
+        paths: /data/storage/corefiles
+        #recurse: yes
+      register: find_cores
+
+    - name: print find_cores
+      debug: var=item.path
+      with_items: "{{ find_cores.files }}"
+

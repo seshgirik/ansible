@@ -1,0 +1,153 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+  tasks:
+    - name: new variable with current date time
+      gather_facts: False
+      set_fact: date="{{lookup('pipe','date \"+%Y%m%d%H%M\"')}}"
+#    - name: print variable
+#      debug: msg="Current date and time is {{date}}"
+#
+
+- hosts: all
+  gather_facts: no
+  #strategy: free
+#- hosts: localhost 
+
+  vars:
+      timestamp: "{{ hostvars['localhost']['date'] }}"
+
+      cap_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.pcap"
+      log_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.log"
+      dest_folder: /root/
+      local_folder: /root/LOG_PCAP/
+
+  tasks:
+#
+#    - debug: var=cap_file
+#      gather_facts: False
+#
+#    - debug: var=timestamp
+#      gather_facts: False
+#
+#    - debug: msg="Current date and time is {{ timestamp }}"
+#    - debug: msg="Current logfile name is  {{ log_file }}"
+#
+#    - debug: 
+#      msg: "timestamp is '{{ timestamp }}'"
+# 
+
+    - name: start log capture
+      gather_facts: False
+      shell: "source /usr/IMS/exports/blade.cfg ; /usr/IMS/current/bin/mlogc -c 127.0.0.1 > /{{ dest_folder}}/{{ log_file }} &"
+      async: 1200
+      poll: 0
+      ignore_errors: true
+ 
+    - name: start tcpdump
+      gather_facts: False
+      shell: nohup timeout 1800 tcpdump -i any -s 0 -w /{{ dest_folder}}/{{ cap_file }} &
+      ignore_errors: true
+ 
+
+
+    - pause:
+        prompt: "Do you want to stop log/pcap (yes/no)?"
+      register: my_pause
+      #delegate_to: localhost
+      #
+      #
+- hosts: all
+  gather_facts: no
+  strategy: free
+
+  vars:
+      timestamp: "{{ hostvars['localhost']['date'] }}"
+
+      cap_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.pcap"
+      log_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.log"
+      dest_folder: /root/
+      local_folder: /root/LOG_PCAP/
+
+  tasks:
+
+#    - debug: var=cap_file
+#      gather_facts: False
+#
+#    - debug: var=timestamp
+#      gather_facts: False
+#
+#    - debug: msg="Current date and time is {{ timestamp }}"
+#    - debug: msg="Current logfile name is  {{ log_file }}"
+#
+#    - debug: 
+#      msg: "timestamp is '{{ timestamp }}'"
+ 
+    - name: stop tcpdump
+      gather_facts: False
+      shell: |
+        killall tcpdump 
+        killall -9 mlogc
+
+      #shell: killall tcpdump 
+      #shell: killall -9 mlogc
+      ignore_errors: true
+ 
+      #shell: sshpass -p 'mavenir' ssh $ip "tcpdump -i any -s 0 -w /root/${file_prifix}_$Date.pcap </dev/null >& /dev/null &"
+      #shell: sshpass -p 'mavenir' ssh $ip "source /usr/IMS/exports/blade.cfg ; /usr/IMS/current/bin/mlogc -c 127.0.0.1 > /root/${file_prifix}_$Date.log &"
+      #
+      #
+      #
+      #
+    - name: Wait for system to become reachable over SSH
+      wait_for_connection:
+       connect_timeout: 20
+       timeout: 60
+    - name: compress capture file
+      command: |
+        gzip {{cap_file}} chdir={{ dest_folder}}/
+        gzip {{log_file}} chdir={{ dest_folder}}/
+        chmod 755 {{ dest_folder}}/{{cap_file}}.gz
+        chmod 755 {{ dest_folder}}/{{log_file}}.gz
+      ignore_errors: true
+
+    - name: copy logs to /export/tmp/ansible/
+      fetch: |
+        src={{ dest_folder}}/{{cap_file}}.gz dest={{ local_folder}} flat=yes
+        src={{ dest_folder}}/{{log_file}}.gz dest={{ local_folder}} flat=yes
+      ignore_errors: true
+
+
+
+
+
+
+
+    - name: copy logs to /export/tmp/ansible/
+      fetch: src={{ dest_folder}}/{{cap_file}}.gz dest={{ local_folder}} flat=yes
+
+- hosts: all
+  gather_facts: no
+  strategy: free
+
+  vars:
+      timestamp: "{{ hostvars['localhost']['date'] }}"
+
+      cap_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.pcap"
+      log_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.log"
+      dest_folder: /root/
+      local_folder: /root/LOG_PCAP/
+
+  tasks:
+    - name: finding core files
+      find:
+        paths: /data/storage/corefiles
+        #recurse: yes
+      register: find_cores
+
+    - name: print find_cores
+      debug: var=item.path
+      with_items: "{{ find_cores.files }}"
+
+

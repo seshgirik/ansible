@@ -1,0 +1,338 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    names:
+      - first: Paul
+        last: Thompson
+      - first: Rod
+        last: '11'
+
+    numbers:
+      -10
+      -20
+      -30
+      -40
+      -50
+      #interfaces: [ "docker0", "lo", "veth3e8c318", "wlan0", "eth0",Undefined, "vethe2459c9" ]
+    stores : [
+#    {'name': 'Downtown', 'street': '385 Main Street', 'city': 'San Diego'},
+    {'name': 'Dwntown', 'street': '385 Main Stree', 'city': ['dellas', 'San Diego' , 'seattle', 'portland']},
+    {'name': 'Downtown', 'street': '385 Main Street', 'city': ['San Diego' , 'seattle', 'portland']},
+    {'name': 'town', 'street': '385 Main Street', 'city': ['loasange3les', 'San Diego' , 'seattle', 'portland']},
+#    {'name': 'Uptown', 'street': '231 Highland Avenue', 'city': 'San Diego'},
+#    {'name': 'Midtown', 'street': '85 Balboa Street', 'city': 'San Diego'},
+#    {'name': 'Downtown', 'street': '639 Spring Street', 'city': 'Los Angeles'},
+#    {'name': 'Midtown', 'street': '1407 Broadway Street', 'city': 'Los Angeles'},
+#    {'name': 'Downton', 'street': '50 1st Street', 'city': 'San Francisco'},
+]
+
+    # file host_vars/HOST/interfaces-eth1.yml
+    interfaces_eth1:
+     - gw: 10.10.10.1
+       name: eth1
+       ips:
+        - {ip: 10.10.10.104, owner: TEST, project: The Project}
+        - {ip: 10.10.10.105, owner: Our Client, project: The Project}
+# file host_vars/HOST/interfaces-eth2.yml
+    interfaces_eth2:
+     - gw: 10.10.10.1
+       name: eth2
+       ips:
+        - {ip: 10.10.10.204, owner: TEST, project: The Project}
+        - {ip: 10.10.10.205, owner: Our Client, project: The Project}
+        - {ip: 10.10.10.206, owner: Our Client, project: The Project}
+        - {ip: 10.10.10.207, owner: Our Client, project: The Project}
+        - {ip: 10.10.10.208, owner: Our Client, project: The Project}
+        - {ip: 10.10.10.209, owner: Our Client, project: The Project}
+
+    interfaces: "{{ interfaces_eth1 }} + {{ interfaces_eth2 }}"
+    ansible_interfaces: [
+        "docker0", 
+        "lo", 
+        "veth3e8c318", 
+        "wlan0",
+        "eth0", 
+        "vethe2459c9"
+    ]
+
+    "addresses": {
+        "private_ext": [
+            {
+                "type": "fixed",
+                "addr": "172.16.2.100"
+            }
+        ],
+        "private_man": [
+            {
+                "type": "rounded",
+                "addr": "172.16.1.100"
+            },
+            {
+                "type": "fixed",
+                "addr": "172.16.1.100"
+            },
+            {
+                "type": "floating",
+                "addr": "10.90.80.10"
+            }
+        ] }
+
+    region: [ 'east', 'west' ]
+    sources:   
+      wind:
+        east:
+          filenames:
+            - noreaster.txt
+            - gusts.txt
+            - drafty.txt
+        west:
+          filenames:
+            - zephyr.txt
+            - jetstream.txt
+      solar:
+        east:
+          filenames:
+            - sunny.txt
+            - cloudy.txt
+        west:
+          filenames:
+            - blazing.txt
+            - frybaby.txt
+            - skynuke.txt
+    src: wind
+    src1: solar
+    php_command_result:
+        [
+            { 
+           'stderr': 'error: cannot open file',
+           'stdout': '123 file',
+             },
+            { 
+           'stderr': '',
+           'stdout': '5123 file',
+            }
+        ]
+    
+    apps:
+      - {name: A, extension: .ab}
+      - {name: B, extension: .ab}
+      - {name: C, extension: .c}
+
+    my_lines:
+      - "rchinnn01"
+      - "rchinnn02"
+      - "*"
+
+    input:
+     - name: Good one
+       good: True
+     - name: Another good
+       good: True
+     - name: Bad one
+       good: False
+     - name: Some junk at the end
+    foo: '{{input|json_query("[?good==`true`]")}}'
+
+
+
+  tasks:
+
+#    - name: json query
+#      debug:
+#        msg: "{{ addresses | json_query(\"private_man[?type=='fixed'].addr\") }}"
+#
+    - name: reject filter 
+      debug:
+        #msg: "{{ my_lines|reject('search', 'r')|list }}"
+        msg: "{{ my_lines|reject('match', '[*]')|list }}"
+
+    - name: ansible hostname with slice filter 
+      debug:
+        #msg: "{{ my_lines|reject('search', 'r')|list }}"
+        msg: "{{ apps[-2:] }}"
+
+
+    - name: select  sources with filenames
+      debug:
+        msg: "{{ [ 'east', 'west' ] | map('extract',sources[src]) | join }}"
+        #msg: "{{ [ 'filenames', 'west' ] | map('extract',sources[src]) | join }}"
+        #msg: "{{ [ 'east', 'west' ] | map('extract',sources[src],'filenames') | sum(start=[]) }}"
+        #msg: "{{ [ 'east'] | map('extract',{ 'east': { "filenames": [ "noreaster.txt", "gusts.txt", "drafty.txt" ] }}),'filenames') | sum(start=[]) }}"
+        #msg: "{{ region | map('extract',sources[src],'filenames') | sum(start=[]) }}"
+    - name: select  sources with filenames
+      debug:
+        #msg: "{{ region | map('extract',"wind",'filenames') | sum(start=[]) }}"
+        #msg: "{{ src1 }}"
+        #msg: "{{ region | map('extract',sources[src1],'filenames') | sum(start=[]) }}"
+        #msg: "{{ sources | sum(attribute='filenames', start=[]) }}"
+    - name: select  interfaces based on match
+      debug:
+        msg: "{{ ansible_interfaces | select('match', '^(eth|wlan)[0-9]+') | list }}"
+    - name: print interfaces
+      debug:
+        msg: "{{ ansible_interfaces | list }}"
+    - name: change to uppercase interfaces
+      debug:
+        msg: "{{ ansible_interfaces | map('upper') | list }}"
+    - debug: msg={{ addresses.private_ext | selectattr('type','equalto','fixed')|map(attribute="addr") | list }}
+    - name: rejectattr
+      debug:
+        msg: "{{  apps|rejectattr('name', 'match', 'C')|list }}"
+        #msg: "{{ addresses.private_ext| rejectattr('type', 'search', 'fixed')|list }}"
+        #msg: "{{ php_command_result| rejectattr('stderr', 'search', 'cannot')| map(attribute='stderr') | sort | join('\r - ') }}"
+        #msg: "{{ php_command_result| rejectattr('stderr', 'equalto', '')| map(attribute='stderr') | sort | join('\r - ') }}"
+        #msg: "{{ addresses.private_ext | rejectattr('type','search','fixed')| list }}"
+        #msg: "{{ addresses.private_ext | rejectattr('type','equalto','fixed')|map(attribute='addr') | list }}"
+    - debug: msg={{ addresses.private_ext | selectattr('type','match','fixed') | list }}
+    - debug: msg={{ addresses.private_ext | selectattr('type','search','fix') | list }}
+    #- debug: msg={{ addresses.private_ext | sum(attribute='type') | list }}
+    - debug: msg={{ addresses | map(attribute='type') | list }}
+    - name: "use filter to change to string"
+      debug: 
+        msg: "{{ numbers | string  }}"
+    - name: "filter odd nos"
+      debug: 
+        msg: "{{ numbers | select('odd')  }}"
+    - name: "filter interfaces"
+      debug: msg={{ interfaces  }}
+      #debug: msg={{ interfaces | select('match' , 'eth') | list }}
+      #- name: "filter interfaces"
+      #debug: msg={{ interfaces | select('search' , 'eth') | list }}
+      #- name: "filter defined interfaces"
+      #debug: msg={{ interfaces | select('defined') | list }}
+#    - debug: msg={{ names | map(attribute='first') | list }}
+#    - debug: msg={{ names | map(attribute='last') | list }}
+#    - debug: msg={{ names | map('upper') | list }}
+#    - debug: msg={{ names | map(attribute='last') | map('int') | list }}  # To convert string to int and add to list
+#    - debug: msg={{ names | map(attribute='last') | map('int') | sum }} # To convert int and sum the values
+#    - debug: msg={{  [1,2,3,4]  | map('int') | sum }} # To convert int and sum the values
+#    - debug: msg={{  [1,2,3,4]  | map('int') | first }} #  to get first element
+#    - debug: msg={{  [1,2,3,4,55]  | last }} # to get last element
+#    - debug: msg={{  [11,2,3,4]  | map('int') | max }} # To get max 
+#    - debug: msg={{  [1,-2,3,4]  | map('int') | min }} # To get min
+#    - debug: msg={{  [1,2,3]|join('xx')   }} # To convert int and sum the values
+#    - debug: msg={{  [1,2,3]|join('xx')   }} # To convert int and sum the values
+#    - name: "interfaces"
+#      debug: msg={{  interfaces   }} # To convert int and sum the values
+#    - name: "interfaces matching eth1 ,eth2 here, match list"
+#      debug: msg={{  interfaces | selectattr('name', 'match', 'eth[1-9]')|list  }} # To convert int and sum the values
+#    - name: "filter ips and reduce to sum using attributes as ips"
+#      debug: msg={{  interfaces | selectattr('name', 'match', 'eth[1-9]')|sum(attribute='ips', start=[])  }} # To convert int and sum the values
+#    - name: "reduced to sum and filter only owner as TEST and make lists "
+#      debug: msg={{  interfaces | selectattr('name', 'match', 'eth[1-9]')|sum(attribute='ips', start=[])|selectattr('owner','match','TEST')|list  }} # To convert int and sum the values
+#    - name: "filter only ips from above list using map attribute filter "
+    - name: "filter only ips from above list using map attribute filter "
+      debug: msg={{  interfaces | selectattr('name', 'match', 'eth[1-9]')|sum(attribute='ips', start=[])|selectattr('owner','match','TEST')|list | map(attribute="ip")|list  }} # To convert int and sum the values
+    - name: "filter and join only ips from above list using map attribute filter "
+      debug: msg={{  interfaces | selectattr('name', 'match', 'eth[1-9]')|sum(attribute='ips', start=[])|selectattr('owner','match','TEST')|list | map(attribute="ip")|join(',')  }} # To convert int and sum the values
+#    - debug: msg={{ groups['peers'] | map('extract', hostvars, ['ansible_ssh_host']) | list }} # To convert int and sum the values
+#
+    - name: "filter only city from stores and sum only ips from above list using map attribute filter "
+      debug: msg={{  stores | sum(attribute='city' ,start=[]) }} # To convert int and sum the values
+
+    - name: with_together item.0 returns from the 'a' list, item.1 returns from the '1' list
+      debug: msg={{ item.0 }} and {{ item.1 }}
+      with_together:
+        - ['a', 'b', 'c', 'd']
+        - [1, 2, 3, 4]
+#    - name: "map extract" 
+#      debug: msg={{ ['x','y'] | map('extract', {'x': 42, 'y': 31}) | list }}
+      #debug: msg={{  stores | map(attribute='city') |list }} # To convert int and sum the values
+      #debug: msg={{  stores | map('attribute', 'city') |list|join(",") }} # To convert int and sum the values
+      #
+      #
+      #
+#
+
+    - name: "json query filter "
+      debug: msg={{  input|json_query("[?good==`true`]") }} # To convert int and sum the values
+# file playbook.yml
+#    - set_fact:
+#      test_ip: "{{ interfaces
+# | selectattr('name', 'match', 'eth[2-9]') 
+# | sum(attribute='ips', start=[]) 
+# | selectattr('owner', 'equalto', 'TEST') 
+# | map(attribute='ip') 
+# | list 
+# | first 
+# | default('NOT_FOUND') }}"
+#
+#    - debug:
+#      msg: "The TEST IP is {{ test_ip }}"
+#
+#
+#
+#
+
+# below data used for above example , both json and yaml shown below
+#[
+#
+#{
+#   "gw":"10.10.10.1",
+#   "ips":[
+#      {
+#         "ip":"10.10.10.104",
+#         "owner":"TEST",
+#         "project":"The Project"
+#      },
+#      {
+#         "ip":"10.10.10.105",
+#         "owner":"Our Client",
+#         "project":"The Project"
+#      }
+#   ],
+#   "name":"eth1"
+#},
+#{
+#            "gw": "10.10.10.1",
+#            "ips": [
+#                {
+#                    "ip": "10.10.10.204",
+#                                                                                                                                                                                                 96,1          71%
+#    - name: "filter only ips from above list using map attribute filter "
+#      debug: msg={{  interfaces | selectattr('name', 'match', 'eth[1-9]')|sum(attribute='ips', start=[])|selectattr('owner','match','TEST')|list | map(attribute="ip")|list  }} # To convert int and sum the values
+##    - debug: msg={{ groups['peers'] | map('extract', hostvars, ['ansible_ssh_host']) | list }} # To convert int and sum the values
+##
+## file playbook.yml
+#    - set_fact:
+#      test_ip: "{{ interfaces
+# | selectattr('name', 'match', 'eth[2-9]') 
+# | sum(attribute='ips', start=[]) 
+# | selectattr('owner', 'equalto', 'TEST') 
+# | map(attribute='ip') 
+# | list 
+# | first 
+# | default('NOT_FOUND') }}"
+#
+#    - debug:
+#      msg: "The TEST IP is {{ test_ip }}"
+#
+#
+
+
+
+# below data used for above example , both json and yaml shown below
+#[
+#
+#{
+#   "gw":"10.10.10.1",
+#   "ips":[
+#      {
+#         "ip":"10.10.10.104",
+#         "owner":"TEST",
+#         "project":"The Project"
+#      },
+#      {
+#         "ip":"10.10.10.105",
+#         "owner":"Our Client",
+#         "project":"The Project"
+#      }
+#   ],
+#   "name":"eth1"
+#},
+#{
+#            "gw": "10.10.10.1",
+#            "ips": [
+#                {
+#                    "ip": "10.10.10.204",

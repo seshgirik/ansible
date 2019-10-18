@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  vars:
+    hello: 
+        well: "fine"
+        welcome: "not"
+    hello1: 
+        well: "fine"
+        welcome: "not"
+
+ 
+  tasks:
+  - name: Ansible Basic Variable Example
+    debug:
+      msg: "{{ item.value.well }}"
+    with_dict: "{{ vars }}" 
+
+

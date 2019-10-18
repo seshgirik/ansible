@@ -1,0 +1,58 @@
+---
+- name: Filter with jmespath
+  hosts: localhost
+  gather_facts: false
+  vars:
+    query_result: {
+      "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+      },
+      "changed": false,
+      "current": [
+         {
+           "context": {
+             "attributes": {
+               "name": "prod",
+               "uid": "11756"
+             }
+           }
+         },
+         {
+           "context": {
+             "attributes": {
+               "name": "dev",
+               "uid": "14424"
+             }
+           }
+         }
+, 
+         {
+           "context": {
+             "attributes": {
+               "name": "staging",
+               "uid": "14424"
+             }
+           }
+         }
+      ],
+      "failed": false
+    }
+  tasks:
+    - name: Display original result
+      debug: var=query_result
+    - name: Display Filtered Result - One expression - one liner
+      debug:
+        msg: "{{ query_result.current | json_query(\"[?context.attributes.name=='prod'||context.attributes.name=='staging'].context.attributes.name[]\") }}"
+    - name: Display Filtered Result - One expression - Query in block var
+      vars:
+        query: >-
+          [?context.attributes.name=='prod'].context.attributes.name[]
+      debug:
+        msg: "{{ query_result.current | json_query(query) }}"
+    - name: Display Filtered Result - Pipe expressions - Query in block var
+      vars:
+        query: >-
+          [].context.attributes[] | [?name=='prod'].name[]
+      debug:
+        msg: "{{ query_result.current | json_query(query) }}"
+

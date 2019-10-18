@@ -1,0 +1,126 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+
+#ansible-playbook -f 15 ~/ansible/patch.yml --extra-vars "name=PLMNChange patch=/root/asbcMgr" 
+#
+
+  vars:
+    my_patch: "{{ patch }}"
+
+  tasks:
+    - name: new variable with current date time
+      gather_facts: False
+      set_fact: date="{{lookup('pipe','date \"+%Y%m%d%H%M\"')}}"
+    
+- hosts: scs
+  gather_facts: no
+  vars:
+    my_patch: "{{ patch }}"
+    patch_name: "{{ name }}"
+    timestamp: "{{ hostvars['localhost']['date'] }}"
+    file_info: "{{ hostvars['localhost']['file_details'] }}"
+    #dest_path: "/usr/IMS/current/bin/{{ timestamp }}"
+    dest_path: "/usr/IMS/current/bin/{{ name | default('patch') }}_{{ timestamp }}"
+    files_list: []
+
+
+  tasks:
+
+    - name: Creates directory
+      file:
+        path: "{{ dest_path }}"
+        state: directory
+        recurse: yes
+
+
+    - name: copying file
+      copy:
+        #src: "/root/{{ my_patch }}"
+        src: "{{ patch }}"
+        dest: "{{ dest_path }}"
+        mode: '0777'
+      ignore_errors: true
+
+    - name: untar tgz files  and delete tgz files
+      #shell: "find . -type f | cut -d: -f1 |xargs -I % readlink -f %|sed 's#.*bin/##'|xargs -t -I % ln -sf % /usr/IMS/current/bin"
+      shell: "for file in *.tgz; do tar -zxvf $file; done && rm -rf *.tgz"
+      ignore_errors: true
+      args:
+       chdir: "{{ dest_path }}"
+
+
+    - name: create softlinks in bin path for files
+      shell: "find . -type f | cut -d: -f1 |xargs -I % readlink -f %|sed 's#.*bin/##'|xargs -t -I % ln -sf % /usr/IMS/current/bin"
+      #ignore_errors: true
+      args:
+       chdir: "{{ dest_path }}"
+
+    - name: chking md5sum
+      #shell: "find . -type f | cut -d: -f1 |xargs -I % readlink -f %|sed 's#.*bin/##'|xargs -t -I % ln -sf % /usr/IMS/current/bin"
+      shell: "md5sum *"
+      #ignore_errors: true
+      args:
+       chdir: "{{ dest_path }}"
+
+#
+#    - name: md5sum check file exists example.
+#      stat:
+#       path: "{{ dest_path }}/"
+#      register: remotefile_details
+#
+#    - debug:
+#       var=remotefile_details
+#
+#
+#    - stat: path= "{{ dest_path }}" get_md5=yes
+#
+    - name: finding binary files
+      find:
+        path: "{{ dest_path }}"
+        #recurse: yes
+      register: remotefiles
+
+    - name: "appending peers stdout to a list files_list"
+      set_fact:
+        files_list: "{{ files_list }} + [ '{{ item.path|regex_replace('.*bin.*/', '') }}']"
+        #files_list: "{{ files_list }} + [ '{{ item.path|regex_replace('bin.*/', 'bin/') }}']"
+      with_items: "{{ remotefiles.files }}"
+
+    - name: all files in list 
+      #ignore_errors: true
+      #shell: "md5sum {{ item.path }} "
+      debug: var=files_list
+
+    - name: chking md5sum
+      #shell: "find . -type f | cut -d: -f1 |xargs -I % readlink -f %|sed 's#.*bin/##'|xargs -t -I % ln -sf % /usr/IMS/current/bin"
+      shell: "md5sum {{ item }} "
+      register: md5
+      with_items: "{{ files_list }}"
+      #ignore_errors: true
+      args:
+       chdir: /usr/IMS/current/bin
+
+    - name: killing process
+      #shell: "find . -type f | cut -d: -f1 |xargs -I % readlink -f %|sed 's#.*bin/##'|xargs -t -I % ln -sf % /usr/IMS/current/bin"
+      shell: "pkill -9 {{ item }} "
+      when: "'so' not in item"
+      with_items: "{{ files_list }}"
+      ignore_errors: true
+      args:
+       chdir: /usr/IMS/current/bin
+
+
+
+
+
+    - name: md5sum files in remote directory
+      #ignore_errors: true
+      #shell: "md5sum {{ item.path }} "
+      debug: var=item.stdout
+      with_items: "{{ md5.results }}"
+
+
+
+

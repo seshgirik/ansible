@@ -1,0 +1,68 @@
+- name: execution on sm node
+  hosts: sm
+  gather_facts: no
+  tasks: 
+
+    - name: searching sm nodes for unwanted GM-2260|MW-2260 and deleting using shell oneliner script
+      shell: "for entry in `/usr/IMS/current/bin/etcdctl get A z|egrep \"GM-|MW-\"|grep -v ipAddress`; do /usr/IMS/current/bin/etcdctl del $entry; done"
+      register: smdelete 
+
+    - debug: var=smdelete
+
+
+- name: print the date
+  hosts: scs
+  gather_facts: no
+  tasks: 
+
+    - name: writing peer_ip output to xml 
+      shell: "/opt/confd/confdInstallDir/bin/confd_load -Fp -p /sys/platform/peer_ip > peer_ip.xml"
+      register: peersxml 
+    - name: grep GM-2260|MW-2260 from peer_ip xml 
+      shell: "egrep \"GM-2260|MW-2260\"  peer_ip.xml"
+      register: peers 
+
+    - debug: var=peers.stdout_lines
+    - debug: var=peers
+    - debug: var=peersxml
+
+#    - name: inform to change peer_ip to all windows
+#      shell: "wall correct peer_ips in all scs , remove GM-2260 or MW-2260" 
+#      delegate_to: 127.0.0.1
+#      when: "'2260' in peers.stdout"
+#
+    - name: replacing GM-2260|MW-2260 with unwanted in peer_ips xml
+      replace:
+       path: peer_ip.xml
+       regexp: 'MW-2260|GM-2260'
+       replace: 'unwanted'
+      register: replace 
+      #backup: yes
+
+    - debug: var=replace
+
+    - name: loading peer_ips xml with changing peer ips with unwanted 
+      shell: "/opt/confd/confdInstallDir/bin/confd_load -lm peer_ip.xml"
+      when: replace.changed
+#
+    - name: loading fqdn_local xml with changing peer ips with unwanted 
+      shell: "/opt/confd/confdInstallDir/bin/confd_load -lm /data/fqdn_local.xml"
+      when: replace.changed
+#
+
+#  shell -a "/opt/confd/confdInstallDir/bin/confd_load -Fp -p /sys/platform/peer_ip > peer_ip.xml "  scs
+#  shell -a "egrep \"GM-2260|MW-2260\"  peer_ip.xml "  scs >out
+#  shell -a "if [[ -s out ]] ;then     wall \"correct peer_ips in all scs , remove GM-2260 or MW-2260\"; else echo \"nothing\" ;fi" scs
+##if [[ -s diff.txt ]]; then wall "file has something"; else echo ""; fi
+##if grep -q FAILED out ;then     wall "correct peer_ips in all scs , remove GM-2260 or MW-2260"; fi
+#sleep 30
+#
+#
+#    - name: Set peers_count fact
+#      #set_fact: peers_count="peers_count+peers.stdout_lines"
+##      set_fact: peers_count={{ peers_count }}+{{ peers.stdout_lines }}
+#      set_fact: peers_count="{{ peers_count }} + [ '{{ peers.stdout_lines }}' ]"
+#
+#    - debug: var=peers_count
+#
+##    set_fact: peers_count="{{ peers_count }} + [ 'one' ]"

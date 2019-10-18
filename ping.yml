@@ -1,0 +1,45 @@
+---
+- hosts: peers
+  gather_facts: no
+  vars:
+    iplist:
+      - 10.10.233.139
+      - 10.10.233.160
+      - 10.10.233.164
+      - 110.10.233.164
+      - 210.10.233.164
+    total: 0
+    peers_sum: []
+
+  tasks:
+
+    - name: "peers on all nodes"
+      shell: "netstat -anp|grep emx| awk '{print $5;}'|sed -e 's/:.*//'|sort|uniq|grep -v 0.0|grep -v DGRAM|wc -l"
+      register: peers_node
+    #- debug: var=peers_node
+    - debug: var=peers_node.stdout
+
+    - name: "appending peers stdout to a list peers_sum"
+      set_fact:
+        peers_sum: "{{ peers_sum }} + [ '{{ hostvars[item].peers_node.stdout }}']"
+      run_once: yes
+      delegate_to: localhost
+      with_items: "{{ groups['peers'] }}"
+
+    - debug: var=peers_sum
+      run_once: yes
+      delegate_to: localhost
+
+
+    - name: sum the values of peers_sum.
+      set_fact:
+        total: "{{ total|default(0)|int + item|int }}"
+      run_once: yes
+      delegate_to: localhost
+      with_items: "{{ peers_sum }}"
+
+    - name: sum the values of list peers_sum which should be equal/more than 30.
+      debug: var=total
+      failed_when: total|int<30
+      run_once: yes
+      delegate_to: localhost

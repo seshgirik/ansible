@@ -1,0 +1,41 @@
+---
+- hosts: localhost
+  vars:
+    users:
+        alice: 
+             name: Alice Appleworth
+             telephone: 123-456-7890
+        bob: 
+             name: bobn Appleworth
+             telephone: 23-456-7890
+ 
+ 
+  tasks:
+  - name: Ansible Basic Variable Example
+    debug:
+      msg: "User {{ item.key }} is {{ item.value.name }} ({{ item.value.telephone }})"
+    with_dict: "{{ users }}"
+  - name: Ansible Basic Variable Example
+    debug:
+      msg: "User {{ item.key }} is {{ item.value.name }} ({{ item.value.telephone }})"
+    with_dict: "{{ users }}"
+
+
+- hosts: localhost
+  vars:
+    users:
+        alice: 
+             name: Alice Appleworth
+             telephone: 123-456-7890
+        bob: 
+             name: bobn Appleworth
+             telephone: 23-456-7890
+ 
+ 
+  tasks:
+  - name: Ansible Basic Variable Example
+    debug:
+      msg: "User {{ item.key }} is {{ item.value.name }} ({{ item.value.telephone }})"
+    with_dict: "{{ users }}"
+
+

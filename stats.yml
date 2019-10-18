@@ -1,0 +1,14 @@
+---
+#- hosts: localhost
+- hosts: all
+  gather_facts: no
+  vars:
+
+  tasks:
+  - name: Check that the somefile.conf exists
+    stat:
+      path: /data/storage/corefiles/
+    register: stat_result
+  #- debug: var={{stat_result}}
+  - debug: msg="corefiles  {{ stat_result }}"
+    #

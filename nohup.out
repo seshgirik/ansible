@@ -1,0 +1,95 @@
+ [WARNING]: Ignoring invalid attribute: gather_facts
+
+PLAY [localhost] ***************************************************************
+
+TASK [new variable with current date time] *************************************
+ok: [localhost]
+ [WARNING]: Found variable using reserved name: tags
+
+PLAY [peers] *******************************************************************
+
+PLAY [all] *********************************************************************
+
+TASK [Creates directory] *******************************************************
+fatal: [group_vars/gtres]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: Could not resolve hostname group_vars/gtres: Temporary failure in name resolution\r\n", "unreachable": true}
+ok: [sipre2]
+ok: [upc1]
+ok: [gtre1]
+ok: [sc1]
+ok: [upc2]
+ok: [sc2]
+ok: [fe]
+ok: [gtre2]
+ok: [sipre1]
+ok: [mp2]
+ok: [mp1]
+ok: [sc3]
+
+TASK [delete logs in /root/ansible] ********************************************
+ [WARNING]: Consider using file module with state=absent rather than running rm
+changed: [upc2]
+changed: [sipre2]
+changed: [gtre2]
+changed: [gtre1]
+changed: [sc2]
+changed: [upc1]
+changed: [mp2]
+changed: [sipre1]
+changed: [mp1]
+changed: [sc3]
+changed: [sc1]
+
+TASK [start log capture] *******************************************************
+changed: [upc2]
+changed: [sipre2]
+
+TASK [delete logs in /root/ansible] ********************************************
+changed: [fe]
+
+TASK [start log capture] *******************************************************
+changed: [gtre1]
+changed: [sc2]
+changed: [upc1]
+changed: [gtre2]
+changed: [mp2]
+changed: [sipre1]
+changed: [sc3]
+changed: [mp1]
+changed: [sc1]
+changed: [fe]
+
+TASK [start tcpdump] ***********************************************************
+changed: [upc2]
+changed: [sipre2]
+changed: [gtre1]
+changed: [upc1]
+changed: [sc2]
+changed: [gtre2]
+changed: [sipre1]
+changed: [mp2]
+changed: [sc3]
+changed: [mp1]
+changed: [sc1]
+changed: [fe]
+
+PLAY [all] *********************************************************************
+
+PLAY [all] *********************************************************************
+	to retry, use: --limit @/root/ansible/start.retry
+
+PLAY RECAP *********************************************************************
+fe                         : ok=4    changed=3    unreachable=0    failed=0   
+group_vars/gtres           : ok=0    changed=0    unreachable=1    failed=0   
+gtre1                      : ok=4    changed=3    unreachable=0    failed=0   
+gtre2                      : ok=4    changed=3    unreachable=0    failed=0   
+localhost                  : ok=1    changed=0    unreachable=0    failed=0   
+mp1                        : ok=4    changed=3    unreachable=0    failed=0   
+mp2                        : ok=4    changed=3    unreachable=0    failed=0   
+sc1                        : ok=4    changed=3    unreachable=0    failed=0   
+sc2                        : ok=4    changed=3    unreachable=0    failed=0   
+sc3                        : ok=4    changed=3    unreachable=0    failed=0   
+sipre1                     : ok=4    changed=3    unreachable=0    failed=0   
+sipre2                     : ok=4    changed=3    unreachable=0    failed=0   
+upc1                       : ok=4    changed=3    unreachable=0    failed=0   
+upc2                       : ok=4    changed=3    unreachable=0    failed=0   
+

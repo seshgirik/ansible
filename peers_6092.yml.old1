@@ -1,0 +1,46 @@
+- name: print the date
+  hosts: scs
+  gather_facts: no
+  tasks: 
+
+    - name: create array reversed
+      #set_fact: peers_count=[]
+      set_fact: peers_count="[ 'zero' ]"
+      run_once: true
+
+
+    - shell: "/opt/confd/confdInstallDir/bin/confd_load -lm /data/fqdn_local.xml"
+    - shell: "/opt/confd/confdInstallDir/bin/confd_load -Fp -p /sys/platform/peer_ip > peer_ip.xml"
+      register: peersxml 
+    - shell: "egrep \"GM-2260|MW-2260\"  peer_ip.xml"
+      register: peers 
+
+    - debug: var=peers.stdout_lines
+    - debug: var=peers
+    - debug: var=peersxml
+
+
+
+    - name: inform to change peer_ip to all windows
+      shell: "wall correct peer_ips in all scs , remove GM-2260 or MW-2260" 
+      delegate_to: 127.0.0.1
+      when: "'2260' in peers.stdout"
+
+
+
+#  shell -a "/opt/confd/confdInstallDir/bin/confd_load -Fp -p /sys/platform/peer_ip > peer_ip.xml "  scs
+#  shell -a "egrep \"GM-2260|MW-2260\"  peer_ip.xml "  scs >out
+#  shell -a "if [[ -s out ]] ;then     wall \"correct peer_ips in all scs , remove GM-2260 or MW-2260\"; else echo \"nothing\" ;fi" scs
+##if [[ -s diff.txt ]]; then wall "file has something"; else echo ""; fi
+##if grep -q FAILED out ;then     wall "correct peer_ips in all scs , remove GM-2260 or MW-2260"; fi
+#sleep 30
+#
+#
+#    - name: Set peers_count fact
+#      #set_fact: peers_count="peers_count+peers.stdout_lines"
+##      set_fact: peers_count={{ peers_count }}+{{ peers.stdout_lines }}
+#      set_fact: peers_count="{{ peers_count }} + [ '{{ peers.stdout_lines }}' ]"
+#
+#    - debug: var=peers_count
+#
+##    set_fact: peers_count="{{ peers_count }} + [ 'one' ]"

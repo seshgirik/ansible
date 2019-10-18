@@ -1,0 +1,259 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  vars:
+  connection: local
+
+  tasks:
+    - name: new variable with current date time
+      gather_facts: False
+      set_fact: date="{{lookup('pipe','date \"+%Y%m%d%H%M\"')}}"
+      tags:
+        - checks
+        - start
+        - stop
+
+- hosts: peers
+  gather_facts: no
+  vars:
+    total: 0
+    peers_sum: []
+    tags:
+      - checks
+
+  tasks:
+
+    - name: "peers on all nodes"
+      shell: "netstat -anp|grep emx| awk '{print $5;}'|sed -e 's/:.*//'|sort|uniq|grep -v 0.0|grep -v DGRAM|wc -l"
+      register: peers_node
+      tags:
+        - checks
+
+    - debug: var=peers_node.stdout
+      tags:
+        - checks
+
+    - name: "appending peers stdout to a list peers_sum"
+      set_fact:
+        peers_sum: "{{ peers_sum }} + [ '{{ hostvars[item].peers_node.stdout }}']"
+      run_once: yes
+      delegate_to: localhost
+      with_items: "{{ groups['peers'] }}"
+      tags:
+        - checks
+
+    - debug: var=peers_sum
+      run_once: yes
+      delegate_to: localhost
+      tags:
+        - checks
+
+
+    - name: sum the values of peers_sum.
+      set_fact:
+        total: "{{ total|default(0)|int + item|int }}"
+      run_once: yes
+      delegate_to: localhost
+      with_items: "{{ peers_sum }}"
+      tags:
+        - checks
+
+    - name: sum the values of list peers_sum which should be equal/more than 30.
+      debug: var=total
+      failed_when: total|int<30
+      run_once: yes
+      delegate_to: localhost
+      tags:
+        - checks
+
+
+
+
+
+- hosts: all
+  gather_facts: no
+  strategy: free
+
+  vars:
+      timestamp: "{{ hostvars['localhost']['date'] }}"
+      cap_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.pcap"
+      log_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.log"
+      dest_folder: /root/ansible
+      #local_folder: /root/LOG_PCAP/
+      local_folder: /tmp/LMTOOL/temp/
+      iplist:
+      - 10.10.233.139
+      - 10.10.233.160
+      - 10.10.233.164
+      - 10.10.233.151
+ 
+  tasks:
+
+    - name: "Checking if ports 8082/3030 listening on gtre1/gtre2"
+      shell: "netstat -anp|egrep \"8082|3030 \""
+      run_once: yes
+      register: netstat_res
+      failed_when:
+        -  "'10.69.22.156' not in netstat_res.stdout"
+        -  "'10.69.23.199' not in netstat_res.stdout"
+        -  "'3030' not in netstat_res.stdout"
+        -  "'8082' not in netstat_res.stdout"
+      #ignore_errors: yes
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups.gtres }}"
+      tags:
+        - checks
+
+
+
+    - name: "Checking if ports 506 listening on sipre1/sipre2"
+      shell: "netstat -anp|egrep \":506\""
+      run_once: yes
+      register: netstat_res
+      failed_when:
+        -  "'10.69.22.156' not in netstat_res.stdout"
+        -  "'10.69.23.199' not in netstat_res.stdout"
+      #ignore_errors: yes
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups.sipres }}"
+      tags:
+        - checks
+
+    - name: "Checking if cscf/dnsSrvr/mstore is reachable"
+      shell: "ping -c 1 -W 10 {{ item }} -I fpeth2"
+      run_once: yes
+      register: ping_cscf_res
+      failed_when: "'Unreachable' in ping_cscf_res.stdout"
+      #ignore_errors: yes
+      delegate_to: fe
+      with_items: "{{ iplist }}"
+      tags:
+        - checks
+
+
+#    - name: Creates directory
+#      file:
+#        path: /root/ansible
+#        #path: /root/ansible/old
+#        state: directory
+#        recurse: yes
+#      tags:
+#        - start
+
+    - name: start log capture
+      gather_facts: False
+      shell: "source /usr/IMS/exports/blade.cfg ; /usr/IMS/current/bin/mlogc -c 127.0.0.1 > /{{ dest_folder}}/{{ log_file }} &"
+      async: 1200
+      poll: 0
+      ignore_errors: true
+      tags:
+        - start
+ 
+    - name: start tcpdump
+      gather_facts: False
+      shell: nohup timeout 1800 tcpdump -i any -s 0 -w /{{ dest_folder}}/{{ cap_file }} &
+      ignore_errors: true
+      tags:
+        - start
+ 
+#
+#
+#    - pause:
+#        prompt: "Do you want to stop log/pcap (yes/no)?"
+#      register: my_pause
+#      tags:
+#        - pause
+#      #delegate_to: localhost
+#      #
+#      #
+
+- hosts: all
+  gather_facts: no
+  strategy: free
+
+  vars:
+      timestamp: "{{ hostvars['localhost']['date'] }}"
+
+      cap_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.pcap"
+      log_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.log"
+      dest_folder: /root/ansible
+      local_folder: /tmp/LMTOOL/temp/
+      tags:
+        - stop
+
+  tasks:
+
+
+    - name: stop tcpdump
+      gather_facts: False
+      shell: |
+        killall tcpdump 
+        killall -9 mlogc
+      ignore_errors: true
+      tags:
+        - stop
+
+    - name: compress capture file
+      shell: "cd '/root/ansible' && for file in *; do gzip $file ;done"
+      ignore_errors: true
+      tags:
+        - stop
+
+    - name: finding logpcap files
+      find:
+        paths: /root/ansible
+        #recurse: yes
+      register: find_logpcap
+      tags:
+        - stop
+
+    - name: fetching files
+      fetch: |
+        src={{ item.path }} dest={{ local_folder}} flat=yes
+      ignore_errors: true
+      #debug: var=item
+      with_items: "{{ find_logpcap.files }}"
+      tags:
+        - stop
+
+    - name: delete logs in /root/ansible
+      gather_facts: False
+      shell: "rm -rf {{ dest_folder}}/* "
+      tags:
+        - stop
+
+
+
+
+- hosts: all
+  gather_facts: no
+  strategy: free
+
+  vars:
+      timestamp: "{{ hostvars['localhost']['date'] }}"
+      cap_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.pcap"
+      log_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.log"
+      dest_folder: /root/ansible
+      local_folder: /tmp/LMTOOL/temp/
+
+  tasks:
+    - name: finding core files
+      find:
+        paths: /data/storage/corefiles
+        #recurse: yes
+      register: find_cores
+      failed_when:
+        #-  "'Mgr' in find_cores.files.path"
+        -  "'Mgr' in find_cores"
+      tags:
+        - cores
+
+    - name: print find_cores
+      debug: var=item.path
+      failed_when:
+        -  "'Mgr' in item.path"
+      with_items: "{{ find_cores.files }}"
+      tags:
+        - cores
+

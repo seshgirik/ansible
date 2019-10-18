@@ -1,0 +1,190 @@
+---
+- hosts: all
+  gather_facts: no
+  vars:
+    iplist:
+      - 10.10.233.139
+      - 10.10.233.160
+      - 10.10.233.164
+      - 110.10.233.164
+      - 210.10.233.164
+    total: 0
+  connection: local
+
+
+  tasks:
+
+#
+    - name: "peers on sc"
+      #shell: "netstat -anp|egrep \"8082|3030 \""
+      shell: "netstat -anp|grep emx| awk '{print $5;}'|sed -e 's/:.*//'|sort|uniq|grep -v 0.0|grep -v DGRAM|wc -l"
+      #shell: "ping -c 2 -W 10 10.10.233.139 -I fpeth2"
+      run_once: yes
+      register: peers_sc
+#      failed_when: >
+#        (peers_sc.stdout|int > 0) and (peers_sc.stdout|int < 8)
+      ignore_errors: yes
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups.all }}"
+      tags:
+        - peers
+
+#    - debug: msg="{{ peers_sc.results }}"
+    #- debug: msg="{{ item | selectattr("stdout") | map('int') | sum(start=0) }}"
+    - debug: msg="{{ item.stdout |  map('int') | sum(start=0) }}"
+      with_items: "{{ peers_sc.results }}"
+#    - debug: msg="{{ peers_sc.results | map(attribute='stdout') | map('int') | sum(start=0) }}"
+
+      run_once: yes
+      delegate_to: localhost
+    #- debug: msg="{{ peers_sc.results | map(attribute='peers_sc.stdout') | map('int') | sum(start=0) }}"
+#
+#    - set_fact:
+#      total: "{{ total|default(0)|int + item.stdout|int }}"
+#      #debug: var=item.failed
+#      #when: item.stdout is search("Unreachable")
+#      run_once: yes
+#      delegate_to: localhost
+#      with_items: "{{ peers_sc.results }}"
+#      tags:
+#        - peers
+#
+#    - debug: var=total
+##        #msg: "{{ item.stdout.split('\n') }}"
+#
+#    - set_fact:
+#      total: "{{ total|default(0)|int + item|int }}"
+#      run_once: yes
+#      delegate_to: localhost
+#      with_items:
+#        - 1
+#        - 4
+#        - 3
+#
+#    - debug: var=total
+##
+#    - name: print peers_sc
+#      #debug: var=item.stdout | regex_search('Unreachable')
+#      #debug: var=item.stdout
+#      run_once: yes
+#      delegate_to: localhost
+#      debug:
+#        #msg: "{{ item.stdout.split('\n') }}"
+#        #var=item.stdout
+#        var=peers_sc.results
+#
+#
+#
+##
+#    - name: "peers on mp"
+#      #shell: "netstat -anp|egrep \"8082|3030 \""
+#      shell: "netstat -anp|grep emx| awk '{print $5;}'|sed -e 's/:.*//'|sort|uniq|grep -v 0.0|grep -v DGRAM|wc -l"
+#      #shell: "ping -c 2 -W 10 10.10.233.139 -I fpeth2"
+#      run_once: yes
+#      register: peers_mp
+#      failed_when: >
+#        (peers_mp.stdout|int > 0) and (peers_mp.stdout|int < 3)
+#      #ignore_errors: yes
+#      delegate_to: "{{ item }}"
+#      with_items: "{{ groups.mps }}"
+#      tags:
+#        - peers
+#
+#    - name: print peers_mp
+#      #debug: var=item.stdout | regex_search('Unreachable')
+#      #debug: var=item.stdout
+#      debug:
+#        #msg: "{{ item.stdout.split('\n') }}"
+#        var=item.stdout
+#
+#      #debug: var=item.failed
+#      #when: item.stdout is search("Unreachable")
+#      run_once: yes
+#      delegate_to: localhost
+#      with_items: "{{ peers_mp.results }}"
+#      tags:
+#        - peers
+#
+#
+#
+#
+#
+#    - name: "Checking if ports 8082/3030 listening on gtre1/gtre2"
+#      shell: "netstat -anp|egrep \"8082|3030 \""
+#      #shell: "ping -c 2 -W 10 10.10.233.139 -I fpeth2"
+#      run_once: yes
+#      register: netstat_res
+#      ignore_errors: yes
+#      delegate_to: "{{ item }}"
+#      with_items: "{{ groups.gtres }}"
+#
+#    - name: print netstat_res
+#      #debug: var=item.stdout | regex_search('Unreachable')
+#      #debug: var=item.stdout
+#      debug:
+#        msg: "{{ item.stdout.split('\n') }}"
+#
+#      #debug: var=item.failed
+#      #when: item.stdout is search("Unreachable")
+#      run_once: yes
+#      delegate_to: localhost
+#      with_items: "{{ netstat_res.results }}"
+#
+#
+#    - name: "Checking if ports 506 listening on sipre1/sipre2"
+#      shell: "netstat -anp|egrep \":506\""
+#      #shell: "ping -c 2 -W 10 10.10.233.139 -I fpeth2"
+#      run_once: yes
+#      register: netstat_res
+#      ignore_errors: yes
+#      delegate_to: "{{ item }}"
+#      with_items: "{{ groups.sipres }}"
+#
+#    - name: print netstat_res
+#      #debug: var=item.stdout | regex_search('Unreachable')
+#      #debug: var=item.stdout
+#      debug:
+#        msg: "{{ item.stdout.split('\n') }}"
+#
+#      #debug: var=item.failed
+#      #when: item.stdout is search("Unreachable")
+#      run_once: yes
+#      delegate_to: localhost
+#      with_items: "{{ netstat_res.results }}"
+#
+#
+#
+#
+#
+#      #debug: var=ping_cscf_res.results.failed
+#      #debug: var=ping_cscf_res.results.failed
+#      #debug: var=ping_cscf_res.results
+#      #debug: var=ping_cscf_res.results.stdout
+#      #debug: var=ping.packets_tx
+#      #with_items: "{{ find_cores.results }}"
+#
+#    - name: "Checking if cscf is pingable"
+#      shell: "ping -c 2 -W 10 {{ item }} -I fpeth2"
+#      #shell: "ping -c 2 -W 10 10.10.233.139 -I fpeth2"
+#      run_once: yes
+#      register: ping_cscf_res
+#      ignore_errors: yes
+#      delegate_to: fe
+#      with_items: "{{ iplist }}"
+#
+#    - name: print pingstatus
+#      #debug: var=item.stdout | regex_search('Unreachable')
+#      debug:
+#        msg: "{{ item.stdout.split('\n') }}"
+#      #debug: var=item.failed
+#      run_once: yes
+#      delegate_to: localhost
+#      when: item.stdout is search("Unreachable")
+#      with_items: "{{ ping_cscf_res.results }}"
+#      #debug: var=ping_cscf_res.results.failed
+#      #debug: var=ping_cscf_res.results.failed
+#      #debug: var=ping_cscf_res.results
+#      #debug: var=ping_cscf_res.results.stdout
+#      #debug: var=ping.packets_tx
+#      #with_items: "{{ find_cores.results }}"
+#

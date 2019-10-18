@@ -1,0 +1,193 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+  tasks:
+    - name: new variable with current date time
+      gather_facts: False
+      set_fact: date="{{lookup('pipe','date \"+%Y%m%d%H%M\"')}}"
+    - name: print variable
+      debug: msg="Current date and time is {{date}}"
+
+# Daniel Schwartz
+#- hosts: localhost
+#  vars:
+#    time: ansible_date_time['epoch']
+## Version 1.0.0
+## Ansible Playbook
+#
+##- hosts: localhost 
+#
+#  tasks: 
+#    - name: "Getting current timestamp" 
+      gather_facts: False
+#      set_fact: timestamp_fact: "{{ lookup('pipe', 'date +%Y%m%d%H%M%SZ') }}"
+#
+- hosts: all
+  gather_facts: no
+  #strategy: free
+#- hosts: localhost 
+
+  vars:
+      #timestamp: "{{ hostvars['localhost'].timestamp_fact }}"
+      timestamp: "{{ hostvars['localhost']['date'] }}"
+
+      #cap_file: packet_capture_{{ ansible_hostname }}_{{ ansible_date_time['epoch'] }}.pcap
+      #cap_file: packet_capture_{{ ansible_hostname }}_{{ current_run_timestamp }}.pcap
+      cap_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.pcap"
+      log_file: "{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.log"
+      #cap_file: _{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.pcap
+      #log_file: _{{ hostvars[inventory_hostname].node_name }}_{{ timestamp }}.log
+      #cap_file: pcap_{{ inventory_hostname }}_{{ timestamp }}.pcap
+      #log_file: log_{{ inventory_hostname }}_{{ timestamp }}.log
+      #cap_file: packet_capture_{{ inventory_hostname }}_{{ hostvars['localhost']['date'] }}.pcap
+      #cap_file: packet_capture_{{ inventory_hostname.node_name }}_{{ hostvars['localhost']['date'] }}.pcap
+      #dest_folder: /tmp
+      dest_folder: /root/
+      local_folder: /root/LOG_PCAP/
+
+#- set_fact:
+#    timestamp: "{{ lookup('pipe', 'date +%Y%m%d%H%M%SZ') }}"
+
+
+#  vars_prompt:
+#    - name: dur_in_sec
+#      prompt: Please specify the runtime duration in sec
+#      private: no
+#
+#    - name: interface
+#      prompt: Please specify the interface (e.g. eth0)
+#      private: no
+#    
+#    - dest_folder
+#
+#    - name: filter
+#      prompt: Please specify the tcpdump filter (e.g. host 10.10.10.10). For no filter just press enter
+#      default: ""
+#      private: no
+ 
+  tasks:
+
+    - debug: var=cap_file
+      gather_facts: False
+
+    - debug: var=timestamp
+      gather_facts: False
+
+    - debug: msg="Current date and time is {{ timestamp }}"
+    - debug: msg="Current logfile name is  {{ log_file }}"
+
+    - debug: 
+      msg: "timestamp is '{{ timestamp }}'"
+ 
+    - name: start tcpdump
+      gather_facts: False
+      #command: sudo /usr/sbin/tcpdump -G {{ dur_in_sec }} -W 1 -i {{ interface }} -s 0 -w {{ dest_folder}}/{{ cap_file }} {{ filter }}
+      #shell: timeout 10 tcpdump -i any -s 0 -w /tmp/{{ cap_file }}
+      shell: nohup timeout 1800 tcpdump -i any -s 0 -w /{{ dest_folder}}/{{ cap_file }} &
+      ignore_errors: true
+ 
+    - name: start log capture
+      gather_facts: False
+      #command: sudo /usr/sbin/tcpdump -G {{ dur_in_sec }} -W 1 -i {{ interface }} -s 0 -w {{ dest_folder}}/{{ cap_file }} {{ filter }}
+      #shell: timeout 10 tcpdump -i any -s 0 -w /tmp/{{ cap_file }}
+      shell: "source /usr/IMS/exports/blade.cfg ; /usr/IMS/current/bin/mlogc -c 127.0.0.1 > /{{ dest_folder}}/{{ log_file }} &"
+      #command: "nohup /usr/IMS/current/bin/mlogc -c 127.0.0.1 > {{ dest_folder}}{{ log_file }} &"
+      #command: nohup /usr/IMS/current/bin/mlogc -c 127.0.0.1 > /{{ dest_folder}}/{{ log_file }} &
+      async: 1200
+      poll: 0
+      ignore_errors: true
+ 
+
+
+
+    - pause:
+        #prompt: "Do you want to install MariaDB (yes/no)?"
+        prompt: "Do you want to stop log/pcap (yes/no)?"
+      register: my_pause
+      #delegate_to: localhost
+      #
+      #
+
+    - name: stop tcpdump
+      gather_facts: False
+      shell: |
+        killall tcpdump 
+        killall -9 mlogc
+
+      #shell: killall tcpdump 
+      #shell: killall -9 mlogc
+      ignore_errors: true
+ 
+      #shell: sshpass -p 'mavenir' ssh $ip "tcpdump -i any -s 0 -w /root/${file_prifix}_$Date.pcap </dev/null >& /dev/null &"
+      #shell: sshpass -p 'mavenir' ssh $ip "source /usr/IMS/exports/blade.cfg ; /usr/IMS/current/bin/mlogc -c 127.0.0.1 > /root/${file_prifix}_$Date.log &"
+      #
+      #
+      #
+      #
+    - name: Wait for system to become reachable over SSH
+      wait_for_connection:
+       connect_timeout: 20
+       timeout: 9000
+    - name: compress capture file
+      command: |
+        gzip {{cap_file}} chdir={{ dest_folder}}/
+        gzip {{log_file}} chdir={{ dest_folder}}/
+        chmod 755 {{ dest_folder}}/{{cap_file}}.gz
+        chmod 755 {{ dest_folder}}/{{log_file}}.gz
+      ignore_errors: true
+
+    - name: copy logs to /export/tmp/ansible/
+      fetch: |
+        src={{ dest_folder}}/{{cap_file}}.gz dest={{ local_folder}} flat=yes
+        src={{ dest_folder}}/{{log_file}}.gz dest={{ local_folder}} flat=yes
+      ignore_errors: true
+
+
+
+
+
+
+
+#    - name: compress capture file
+#      command: gzip {{cap_file}} chdir={{ dest_folder}}/
+# 
+#    - name: compress log file
+#      command: gzip {{log_file}} chdir={{ dest_folder}}/
+#
+#    - name: Change file permission
+#      command: chmod 755 {{ dest_folder}}/{{cap_file}}.gz
+#
+#    - name: Change file permission
+#      command: chmod 755 {{ dest_folder}}/{{log_file}}.gz
+#
+#    - name: copy logs to /export/tmp/ansible/
+#      fetch: src={{ dest_folder}}/{{log_file}}.gz dest={{ local_folder}} flat=yes
+#
+    - name: copy logs to /export/tmp/ansible/
+      fetch: src={{ dest_folder}}/{{cap_file}}.gz dest={{ local_folder}} flat=yes
+#
+
+
+#    - name: remove files from remote server
+#      command: rm -rf {{ dest_folder}}/{{log_file}}.gz 
+#
+#    - name: remove files from remote server
+#      command: rm -rf {{ dest_folder}}/{{cap_file}}.gz 
+
+    - name: coreFiles
+      command: ls -ltr  /data/storage/corefiles
+      register: cores
+    #- debug: msg="corefiles  {{ cores }}"
+    - debug: var={{item}}
+      with_items: cores.stdout_lines
+      #when: "cores.rc != 0"
+      when: cores.stdout != ""
+      #with_items: "{{ cores.stdout_lines|difference(cores.stdout_lines|select('search','core')|list) }}"
+
+
+
+
+
+
+
