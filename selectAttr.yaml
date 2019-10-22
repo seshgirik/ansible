@@ -228,6 +228,15 @@
       debug: msg={{  interfaces | selectattr('name', 'match', 'eth[1-9]')|sum(attribute='ips', start=[])|selectattr('owner','match','TEST')|list | map(attribute="ip")|join(',')  }} # To convert int and sum the values
 #    - debug: msg={{ groups['peers'] | map('extract', hostvars, ['ansible_ssh_host']) | list }} # To convert int and sum the values
 #
+    - name: Display Filtered Result - One expression - Query in block var
+      vars:
+        query: >-
+         [?contains(name, 'eth')].ips|[]|[?owner=='TEST']|[*].ip
+#[?starts_with(name, 'eth')].ips|[]|[?owner=='TEST']|[*].ip
+      debug:
+        msg: "{{ interfaces |  to_json | from_json |json_query(query) }}"
+
+
     - name: "filter only city from stores and sum only ips from above list using map attribute filter "
       debug: msg={{  stores | sum(attribute='city' ,start=[]) }} # To convert int and sum the values
 
