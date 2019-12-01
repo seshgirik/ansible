@@ -2,23 +2,23 @@
   connection: local
   gather_facts: no
   vars:
-    names:
-      - first: Paul
-        last: Thompson
-      - first: Rod
-        last: '11'
- 
-  tasks:
-    - debug: msg={{ names | map(attribute='first') | list }}
-    - debug: msg={{ names | map(attribute='last') | list }}
-    - debug: msg={{ names | map('upper') | list }}
-    - debug: msg={{ names | map(attribute='last') | map('int') | list }}  # To convert string to int and add to list
-    - debug: msg={{ names | map(attribute='last') | map('int') | sum }} # To convert int and sum the values
-    - debug: msg={{  [1,2,3,4]  | map('int') | sum }} # To convert int and sum the values
-    - debug: msg={{  [1,2,3,4]  | map('int') | first }} #  to get first element
-    - debug: msg={{  [1,2,3,4,55]  | last }} # to get last element
-    - debug: msg={{  [11,2,3,4]  | map('int') | max }} # To get max 
-    - debug: msg={{  [1,-2,3,4]  | map('int') | min }} # To get min
-    - debug: msg={{  [1,2,3]|join('xx')   }} # To convert int and sum the values
-    - debug: msg={{  [1,2,3]|join('xx')   }} # To convert int and sum the values
-    - debug: msg={{ groups['peers'] | map('extract', hostvars, ['ansible_ssh_host']) | list }} # To convert int and sum the values
+          names:
+                  - first: Paul
+                    last: Thompson
+                  - first: Rod
+                    last: '11'
+
+                    tasks:
+                            - debug: msg={{ names | map(attribute='first') | list }}
+                            - debug: msg={{ names | map(attribute='last') | list }}
+                            - debug: msg={{ names | map('upper') | list }}
+                            - debug: msg={{ names | map(attribute='last') | map('int') | list }}  # To convert string to int and add to list
+                            - debug: msg={{ names | map(attribute='last') | map('int') | sum }} # To convert int and sum the values
+                            - debug: msg={{  [1,2,3,4]  | map('int') | sum }} # To convert int and sum the values
+                            - debug: msg={{  [1,2,3,4]  | map('int') | first }} #  to get first element
+                            - debug: msg={{  [1,2,3,4,55]  | last }} # to get last element
+                            - debug: msg={{  [11,2,3,4]  | map('int') | max }} # To get max 
+                            - debug: msg={{  [1,-2,3,4]  | map('int') | min }} # To get min
+                            - debug: msg={{  [1,2,3]|join('xx')   }} # To convert int and sum the values
+                            - debug: msg={{  [1,2,3]|join('xx')   }} # To convert int and sum the values
+                            - debug: msg={{ groups['peers'] | map('extract', hostvars, ['ansible_ssh_host']) | list }} # To convert int and sum the values
