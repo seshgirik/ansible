@@ -1,0 +1,75 @@
+=====================================
+CHANGELOG - v1.0.9
+=====================================
+
+1. Bug fixes in Adding Config Model.
+
+
+=====================================
+CHANGELOG - v1.0.8
+=====================================
+
+1. Bug fixes in NSD Termination.
+
+
+=====================================
+CHANGELOG - v1.0.7
+=====================================
+
+1. Support for CMS Version - CMSNFV-R_7_1_16_2 (Fixed issues with respect to Onboarding Images/Descriptors and Deploying in CMSNFV-R_7_1_16_2)
+
+
+
+=====================================
+CHANGELOG - v1.0.6
+=====================================
+
+1. Feature Added - Loading CMS/VNFM environment data into excel workbook
+
+
+=====================================
+CHANGELOG - v1.0.5
+=====================================
+
+1. Pause removed from CMS/VNFM Instantiation, installs VNFM once system is up automatically
+
+2. Feature Added - Loading descriptors into excel workbook
+
+3. Bug fixes in NSD Deployment
+
+
+=====================================
+CHANGELOG - v1.0.3
+=====================================
+
+1. Optimizations in Rolling Upgrade
+
+2. Bug fixes in Online Config
+
+
+=====================================
+CHANGELOG - v1.0.2
+=====================================
+
+1. Added support for CRDL (includes creation of Admin/DB Nodes, creating clusters/buckets, admin config)
+
+2. Generation of Descriptors separated from generation of Config files in Excel Workbook
+   NOTE: Use Ctrl + Shift + X to generate config files, Ctrl + Shift + D to generate descriptors
+
+3. Bug fixes in Rolling Upgrade
+
+
+=====================================
+CHANGELOG - v1.0.1
+=====================================
+
+1. Added support for CMS version - "CMSNFV-R_7_1_15_0"
+
+2. Bug fixes in VNFM Upgrade
+
+
+=====================================
+CHANGELOG - v1.0.0
+=====================================
+
+First Release

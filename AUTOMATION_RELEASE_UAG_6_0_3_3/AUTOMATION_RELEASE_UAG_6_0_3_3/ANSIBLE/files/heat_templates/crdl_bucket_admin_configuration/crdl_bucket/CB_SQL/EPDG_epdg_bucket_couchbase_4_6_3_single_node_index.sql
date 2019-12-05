@@ -1,0 +1,15 @@
+CREATE PRIMARY INDEX epdg_bucket_PK ON epdg_bucket USING GSI;
+CREATE INDEX epdg_bucket_idx1 ON epdg_bucket(APP_OID) WHERE KTAB='epdgMap' USING GSI;
+CREATE INDEX epdg_bucket_idx2 ON epdg_bucket(APP_OID) WHERE KTAB='ipsecATBriefMap' USING GSI;
+CREATE INDEX epdg_bucket_idx3 ON epdg_bucket(APP_OID) WHERE KTAB='ipsecACTMap' USING GSI;
+CREATE INDEX epdg_bucket_idx4 ON epdg_bucket(APP_OID) WHERE KTAB='ipsecAllTMap' USING GSI;
+CREATE INDEX epdg_bucket_idx5 ON epdg_bucket(APP_OID) WHERE KTAB='ikeVnfAppMap' USING GSI;
+CREATE INDEX epdg_bucket_idx6 ON epdg_bucket(APP_OID) WHERE KTAB='ssuVNFAppMap' USING GSI;
+CREATE INDEX epdg_bucket_idx7 ON epdg_bucket(VNFID) WHERE KTAB='ipsecACTMap' USING GSI;
+CREATE INDEX epdg_bucket_idx8 ON epdg_bucket(VNFID) WHERE KTAB='ipsecAllTMap' USING GSI;
+CREATE INDEX epdg_bucket_idx9 ON epdg_bucket(VNFID,Timestamp) WHERE KTAB= 'ssuVNFPAppMap' USING GSI;
+CREATE INDEX epdg_bucket_idx10 ON epdg_bucket(VNFID,TIMESTAMP) WHERE KTAB= 'ipsecATBriefMap' USING GSI;
+CREATE INDEX epdg_bucket_idx11 ON epdg_bucket(VNFPriority) WHERE KTAB='ssuVNFPAppMap' USING GSI;
+CREATE INDEX epdg_bucket_idx12 ON epdg_bucket(VNFIDPriority,APP_OID) WHERE KTAB='epdgMap' USING GSI;
+CREATE INDEX epdg_bucket_idx13 ON epdg_bucket(IKE_SYNC_KEY_VM_ID) WHERE KTAB='ikeVnfAppMap' USING GSI;
+CREATE INDEX epdg_bucket_idx14 ON epdg_bucket(epdgappinterfaceids) USING GSI;

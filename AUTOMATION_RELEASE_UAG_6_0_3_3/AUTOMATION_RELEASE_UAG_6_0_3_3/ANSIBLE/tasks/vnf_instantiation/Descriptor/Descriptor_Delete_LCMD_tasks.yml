@@ -1,0 +1,65 @@
+---
+
+
+    - set_fact:
+        XML_MODDED_STR: "{{lookup('file', '{{ XML_PATH }}')}}"
+
+    - set_fact:
+        XML_MODDED_STR: "{{XML_MODDED_STR[0:150] | regex_replace('xmlns=.*>', '>')}}{{XML_MODDED_STR[150:]}}"
+
+    - name: Read LCMD_Id attribute from XML
+      xml:
+         xmlstring: "{{XML_MODDED_STR}}"
+         xpath: "{{ DESCRIPTOR_ONBOARD_CON_INFO.LCMD_Metadata_Id }}"
+         content: text
+      register: xmlIDresp
+      delegate_to: localhost
+
+    - debug:
+        var: "{{xmlIDresp.matches[0]['metadata-id']}}"
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select name from lcmd_descriptor where lcmd_id='{{xmlIDresp.matches[0][\"metadata-id\"]}}'"
+      when: xmlIDresp.matches[0]["metadata-id"] is defined
+    - set_fact: LCMD_Metadata_Name={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select id from lcmd_descriptor where lcmd_id='{{xmlIDresp.matches[0][\"metadata-id\"]}}'"
+      when: xmlIDresp.matches[0]["metadata-id"] is defined
+    - set_fact: LCMD_DB_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select fk_vnfd_descriptor from lcmd_descriptor where id='{{LCMD_DB_Id}}'"
+      when: LCMD_DB_Id is defined
+    - set_fact: LCMD_VNFD_DB_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - name: Getting Access Token
+      uri:
+          url: "{{LOGIN_URL}}"
+          method: "POST"
+          body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+          status_code:  200
+          body_format: json
+          validate_certs: no
+      register: login_response
+      delegate_to: localhost
+
+    - shell: "curl -s -k -X \"DELETE\" --cookie '{{login_response.set_cookie}}' {{DESCRIPTOR_DELETE_URL}}/LCMD/{{LCMD_DB_Id}}"
+      delegate_to: localhost
+      register: curl_resp
+      when: LCMD_DB_Id is defined
+
+    - debug: msg="{{curl_resp}}"
+#    - include_tasks: ../https_request.yml
+#                        URL="{{DESCRIPTOR_DELETE_URL}}/LCMD/{{LCMD_DB_Id}}"
+#                        METHOD="DELETE"
+#curl -s -k -X  DELETE -F  file=@"${Depolyment_Descriptors[$Index3]}; type = text/xml" -F listName=descriptor -F descriptorId="'{{xmlIDresp.matches[0]["metadata-id"]}}'" -F parentDescriptorId="{{LCMD_VNFD_DB_Id}}"
+
+#      when: (xmlIDresp.matches[0]["metadata-id"]) and (LCMD_VNFD_DB_Id)

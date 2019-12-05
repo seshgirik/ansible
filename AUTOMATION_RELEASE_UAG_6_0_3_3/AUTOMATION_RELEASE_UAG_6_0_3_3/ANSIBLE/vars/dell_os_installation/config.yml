@@ -1,0 +1,38 @@
+---
+#BASIC_INFORMATION
+IDRAC_USER: root
+IDRAC_DFLT_PW: mavenir#123
+IDRAC_PW: mavosppod
+ISO_PATH: /home/mavenir/
+ISO: Titanium-Cloud-host-installer-17.06-b6.iso
+BOOT_OPTION_NUMBER: 4
+VNC_PORT: 5901
+VNC_PASSWORD: mavenir
+WR_SUDO_USER: root
+WRUSER: wrsroot
+WRPASS: Mavenir1.
+WR_DFLT_PASS: wrsroot
+LICENSE_SOURCE_PATH: /root/license.lic
+HOME_DIR: /home/wrsroot
+PATCH_SOURCE_PATH: /root/Patches
+KEYSTONE_SOURCE_FILE_PATH: /etc/nova/openrc
+TENANT_NAME: softbank
+
+
+BIOS_SETTINGS:
+    - key : BIOS.SysProfileSettings.ProcTurboMode
+      value : Enabled
+    - key : BIOS.ProcSettings.ProcVirtualization
+      value : Enabled
+    - key : BIOS.ProcSettings.QpiSpeed
+      value : MaxDataRate
+    - key : BIOS.IntegratedDevices.SriovGlobalEnable
+      value : Enabled
+    - key : BIOS.SysProfileSettings.ProcPwrPerf
+      value : MaxPerf
+    - key : BIOS.BiosBootSettings.BootMode
+      value : BIOS
+
+
+
+

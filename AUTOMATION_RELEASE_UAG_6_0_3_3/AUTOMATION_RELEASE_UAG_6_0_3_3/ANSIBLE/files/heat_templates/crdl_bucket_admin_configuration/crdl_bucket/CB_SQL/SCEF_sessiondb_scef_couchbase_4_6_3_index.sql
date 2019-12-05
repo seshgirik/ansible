@@ -1,0 +1,17 @@
+CREATE PRIMARY INDEX `sessiondb_scef_PK1` ON `sessiondb_scef` USING GSI WITH {"nodes":["node1_IP:8091"]};
+CREATE PRIMARY INDEX `sessiondb_scef_PK2` ON `sessiondb_scef` USING GSI WITH {"nodes":["node2_IP:8091"]};
+CREATE PRIMARY INDEX `sessiondb_scef_PK3` ON `sessiondb_scef` USING GSI WITH {"nodes":["node3_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx1` ON `sessiondb_scef`(`VNFID`,`SERVICETYPE`) WHERE (`KTAB` = "MONTE") USING GSI WITH {"nodes":["node1_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx2` ON `sessiondb_scef`(`SCEFREFID_SERVICE`) WHERE (`KTAB` = "MONTE") USING GSI WITH {"nodes":["node1_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx3` ON `sessiondb_scef`(`VNFID`,`SERVICETYPE`) WHERE (`KTAB` = "NIDD") USING GSI WITH {"nodes":["node2_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx4` ON `sessiondb_scef`(`SCSID_EXTID_SERVICE`) WHERE (`KTAB` = "NIDD") USING GSI WITH {"nodes":["node2_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx5` ON `sessiondb_scef`(`VNFID`,`SERVICETYPE`) WHERE (`KTAB` = "SESSION") USING GSI WITH {"nodes":["node3_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx6` ON `sessiondb_scef`(`SCSID_EXTID_RTRIGREFNUM`) WHERE (`KTAB` = "SESSION") USING GSI WITH {"nodes":["node3_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx7` ON `sessiondb_scef`(`scefappinterfaceids`) USING GSI WITH {"nodes":["node3_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx_dup1` ON `sessiondb_scef`(`VNFID`,`SERVICETYPE`) WHERE (`KTAB` = "MONTE") USING GSI WITH {"nodes":["node2_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx_dup2` ON `sessiondb_scef`(`SCEFREFID_SERVICE`) WHERE (`KTAB` = "MONTE") USING GSI WITH {"nodes":["node2_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx_dup3` ON `sessiondb_scef`(`VNFID`,`SERVICETYPE`) WHERE (`KTAB` = "NIDD") USING GSI WITH {"nodes":["node3_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx_dup4` ON `sessiondb_scef`(`SCSID_EXTID_SERVICE`) WHERE (`KTAB` = "NIDD") USING GSI WITH {"nodes":["node3_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx_dup5` ON `sessiondb_scef`(`VNFID`,`SERVICETYPE`) WHERE (`KTAB` = "SESSION") USING GSI WITH {"nodes":["node1_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx_dup6` ON `sessiondb_scef`(`SCSID_EXTID_RTRIGREFNUM`) WHERE (`KTAB` = "SESSION") USING GSI WITH {"nodes":["node1_IP:8091"]};
+CREATE INDEX `sessiondb_scef_idx_dup7` ON `sessiondb_scef`(`scefappinterfaceids`) USING GSI WITH {"nodes":["node1_IP:8091"]};

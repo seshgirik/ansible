@@ -1,0 +1,6 @@
+#-------[CMS_Information]-----------
+#CMS_URL:               https://10.10.198.10:18080
+#CMS_URL: "https://10.10.225.50:18080"
+#CMS_IP_SYSUSER: "root"
+#CMS_IP_SYSPASS: "mavenir"
+BACKUP_URL:	"https://{{inventory_hostname}}:18080/cms-service/webapi/cmsManageService/create?"

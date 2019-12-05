@@ -1,0 +1,13 @@
+
+---
+
+
+  - name: Upload files to qcow2 image
+    local_action: "shell {{ role_path }}/../common/files/scripts/upload_to_qcow2_image.sh {{ role_path }}/../common/{{ QCOW2_IMAGE_LOCATION }}/{{ VNF_IMAGE_LOCATION }}  {{ role_path }}/../common/files/{{ item.key }} {{item.value}} " 
+    register: patch_upload_result
+    changed_when: "patch_upload_result.rc != 2"
+    failed_when: "patch_upload_result.rc == 1 or patch_upload_result.rc > 2"
+    with_dict: "{{ qcow2_patch_file_list }}"
+        
+#    with_flattened: "{{ qcow2_patch_file_list }}"
+

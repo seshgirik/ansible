@@ -1,0 +1,22 @@
+---
+
+- name: "Get id for Provider"
+  include_tasks: ./query_db.yml QUERY="SELECT id FROM cloud_provider_config WHERE name='{{Provider_Name}}'"
+
+- set_fact:
+    Provider_id: "{{ RESP.stdout_lines.0 }}"
+
+- name: "Get VNFM id for Provider {{Provider_Name}}"
+  include_tasks: ./query_db.yml QUERY="SELECT id FROM vnfm_config limit 1"
+
+- set_fact:
+    VNFM_id: "{{ RESP.stdout_lines.0 }}"
+  when: RESP.stdout_lines
+
+- name: Add Tenant
+  include_tasks: https_request.yml
+  vars:
+      URL: "{{ Tenant_Add_URL }}"
+      METHOD: "POST"
+      PAYLOAD: "TENENT_ADD.j2"
+  when: RESP.stdout_lines

@@ -1,0 +1,25 @@
+---
+    - set_fact:
+        SSH_IP: "{{SSHIP}}"
+        LH: "{{ACIP}}"
+
+    - name: Remove entry from known_hosts
+      become_user: "{{SYSUSER}}"
+      known_hosts:
+        path: /root/.ssh/known_hosts
+        state: absent
+        name: "{{SSHIP}}"
+      delegate_to: "{{LH}}"
+
+    - name: Add the entry to known_hosts
+      become_user: "{{SYSUSER}}"
+      known_hosts:
+        path: '/root/.ssh/known_hosts'
+        name: '{{SSHIP}}'
+        key: "{{ lookup('pipe', 'ssh-keyscan -t rsa \"{{SSHIP}}\"') }}"
+      delegate_to: "{{LH}}"
+
+    - name: share the key for key based login
+      become_user: "{{SYSUSER}}"
+      shell: "sshpass -p {{SYSPASS}} ssh-copy-id {{SYSUSER}}@{{SSH_IP}}"
+      delegate_to: "{{LH}}"

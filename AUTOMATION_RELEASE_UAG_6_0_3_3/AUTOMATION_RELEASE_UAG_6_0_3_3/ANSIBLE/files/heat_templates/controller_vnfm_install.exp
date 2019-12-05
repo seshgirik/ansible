@@ -1,0 +1,11 @@
+#!HOME/expect
+spawn "HOME/controller_vnfm_install.sh"
+expect ":"
+send "PASS\r"
+expect ":"
+send "PASS\r"
+expect "(yes/NO):"
+send "yes\r"
+expect "(yes/NO):"
+send "yes\r"
+exit

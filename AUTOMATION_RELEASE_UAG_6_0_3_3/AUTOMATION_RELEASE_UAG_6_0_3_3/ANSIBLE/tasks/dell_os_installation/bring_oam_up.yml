@@ -1,0 +1,30 @@
+- set_fact:
+    SSH_IP: "{{OAM_CONF[inventory_hostname]['OAM_IP']}}"
+    DEVICE_FILE: "/etc/sysconfig/network-scripts/ifcfg-{{OAM_CONF[inventory_hostname]['OAM_DEVICE']}}"
+    OAM_DEVICE: "{{OAM_CONF[inventory_hostname]['OAM_DEVICE']}}"
+    OAM_IP: "{{OAM_CONF[inventory_hostname]['OAM_IP']}}"
+    NETMASK: "{{OAM_CONF[inventory_hostname]['NETMASK']}}"
+    GATEWAY: "{{OAM_CONF[inventory_hostname]['GATEWAY']}}"
+    DNS1: "{{OAM_CONF[inventory_hostname]['DNS1']}}"
+    DNS2: "{{OAM_CONF[inventory_hostname]['DNS2']}}"
+
+- shell: "rm -rf {{HOME_DIR}}/bring_oam_up.sh"
+  args:
+    warn: False
+  remote_user: "{{WRUSER}}"
+  delegate_to: "{{SSH_IP}}"
+
+- name: "Writing shell script to bring system up after execution of task"
+  shell: "printf \"rm -rf {{DEVICE_FILE}}\nprintf 'BOOTPROTO=none\nDEFROUTE=yes\nPEERDNS=yes\nPEERROUTES=yes\nNAME={{OAM_DEVICE}}\nDEVICE={{OAM_DEVICE}}\nONBOOT=yes\nIPADDR={{OAM_IP}}\nNETMASK={{NETMASK}}\nGATEWAY={{GATEWAY}}\nDNS1={{DNS1}}\nDNS2={{DNS2}}' >> {{DEVICE_FILE}}\n/etc/init.d/network restart\" >> {{HOME_DIR}}/bring_oam_up.sh"
+  remote_user: "{{WRUSER}}"
+  delegate_to: "{{SSH_IP}}"
+
+- name: "Make 'bring_oam_up.sh' executable"
+  shell: "chmod +x {{HOME_DIR}}/bring_oam_up.sh"
+  args:
+    warn: False
+  remote_user: "{{WRUSER}}"
+  become: yes
+  become_user: "{{WR_SUDO_USER}}"
+  become_method: sudo
+  delegate_to: "{{SSH_IP}}"

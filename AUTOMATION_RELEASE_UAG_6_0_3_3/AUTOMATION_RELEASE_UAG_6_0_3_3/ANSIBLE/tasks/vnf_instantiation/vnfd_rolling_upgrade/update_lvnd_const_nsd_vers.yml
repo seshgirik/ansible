@@ -1,0 +1,18 @@
+- xml:
+    xmlstring: "{{lvnd_xml.xmlstring}}"
+    xpath: "{{inp_xpath}}"
+    content: text
+  register: NSD_DEPENDENCY_LIST
+  delegate_to: localhost
+  ignore_errors: yes
+
+- xml:
+    xmlstring: "{{lvnd_xml.xmlstring}}"
+    xpath: "{{inp_xpath}}"
+    value: "{{NEW_NSD_VERSION}}"
+  register: xml_val
+  delegate_to: localhost
+  when: NSD_DEPENDENCY_LIST.matches is defined
+
+- set_fact: lvnd_xml="{{xml_val}}"
+  when: NSD_DEPENDENCY_LIST.matches is defined

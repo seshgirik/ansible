@@ -1,0 +1,11 @@
+
+---
+
+  - name: source DB
+    shell: 'mysql -u{{ MYSQL_USER }} -p{{ MYSQL_PASSWD }} {{ MYSQL_DB }} --tee=/tmp/db_upgrade_sql.log < "{{ QUERY }}"'
+    args:
+      chdir: /tmp/sql_temp_data/
+    register: RESP
+    remote_user: "{{CMS_ACT_USER}}"
+    delegate_to: "{{ACTIP}}"
+

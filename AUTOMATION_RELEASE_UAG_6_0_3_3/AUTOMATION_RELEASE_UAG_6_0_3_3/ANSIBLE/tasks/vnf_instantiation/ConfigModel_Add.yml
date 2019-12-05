@@ -1,0 +1,44 @@
+---
+      - set_fact:
+          CONFIGMODEL_ADD_VNFD_PATHS: []
+          CONFIGMODEL_ADD_YANG_PATHS: []
+
+
+
+      - include_tasks: ./query_db.yml QUERY="select version from cms_version"
+      - set_fact: CMS_Version={{RESP.stdout_lines.0}}
+        when: RESP.stdout_lines.0 is defined
+
+      - debug:
+          var: CMS_Version
+
+      - include_tasks : ./ConfigModel/List_ConfigModel_folder.yml
+                            PATH="{{ DESCRIPTOR_PATH }}/{{ item }}/"
+        with_items: "{{ DESCRIPTOR_INFO }}"
+
+      - name: loop over result
+        debug:
+          msg="{{item}}"
+        with_items: "{{CONFIGMODEL_ADD_VNFD_PATHS}}"
+
+
+
+
+      - include_tasks : ./ConfigModel/List_ConfigModel_Yang_folder.yml
+                            PATH="{{ DESCRIPTOR_PATH }}/{{ item }}/Yang/"
+        with_items: "{{ DESCRIPTOR_INFO }}"
+
+#      - name: looop over result
+#        debug:
+#          msg="{{item}}"
+#        with_items: "{{CONFIGMODEL_ADD_YANG_PATHS}}"
+
+
+
+
+      - include_tasks : ./ConfigModel/ConfigModel_Add_tasks.yml
+                            XML_PATH="{{xml_file}}"
+
+        with_items: "{{ CONFIGMODEL_ADD_VNFD_PATHS }}"
+        loop_control:
+            loop_var: xml_file

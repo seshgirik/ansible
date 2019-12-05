@@ -1,0 +1,32 @@
+---
+# vars file for vnf_automation
+MYSQL_USER:     controlDb
+MYSQL_PASSWD:   mavenir
+MYSQL_DB:       cms
+CONTROLLER :    10.10.72.3
+DB_UPGRADE_SCRIPT_PATH:  http://10.10.220.84:9899/CMSNFV-P_7_1_14_2_to_CMSNFV-R_7_1_15_0_rhel_7_2_x86_64_mysql_db_upgrade.tar.gz
+CMS_ACT_USER: "root"
+CMS_STB_USER: "root"
+CONTROLLER_SYSUSER: "root"
+CONTROLLER_SYSPASS: "Mavenir12#$"
+KEYSTONE_SOURCE_PATH : /root/keystonerc_vnfm
+HOME_DIR : /home/
+CMS_ACTIVE_YAML_NAME : CMS_Multiple_Int_Active.yaml
+CMS_ACTIVE_ENV_NAME : CMS_Multiple_Int_Active.env
+CMS_ACTIVE_STACK_DELETE : cms_1_P7_1_14_2
+CMS_STANDBY_YAML_NAME : CMS_Multiple_Int_Standby.yaml
+CMS_STANDBY_ENV_NAME : CMS_Multiple_Int_Standby.env
+CMS_STANDBY_STACK_DELETE : cms_2_P7_1_14_2
+CMS_IMAGE_DELETE_NAME : CMSP_7_1_14_2-j1899
+CMS_IMAGE_CREATION_NAME : CMSR_7_1_15_0-j2034
+CMS_IMAGE_LINK: http://10.10.220.84:9899/CloudRange-CMSNFV-rhel_7_2_x86_64-CMSNFV-R_7_1_15_0-v14-20180625222313-j2034.qcow2.txz
+
+CMS_RETRIES: 10
+CMS_DELAY: 30
+
+CMS_ACT_IP: 10.10.72.118
+CMS_STB_IP: 10.10.72.119
+CMS_URL: "https://10.10.225.50:18080"
+CMS_IP_SYSUSER: "root"
+CMS_IP_SYSPASS: "mavenir"
+

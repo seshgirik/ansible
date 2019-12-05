@@ -1,0 +1,81 @@
+- shell: "sed -i 's/CRDL_CFG_PRODUCT/{{CRDL_CFG_PRODUCT.split(',')[DATA_INDEX]}}/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- shell: "sed -i 's/CRDL_CFG_RAM_WEIGHT/{{CRDL_CFG_RAM_WEIGHT.split(',')[DATA_INDEX]}}/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- shell: "sed -i 's/CRDL_CFG_USER_NAME/{{CRDL_CFG_USER_NAME.split(',')[DATA_INDEX]}}/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- shell: "sed -i 's/CRDL_CFG_USER_PASSWD/{{CRDL_CFG_USER_PASSWD.split(',')[DATA_INDEX]}}/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- shell: "cd {{playbook_dir}}/../../files/heat_templates/crdl/ && for env_file in `(ls *{{CLUSTER_TENANTS.split(',')[DATA_INDEX]}}*.env)`; do echo `(cat $env_file | grep CRDL_oam_ips | cut -d':' -f2 | cut -d'[' -f2 | cut -d']' -f1 | awk '{print $1}')`; done;"
+  register: CRDL_CLUSTER_IPS
+  delegate_to: localhost
+
+- set_fact:
+    CRDL_NODE_OAM_IP_LIST: ""
+
+- set_fact:
+    CRDL_NODE_OAM_IP_LIST: "{{CRDL_NODE_OAM_IP_LIST}} {{item}}"
+  with_items: "{{CRDL_CLUSTER_IPS.stdout_lines}}"
+
+- shell: "sed -i 's/CRDL_CFG_CLUSTER_OAM_IP_LIST/{{CRDL_NODE_OAM_IP_LIST[1:]}}/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- shell: "cd {{playbook_dir}}/../../files/heat_templates/crdl/ && for env_file in `(ls *{{CLUSTER_TENANTS.split(',')[DATA_INDEX]}}*.env)`; do echo `(cat $env_file | grep CRDL_db_traffic_ips | cut -d':' -f2 | cut -d'[' -f2 | cut -d']' -f1 | awk '{print $1}')`; done;"
+  register: CRDL_CLUSTER_DB_IPS
+  delegate_to: localhost
+
+- set_fact:
+    CRDL_NODE_DBTRAFFIC_IP_LIST: ""
+
+- set_fact:
+    CRDL_NODE_DBTRAFFIC_IP_LIST: "{{CRDL_NODE_DBTRAFFIC_IP_LIST}} {{item}}"
+  with_items: "{{CRDL_CLUSTER_DB_IPS.stdout_lines}}"
+
+- shell: "sed -i 's/CRDL_CFG_CLUSTER_DBTRAFFIC_IP_LIST/{{CRDL_NODE_DBTRAFFIC_IP_LIST[1:]}}/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- shell: "cd {{playbook_dir}}/../../files/heat_templates/crdl/ && ls *{{CLUSTER_TENANTS.split(',')[DATA_INDEX]}}*.env"
+  register: CRDL_CLUSTER_ENVS
+  delegate_to: localhost
+
+- shell: "cd {{playbook_dir}}/../../files/heat_templates/crdl/ && cat {{CRDL_CLUSTER_ENVS.stdout_lines.0}} | grep CRDL_oam_ips | cut -d':' -f2 | cut -d'[' -f2 | cut -d']' -f1 | awk '{print $1}'"
+  register: CRDL_CLUSTER_OAM_IP
+  delegate_to: localhost
+
+- include_tasks: setup_pwdless_generic.yml PWDLESS_IP="{{CRDL_CLUSTER_OAM_IP.stdout_lines.0}}" PWDLESS_USER="{{CRDL_SYS_USER_NAME}}" PWDLESS_PASSWD="{{CRDL_SYS_PASSWORD}}"
+
+- name: "Copy crdl_bucket to '~' directory in remote host"
+  shell: "sshpass -p {{CRDL_SYS_PASSWORD}} /usr/bin/scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket {{CRDL_SYS_USER_NAME}}@{{CRDL_CLUSTER_OAM_IP.stdout_lines.0}}:~/"
+  delegate_to: localhost
+
+- shell: "sed -i 's/{{CRDL_CFG_PRODUCT.split(',')[DATA_INDEX]}}/CRDL_CFG_PRODUCT/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- shell: "sed -i 's/{{CRDL_CFG_RAM_WEIGHT.split(',')[DATA_INDEX]}}/CRDL_CFG_RAM_WEIGHT/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- shell: "sed -i 's/{{CRDL_CFG_USER_NAME.split(',')[DATA_INDEX]}}/CRDL_CFG_USER_NAME/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- shell: "sed -i 's/{{CRDL_CFG_USER_PASSWD.split(',')[DATA_INDEX]}}/CRDL_CFG_USER_PASSWD/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- shell: "sed -i 's/{{CRDL_NODE_OAM_IP_LIST[1:]}}/CRDL_CFG_CLUSTER_OAM_IP_LIST/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- shell: "sed -i 's/{{CRDL_NODE_DBTRAFFIC_IP_LIST[1:]}}/CRDL_CFG_CLUSTER_DBTRAFFIC_IP_LIST/g' {{playbook_dir}}/../../files/heat_templates/crdl_bucket_admin_configuration/crdl_bucket/CB_SQL/couchbase_cluster.cfg"
+  delegate_to: localhost
+
+- name: "Executing CRDL_Cluster_setup.sh"
+  shell: "cd ~/crdl_bucket/CB_Script && source /etc/profile && chmod +x *.sh && ./CRDL_Cluster_setup.sh"
+  delegate_to: "{{CRDL_CLUSTER_OAM_IP.stdout_lines.0}}"
+  remote_user: "{{CRDL_SYS_USER_NAME}}"
+
+- name: "Executing CRDL_Bucket_Index_setup.sh"
+  shell: "cd ~/crdl_bucket/CB_Script && source /etc/profile && chmod +x *.sh && ./CRDL_Bucket_Index_setup.sh"
+  delegate_to: "{{CRDL_CLUSTER_OAM_IP.stdout_lines.0}}"
+  remote_user: "{{CRDL_SYS_USER_NAME}}"

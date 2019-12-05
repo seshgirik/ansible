@@ -1,0 +1,11 @@
+---
+
+- hosts: idrac
+  gather_facts: no
+  vars_files:
+    - ../vars/config.yml
+    - ../vars/oam_conf.yml
+    - ../vars/flavor.yml
+
+  tasks:
+    - include_tasks: open_stack_flavor.yml

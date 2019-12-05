@@ -1,0 +1,112 @@
+# Request : {"lvnId":"<lvn_id>","vnfdId":"<vnfd_id>","nsdId":"<target_nsd_id>","targetNsdVersion":"<target_nsd_version"}
+
+#### GET VNFD IDs
+# - set_fact:
+#     SOURCE_NSD: "{{NSD_Name}}-{{NSD_VERSION}}"
+#     TARGET_NSD: "{{NSD_Name}}-{{NEW_NSD_VERSION}}"
+- set_fact:
+    VNFD_QUERY: ""
+- set_fact:
+    VNFD_QUERY: "{{VNFD_QUERY}} OR (vnfd_id='{{item.key}}' AND version='{{item.value['NEW_VERSION']}}')"
+  with_dict: "{{VNFD_UPGRADE_PARAMS}}"
+
+- include_tasks: ../query_db.yml QUERY="select id from vnfd_descriptor where {{VNFD_QUERY[3:]}}"
+
+- name: Getting Access Token
+  uri:
+      url: "{{LOGIN_URL}}"
+      method: "POST"
+      body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+      status_code:  200
+      body_format: json
+      validate_certs: no
+  register: login_response
+  delegate_to: localhost
+
+- include_tasks: ./https_request_no_template_quick.yml
+  vars:
+    URL: "{{PREPROD_DEACTIVATE_URL}}?sourcensd={{NSD_Name}}-{{NSD_VERSION}}&targetnsd={{NSD_Name}}-{{NEW_NSD_VERSION}}"
+    METHOD: "POST"
+    PAYLOAD: "rowData={\"id\":\"\",\"srcnsd\":\"{{NSD_Name}}\",\"srcnsdVersion\":\"{{NSD_VERSION}}\",\"targetnsd\":\"{{NSD_Name}}\",\"targetnsdVersion\":\"{{NEW_NSD_VERSION}}\",\"status\":\"PROCESSING\",\"vnfmMode\":\"WITH_VIM_ACCESS\",\"vnfdId\":\"{{item}}\"}"
+  with_items: '{{RESP.stdout_lines}}'
+
+- debug:
+    msg:
+    - ""
+    - ""
+    - "################################################################"
+    - "################################################################"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "###      PREPRODUCTION FOA DEACTIVATION WAS SUCCESSFUL       ###"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "################################################################"
+    - "################################################################"
+    - ""
+    - ""
+
+
+# - name: find
+#   find:
+#       paths: "{{DESCRIPTOR_PATH}}/{{item}}/"
+#       pattern: "LVND*.xml"
+#   with_items: "{{DESCRIPTOR_INFO}}"
+#   register: desc_xml
+#   delegate_to: localhost
+#
+# - name: Get LVND ID
+#   xml:
+#     xmlstring: "{{lookup('file', '{{desc_xml.results.0.files.0.path}}') | regex_replace('xmlns=.*>', '>')}}"
+#     xpath: lvnd-list/id
+#     content: text
+#   register: lvnd_id
+#   delegate_to: localhost
+#
+# - set_fact:
+#     LVND_ID: lvnd_id.matches.0
+#
+# - name: find
+#   find:
+#       paths: "{{DESCRIPTOR_PATH}}/{{item}}/"
+#       pattern: "VNFD*.xml"
+#   with_items: "{{DESCRIPTOR_INFO}}"
+#   register: desc_xml
+#   delegate_to: localhost
+#
+# - name: "Get vnf_id(s) from xml"
+#   xml:
+#     xmlstring: "{{lookup('file', '{{item.0.path}}') | regex_replace('xmlns=.*>', '>')}}"
+#     xpath: /vnfd/vnfd-id
+#     content: text
+#   with_items:
+#     "{{desc_xml.results.0.files}}"
+#   register: xmlresp
+#   delegate_to: localhost
+#
+# - set_fact:
+#     VNFD_IDS: []
+#
+# - name: "Get VNFD_IDS from xmlresp"
+#   set_fact:
+#     VNFD_IDS: "{{ VNFD_IDS + [ item.matches.0.vnfd-id ] }}"
+#   with_items:
+#     "{{ xmlresp.results }}"
+#
+# - include_tasks: query_db.yml QUERY="select id from nsd_descriptor where name='{{NSD_Name}}' AND version='{{NSD_Version}}'"
+#
+# - set_fact:
+#     NSD_ID: "{{RESP.stdout_lines.0}}"
+#     TARGET_NSD_VERSION: "{{NSD_Version}}"
+#
+# - name: Preproduction Upgrade
+#   include_tasks: https_request.yml
+#   vars:
+#       URL:      "{{ PREPROD_DEACTIVATE_URL}}"
+#       METHOD:   "POST"
+#       PAYLOAD:  "PREPROD_FOA_ACTIVATE_DEACTIVATE.j2"
+#   with_items: "{{VNFD_IDS}}"
+#   loop_control:
+#       loop_var: VNFD_ID

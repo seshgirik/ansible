@@ -1,0 +1,19 @@
+- include_tasks: query_db.yml QUERY="select id from data_model where vnfd_id in (select id from vnfd_descriptor where fk_nsd_descriptor=(select id from nsd_descriptor where version='{{NSD_VERSION}}' AND name='{{NSD_Name}}'))"
+- set_fact: DEL_IDS="{{RESP.stdout_lines}}"
+
+
+- name: Getting Access Token
+  uri:
+      url: "{{LOGIN_URL}}"
+      method: "POST"
+      body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+      status_code:  200
+      body_format: json
+      validate_certs: no
+  register: login_response
+  delegate_to: localhost
+
+- shell: "curl -s -k -X \"DELETE\" --cookie '{{login_response.set_cookie}}' {{DESCRIPTOR_UPLOAD_URL}}/data_model/null/{{item}}"
+  delegate_to: localhost
+  with_items: "{{DEL_IDS}}"
+  register: curl_resp

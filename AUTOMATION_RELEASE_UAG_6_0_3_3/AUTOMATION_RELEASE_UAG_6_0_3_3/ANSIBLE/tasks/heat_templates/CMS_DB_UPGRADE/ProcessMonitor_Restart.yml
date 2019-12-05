@@ -1,0 +1,18 @@
+---
+
+    - name: find PID of ProcessMonitor
+      shell: "ps -ef | grep java| grep ProcessMonitor | grep -v grep | awk '{print $2}'"
+      register: RESP
+      remote_user: "{{CMSUSER}}"
+      delegate_to: "{{CMSIP}}"
+    - set_fact: PID={{RESP.stdout}}
+      when: RESP.stdout is defined
+
+    - debug:
+        msg="{{PID}}"
+
+    - name: ProcessMonitor_Restart
+      shell: "kill -9 {{PID}}"
+      remote_user: "{{CMSUSER}}"
+      delegate_to: "{{CMSIP}}"
+      when: PID is defined

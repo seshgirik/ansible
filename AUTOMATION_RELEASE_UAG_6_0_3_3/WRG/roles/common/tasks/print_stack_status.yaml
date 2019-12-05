@@ -1,0 +1,25 @@
+
+---
+
+#   - include: transfer_file.yaml source={{ role_path }}/{{ HEAT_TEMPLATE_LOCATION }}/{{ CREDENTIALS_RC_FILE }} local_dir={{ HOST_TEMP_STORAGE }} 
+#   - include: transfer_file.yaml source={{ role_path }}/{{ HEAT_TEMPLATE_LOCATION }}/{{ HEAT_TEMPLATE_FILENAME }}  local_dir={{ HOST_TEMP_STORAGE }}
+#   - include: transfer_file.yaml source={{ role_path }}/{{ HEAT_TEMPLATE_LOCATION }}/{{ HEAT_TEMPLATE_ENVIRONMENT_FILENAME }}  local_dir={{ HOST_TEMP_STORAGE }}
+
+   - name: "Stack Status"
+     shell: "source {{ HOST_TEMP_STORAGE }}/{{ CREDENTIALS_RC_FILE | basename }} ;/usr/bin/openstack stack list  -c 'Stack Name' -c 'Stack Status' -f value |grep  {{heat_env_file | regex_replace('^(.*).env$', '\\1') }}_stack || true"
+     register: stack_status_result
+
+   - name: Stack Status Result
+     debug: var=stack_status_result.stdout
+     when: stack_status_result.stdout!=""
+
+   - name: "Stack status Reason"
+     shell: "source {{ HOST_TEMP_STORAGE }}/{{ CREDENTIALS_RC_FILE | basename }} ;/usr/bin/openstack stack show  {{heat_env_file | regex_replace('^(.*).env$', '\\1') }}_stack -c  stack_status_reason -f value || true"
+     register: stack_status_reason
+
+   - name: Stack Status Reason
+     debug: var=stack_status_reason.stdout_lines
+     when: stack_status_reason.stdout_lines!=""
+
+
+#     shell: "source {{ HOST_TEMP_STORAGE }}/{{ CREDENTIALS_RC_FILE | basename }} ;/usr/bin/heat stack-show {{heat_env_file | regex_replace('^(.*).env$', '\\1') }}_stack  | grep stack_status_reason | sed 's/|//g' | sed 's/[[:space:]]+/ /g'"

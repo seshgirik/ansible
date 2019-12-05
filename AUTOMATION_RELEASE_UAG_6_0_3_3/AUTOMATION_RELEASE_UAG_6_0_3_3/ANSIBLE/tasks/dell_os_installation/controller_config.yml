@@ -1,0 +1,37 @@
+- set_fact:
+    SSH_IP: "{{OAM_CONF[inventory_hostname]['OAM_IP']}}"
+
+- name: "Copy Controller_config.cfg from {{playbook_dir}}/../files/controller_config.cfg in localhost to {{HOME_DIR}} in the remote host"
+  copy:
+    src: "{{playbook_dir}}/../files/controller_config.cfg"
+    dest: "{{HOME_DIR}}"
+  remote_user: "{{WRUSER}}"
+  delegate_to: "{{SSH_IP}}"
+
+- name: "Install screen"
+  shell: "yum -y install {{HOME_DIR}}/screen.rpm"
+  args:
+    warn: False
+  remote_user: "{{WRUSER}}"
+  become: yes
+  become_user: "{{WR_SUDO_USER}}"
+  become_method: sudo
+  delegate_to: "{{SSH_IP}}"
+  ignore_errors: yes
+
+#- name: "Starting a screen session with name 'controller_config' for controller configuration"
+#  shell: "{{HOME_DIR}}/ctrl.sh"
+#  shell: "sudo screen -dmS controller_config bash -c 'cd {{HOME_DIR}} && config_controller --config-file controller_config.cfg  && {{HOME_DIR}}/bring_oam_up.sh; exec bash'"
+#  remote_user: "{{WRUSER}}"
+#  become: yes
+#  become_user: "{{WR_SUDO_USER}}"
+#  become_method: sudo
+#  delegate_to: "{{SSH_IP}}"
+
+# - name: "Run config_controller with the config file"
+#   shell: "config_controller --config-file {{HOME_DIR}}/controller_config.cfg"
+#   remote_user: "{{WRUSER}}"
+#   delegate_to: "{{SSH_IP}}"
+#   become: yes
+#   become_user: "{{WR_SUDO_USER}}"
+#   become_method: sudo

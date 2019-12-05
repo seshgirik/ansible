@@ -1,0 +1,251 @@
+<sys xmlns="urn:mavenir:ns:yang:reudiam:1.0.6.0">
+<dbadapter>
+<DBAdapterDBConfig>
+            <name>UAG</name>
+            <dbName>UAG</dbName>
+            <dbType>DB_COUCHBASE</dbType>
+            <dbIPAddress>172.16.77.10,172.16.77.11,172.16.77.12</dbIPAddress>
+            <dbPort>0</dbPort>
+            <dbUserName>SCNfvCouchbase</dbUserName>
+            <dbPassword>mavenir</dbPassword>
+            <dbSchemaName>SCNfvCouchbase</dbSchemaName>
+            <noOfRetries>60</noOfRetries>
+            <timeStamp>0</timeStamp>
+        </DBAdapterDBConfig>
+</dbadapter>
+<platform>
+<realm>
+        <name>realm-rx</name>
+        <net_intf_type>NET_INTERFACE_ANY</net_intf_type>
+        <isTrusted>1</isTrusted>
+    </realm>
+<realm>
+        <name>realm-pcrf</name>
+        <net_intf_type>NET_INTERFACE_ANY</net_intf_type>
+        <isTrusted>1</isTrusted>
+    </realm>
+<ext_traffic_type>
+        <name>MW</name>
+      </ext_traffic_type>
+<fqdn_template>
+      <name>mavdiam-1</name>
+      <domain>softbank.ne.jp</domain>
+      <hostname>tbcvims01pcscfd01</hostname>
+    </fqdn_template>
+<fqdn_local_ext_ip_map>
+    <mapName>10</mapName>
+    <fkfqdn_local>mavdiam-1</fkfqdn_local>
+    <fkrealm>realm-rx</fkrealm>
+    <fkext_ip>emxrouter</fkext_ip>
+    </fqdn_local_ext_ip_map>
+<interfaceVnfMapping>
+                        <mapName>sipMgr</mapName>
+                        <interfaceId>87</interfaceId>
+                        <vnfType>SIPRE</vnfType>
+                        <versionID>0</versionID>
+                </interfaceVnfMapping>
+<interfaceVnfMapping>
+                        <mapName>dns</mapName>
+                        <interfaceId>90</interfaceId>
+                        <vnfType>GTRE</vnfType>
+                        <versionID>0</versionID>
+                </interfaceVnfMapping>
+<interfaceVnfMapping>
+                        <mapName>diam</mapName>
+                        <interfaceId>57</interfaceId>
+                        <vnfType>DIAMRE</vnfType>
+                        <versionID>0</versionID>
+                </interfaceVnfMapping>
+<interfaceVnfMapping>
+                        <mapName>lightySoap</mapName>
+                        <interfaceId>323</interfaceId>
+                        <vnfType>GTRE</vnfType>
+                        <versionID>0</versionID>
+                </interfaceVnfMapping>
+<interfaceVnfMapping>
+                        <mapName>regMgr</mapName>
+                        <interfaceId>456</interfaceId>
+                        <vnfType>SCVNF</vnfType>
+                        <versionID>0</versionID>
+                </interfaceVnfMapping>
+<interfaceVnfMapping>
+                        <mapName>webGwSvcMgr</mapName>
+                        <interfaceId>458</interfaceId>
+                        <vnfType>SCVNF</vnfType>
+                        <versionID>0</versionID>
+                </interfaceVnfMapping>
+<interfaceVnfMapping>
+                        <mapName>httpClientMgr</mapName>
+                        <interfaceId>176</interfaceId>
+                        <vnfType>GTRE</vnfType>
+                        <versionID>0</versionID>
+                </interfaceVnfMapping>
+<interfaceVnfMapping>
+                        <mapName>pcscfMgr</mapName>
+                        <interfaceId>272</interfaceId>
+                        <vnfType>SCVNF</vnfType>
+                        <versionID>0</versionID>
+                        </interfaceVnfMapping>
+</platform>
+<appcommon>
+<protocolProgramMap>
+   <mapName>diamMgr</mapName>
+   <protocol>IP_SERVICE_DIAM</protocol>
+   <program>diamMgr</program>
+   <shareClient>FALSE</shareClient>
+   <shareServer>TRUE</shareServer>
+   </protocolProgramMap>
+<domainList>
+        <keyname>0</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+        <domainName>softbank.ne.jp</domainName>
+      </domainList>
+<ims_rmt_server>
+        <name>pcrf</name>
+        <server_type>IMS_SERVER_TYPE_DRA_PA1</server_type>
+        <protocol>IP_SERVICE_DIAM</protocol>
+        <host>172.17.145.16</host>
+        <ip>172.17.145.16</ip>
+        <serverAddr>worker0.tbcimspcrf01.gxrx.softbank.ne.jp</serverAddr>
+        <fkdomain>0</fkdomain>
+        <fkgroup>group-0</fkgroup>
+        <fkrealm>realm-pcrf</fkrealm>
+        <isTrusted>1</isTrusted>
+        <isBinarySupp>0</isBinarySupp>
+        <weight>100</weight>
+        <priority>PRIMARY</priority>
+        <retryTimes>1</retryTimes>
+        <port>3868</port>
+        <protoType>IP_PROTO_TCP</protoType>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:49</timeStamp>
+        <supportHealthCheck>FALSE</supportHealthCheck>
+        <skipOptions>FALSE</skipOptions>
+        <applyAutoSTG>FALSE</applyAutoSTG>
+        <trunkGroupSupport>FALSE</trunkGroupSupport>
+        <relayUnknownEgressTrunkGroup>FALSE</relayUnknownEgressTrunkGroup>
+      </ims_rmt_server>
+<server_group>
+    <name>group-0</name>
+    <timeStamp>2016-10-26 09:21:48</timeStamp>
+    <routingSelection>ROUTING_PERCENT_ALLOCATION</routingSelection>
+    <versionID>0</versionID>
+    <rjtCallForSessLimit>FALSE</rjtCallForSessLimit>
+   </server_group>
+<app_service_port>
+        <name>27</name>
+        <external_port>0</external_port>
+        <app_type>APP_TYPE_PCSCF</app_type>
+        <ip_service_type>IP_SERVICE_DIAM</ip_service_type>
+        <ip_proto_type>IP_PROTO_ANY</ip_proto_type>
+        <ip_port_type>IP_PORT_DEFAULT</ip_port_type>
+        <net_interface_type>NET_INTERFACE_ANY</net_interface_type>
+        <isServer>0</isServer>
+        <internal_port>0</internal_port>
+        <port_range>55000</port_range>
+        <weight>100</weight>
+        <priority>1</priority>
+        <fkfqdn_local>mavdiam-1</fkfqdn_local>
+        <fknodeid>ADM</fknodeid>
+        <fkrealm>realm-rx</fkrealm>
+        <fkgroup>group-0</fkgroup>
+        <trunkGroupSupport>FALSE</trunkGroupSupport>
+        <relayUnknownIngressTrunkGroup>TRUE</relayUnknownIngressTrunkGroup>
+        <virtualServiceIp>MW</virtualServiceIp>
+      </app_service_port>
+<centralDBReplication>
+       <name>0</name>
+       <enableCentralDB>FALSE</enableCentralDB>
+       <dbClientQueryTimer>10</dbClientQueryTimer>
+       <retryReplDelay>10</retryReplDelay>
+       <dbadapterInitFailedAction>CDB_ACT_CONTINUE</dbadapterInitFailedAction>
+       <appReplInternalTimer>500</appReplInternalTimer>
+       <mpcReplInternalTimer>500</mpcReplInternalTimer>
+   </centralDBReplication>
+</appcommon>
+<diam>
+<diam_app>
+	    <id>0</id>
+        <product_name>mOne_UAG_Rx</product_name>
+        <nodeType>DIAM_CLIENT</nodeType>
+        <transpType>DIAM_TCP_IPV4</transpType>
+        <app_type>APP_TYPE_PCSCF</app_type>
+        <nmbWorkerThrds>0</nmbWorkerThrds>
+        <failover>0</failover>
+        <server_security_type>DIAM_NO_SECU</server_security_type>
+      </diam_app>
+<diam_app_intf>
+        <id>0</id>
+        <fkdiam_app>0</fkdiam_app>
+        <application>DIAM_RX</application>
+      </diam_app_intf>
+<diam_app_intf_peer_map>
+        <id>0</id>
+        <fkdiam_app_intf>0</fkdiam_app_intf>
+        <fkims_rmt_diam_peer>0</fkims_rmt_diam_peer>
+      </diam_app_intf_peer_map>
+<diam_global>
+        <id>0</id>
+        <tWatchDogTmr>30</tWatchDogTmr>
+        <tBurstBrkTmr>30</tBurstBrkTmr>
+        <tPeerStateTmr>30</tPeerStateTmr>
+        <tReconnTmr>1</tReconnTmr>
+        <tPeerDscTmr>30</tPeerDscTmr>
+        <maxConnRetry>3</maxConnRetry>
+        <nmbBurstCnt>100</nmbBurstCnt>
+        <stackLog>0</stackLog>
+        <ipBind>1</ipBind>
+        <vendorId>0</vendorId>
+        <firmRev>1</firmRev>
+        <validateFqdn>0</validateFqdn>
+      </diam_global>
+<diam_port>
+        <id>0</id>
+        <fkprot_grp_diam_app_map>0</fkprot_grp_diam_app_map>
+        <fkims_rmt_diam_peer>0</fkims_rmt_diam_peer>
+        <port>51000</port>
+      </diam_port>
+<diam_realm>
+        <realm_name>softbank.ne.jp</realm_name>
+        <fkrealm>realm-rx</fkrealm>
+      </diam_realm>
+<diam_realm>
+        <realm_name>gxrx.softbank.ne.jp</realm_name>
+        <fkrealm>realm-pcrf</fkrealm>
+      </diam_realm>
+<ims_rmt_diam_peer>
+        <id>0</id>
+        <fkims_rmt_server>pcrf</fkims_rmt_server>
+        <fkdiam_realm>gxrx.softbank.ne.jp</fkdiam_realm>
+        <peer_type>DIAM_PRIMARY</peer_type>
+        <addi_peer_type>DIAM_PEER_STANDARD</addi_peer_type>
+        <transpType>DIAM_TCP_IPV4</transpType>
+        <security_type>DIAM_NO_SECU</security_type>
+        <admin_state>UNLOCKED</admin_state>
+        <transExpiryTmr>5</transExpiryTmr>
+      </ims_rmt_diam_peer>
+<prot_grp_diam_app_map>
+        <id>0</id>
+        <fkdiam_app>0</fkdiam_app>
+        <fkapp_service_port>27</fkapp_service_port>
+        <listenPort>3868</listenPort>
+        <listenPortTLS>5658</listenPortTLS>
+        <admin_state>UNLOCKED</admin_state>
+      </prot_grp_diam_app_map>
+<diam_routing>
+        <id>0</id>
+        <diam_application>DIAM_RX</diam_application>
+        <fkdiam_realm>gxrx.softbank.ne.jp</fkdiam_realm>
+        <fkims_rmt_diam_peer>0</fkims_rmt_diam_peer>
+        <metric>0</metric>
+      </diam_routing>
+<diam_fwd_method>
+      <id>1</id>
+      <app_type>APP_TYPE_PCSCF</app_type>
+      <application>DIAM_RX</application>
+      <method>METHOD_SESSION_DB</method>
+      <dest_intf>610</dest_intf>
+      </diam_fwd_method>
+</diam>
+</sys>

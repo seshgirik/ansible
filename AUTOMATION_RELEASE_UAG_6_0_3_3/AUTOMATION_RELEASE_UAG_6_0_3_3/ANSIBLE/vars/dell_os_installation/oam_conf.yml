@@ -1,0 +1,9 @@
+OAM_CONF:
+    "10.10.74.100":
+        OAM_IP: "10.10.74.103"
+        GATEWAY: "10.10.74.1"
+        NETMASK: "255.255.255.0"
+        DNS1: "8.8.8.8"
+        DNS2: "8.8.4.4"
+        DATA_INTERFACE: "enp59s0f0"
+        OAM_DEVICE: "eno4"

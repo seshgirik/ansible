@@ -1,0 +1,17 @@
+listName=cloud_tenant_config&rowData={
+        "id":                 "",
+        "name":               "{{ Tenant_Name }}",
+        "cloudProfileID":     "{{ Cloud_Type}}-{{ POP_IP }}-{{ Tenant }}-{{ Tenant_User_Name }}",
+        "keystoneversion":    "v3",
+        "username":           "admin",
+        "password":           "admin",
+        "popID":              "{{POP_ID}}",
+        "providerID":         "{{ Provider_id }}",
+        "preferredVnfm":      "{{ VNFM_id }}",
+        "cloudType":          "{{ Cloud_Type }}",
+        "domain":             "{{ Domain }}",
+        "tenant":             "{{ Tenant }}",
+        "sfcType":            "none",
+        "createdDatetime":    "",
+        "configuredLevel":"DEBUG"
+}

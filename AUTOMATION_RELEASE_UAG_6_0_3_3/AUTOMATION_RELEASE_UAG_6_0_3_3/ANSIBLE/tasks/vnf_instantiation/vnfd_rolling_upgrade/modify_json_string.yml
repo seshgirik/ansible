@@ -1,0 +1,32 @@
+- set_fact:
+    JSON_OBJ_ORIGINAL: "{{JSON_STR|replace('&', '')|replace('quot;','\"')}}"
+    JSON_OBJ_MODDED: []
+    JSON_OBJ_MODDED_INDEX: []
+    JSON_OBJ_NEW: []
+
+- set_fact:
+    JSON_OBJ_MODDED: "{{JSON_OBJ_MODDED}} + [ \"{{ JSON_ORIG_VAR|combine({'vnfdVersion': VNFD_UPGRADE_PARAMS[JSON_ORIG_VAR['vnfdId']].NEW_VERSION}, recursive=True) }}\" ]"
+    JSON_OBJ_MODDED_INDEX: "{{JSON_OBJ_MODDED_INDEX}} + [{{ JSON_ORIG_INDEX }}]"
+  when: JSON_ORIG_VAR['vnfdId'] in VNFD_UPGRADE_PARAMS
+  loop: "{{JSON_OBJ_ORIGINAL}}"
+  loop_control:
+    loop_var: JSON_ORIG_VAR
+    index_var: JSON_ORIG_INDEX
+
+- set_fact:
+    JSON_OBJ_NEW: "{{ JSON_OBJ_NEW }} + [ \"{{ JSON_OBJ_ORIGINAL[L_IND]|replace('\"', '&quot;') }}\" ]"
+  when: not L_IND in JSON_OBJ_MODDED_INDEX
+  loop: "{{JSON_OBJ_ORIGINAL}}"
+  loop_control:
+    loop_var: ORIG_IND
+    index_var: L_IND
+
+- set_fact:
+    JSON_OBJ_NEW: "{{ JSON_OBJ_NEW }} + [ \"{{item|replace('\"', '&quot;')}}\" ]"
+  with_items: "{{JSON_OBJ_MODDED}}"
+
+- name: SHOWING JSON
+  debug: msg="{{JSON_OBJ_NEW}}"
+# - pause: minutes=60
+- set_fact:
+    MODDED_JSON: "{{MODDED_JSON}} + [{{JSON_OBJ_NEW}}]"

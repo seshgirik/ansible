@@ -1,0 +1,12 @@
+---
+
+
+    - include_tasks: CMS_DB_Upgrade_Initial.yml
+
+    - include_tasks: CMS_DB_Image_upgrade.yml
+
+    - include_tasks: CMS_DB_Upgrade_Phase1.yml
+
+    - include_tasks: CMS_DB_Upgrade_Phase2.yml
+
+    - include_tasks: CMS_DB_Upgrade_Confirm.yml

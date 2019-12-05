@@ -1,0 +1,26 @@
+- set_fact:
+    SSH_IP: "{{SSHIP}}"
+    LH: "{{ACIP}}"
+
+- name: "Delete old host"
+  shell: "rm -rf ~/.ssh/known_hosts"
+  delegate_to: "{{LH}}"
+  args:
+    warn: false
+
+- name: "Getting SSH KEY"
+  shell: "echo $(cat ~/.ssh/id_rsa.pub)"
+  register: id_rsa_pub
+  delegate_to: "{{LH}}"
+
+- set_fact:
+    SSH_KEY: "{{id_rsa_pub.stdout}}"
+
+- fail:
+    msg: "SSH public key not found. Please generate the public key using ssh-keygen.{{SSH_KEY}}"
+  when: SSH_KEY==""
+
+- name: Setting up passwordless login
+  command: "sshpass -p {{SYSPASS}} ssh-copy-id -o StrictHostKeyChecking=no {{SYSUSER}}@{{SSH_IP}}"
+  register: lg_res
+  delegate_to: "{{LH}}"

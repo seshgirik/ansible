@@ -1,0 +1,72 @@
+#CHANGE_NSD_VERSION
+- name: Get Namespace
+  shell: "grep -o 'xmlns=.*>' {{file}} | grep -o '\".*\"'"
+  register: NSD_NAMESPACE
+  delegate_to: localhost
+
+- set_fact:
+    NSD_NAMESPACE: "{{NSD_NAMESPACE.stdout_lines.0}}"
+
+- name: Update NSD Version
+  xml:
+    xmlstring: "{{lookup('file', '{{file}}') | regex_replace('xmlns=.*>', '>')}}"
+    xpath: nsd-list/version
+    value: "{{NEW_NSD_VERSION}}"
+  register: nsd_xml
+  delegate_to: localhost
+
+- name: Get vnf-ref-list
+  xml:
+    xmlstring: "{{nsd_xml.xmlstring[39:]}}"
+    xpath: nsd-list/vnf-ref-list/vnfd-id
+    content: text
+  register: VNF_REF_LIST
+  delegate_to: localhost
+
+- set_fact:
+    NSD_VNFD_UPDT_IND: []
+
+- set_fact:
+    NSD_VNFD_UPDT_IND: "{{NSD_VNFD_UPDT_IND}} + [ { \"VNFD_ID\": \"{{node_matches['vnfd-id']}}\", \"NODE_INDEX\":  {{node_ind|int + 1}} } ]"
+  when: node_matches['vnfd-id'] in VNFD_UPGRADE_PARAMS
+  loop: "{{VNF_REF_LIST.matches}}"
+  loop_control:
+    loop_var: node_matches
+    index_var: node_ind
+
+- name: Update VNFD versions in NSD
+  xml:
+    xmlstring: "{{nsd_xml.xmlstring[39:]}}"
+    xpath: "nsd-list/vnf-ref-list[{{repl['NODE_INDEX']}}]/version"
+    value: "{{VNFD_UPGRADE_PARAMS[repl['VNFD_ID']].NEW_VERSION}}"
+  loop: "{{NSD_VNFD_UPDT_IND}}"
+  loop_control:
+    loop_var: repl
+  register: nsd_xml
+  delegate_to: localhost
+
+- copy: content="{{nsd_xml.results[((nsd_xml.results|length) - 1)].xmlstring[39:]|replace('<nsd>','<nsd xmlns='+NSD_NAMESPACE+'>')}}" dest={{file}}
+  delegate_to: localhost
+
+- name: Get VLD versions in NSD
+  xml:
+    xmlstring: "{{nsd_xml.results[((nsd_xml.results|length) - 1)].xmlstring[39:]}}"
+    xpath: "nsd-list/virtual-links/version"
+    content: text
+  register: vld_versions
+  delegate_to: localhost
+
+- set_fact:
+    UPDATED_VLD_VERSIONS: []
+
+- set_fact:
+    UPDATED_VLD_VERSIONS: "{{UPDATED_VLD_VERSIONS}} + [ \"{{EACH_VLD_VERSION|replace(OLD_VLD_VERSION, NEW_VLD_VERSION)}}\" ]"
+  loop: "{{vld_versions.matches}}"
+  loop_control:
+    loop_var: EACH_VLD_VERSION
+
+- include_tasks: update_nsd_vld_vers.yml FILE_UPDT="{{file}}" XPATH_UPDT="nsd-list/virtual-links[{{(EACH_VLD_INDEX|int)+1}}]/version" VAL_UPDT="{{EACH_VLD_VERSION}}"
+  loop: "{{UPDATED_VLD_VERSIONS}}"
+  loop_control:
+    loop_var: EACH_VLD_VERSION
+    index_var: EACH_VLD_INDEX

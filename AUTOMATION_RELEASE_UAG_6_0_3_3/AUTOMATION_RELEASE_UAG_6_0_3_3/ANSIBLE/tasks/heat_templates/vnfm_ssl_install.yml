@@ -1,0 +1,59 @@
+- include_tasks: setup_pwdless_generic.yml PWDLESS_IP="{{VNFM_IP}}" PWDLESS_PASSWD="{{VNFM_PASSWORD}}" PWDLESS_USER="{{VNFM_USER}}"
+
+- shell: "mkdir /opt/tomcat_latest/ctrl_certs && cp /etc/pki/tls/openssl.cnf /opt/tomcat_latest/ctrl_certs"
+  delegate_to: "{{VNFM_IP}}"
+  remote_user: "{{VNFM_USER}}"
+
+- shell: "sed -i 's/# extendedKeyUsage = critical,timeStamping/# extendedKeyUsage = critical,timeStamping\\n[SAN]\\nsubjectAltName=IP:{{CONTROLLER_IP}},DNS:controller.mavenir.com/g' /opt/tomcat_latest/ctrl_certs/openssl.cnf"
+  delegate_to: "{{VNFM_IP}}"
+  remote_user: "{{VNFM_USER}}"
+
+- name: "Copy create_cert.exp file"
+  shell: "sshpass -p \"{{VNFM_PASSWORD}}\" scp -r {{playbook_dir}}/../../files/heat_templates/create_cert.exp {{VNFM_USER}}@{{VNFM_IP}}:~/"
+  delegate_to: localhost
+
+- set_fact:
+    ansible_become_pass: "{{PASSWD}}"
+
+- shell: "source /etc/profile && cd ~ && chmod +x ./create_cert.exp && ./create_cert.exp VNFM {{CONTROLLER_IP}} $CATALINA_HOME $JAVA_HOME && cd /opt/tomcat_latest/ctrl_certs/ && cat VNFM.key VNFM.crt > VNFM.pem"
+  delegate_to: "{{VNFM_IP}}"
+  remote_user: "{{VNFM_USER}}"
+  # become: yes
+  # become_method: sudo
+
+- name: "Copy VNFM.pem in VNFM to Controller"
+  shell: "sshpass -p \"{{PASSWD}}\" scp /opt/tomcat_latest/ctrl_certs/VNFM.pem {{USER}}@{{CONTROLLER_IP}}:{{HOME_DIR}}/"
+  delegate_to: "{{VNFM_IP}}"
+  remote_user: "{{VNFM_USER}}"
+  # become: yes
+  # become_method: sudo
+
+- shell: "sed -i 's/HOME/{{HOME_DIR|replace('/', '\\/')}}/g' {{playbook_dir}}/../../files/heat_templates/controller_vnfm_install.exp"
+  delegate_to: "localhost"
+
+- shell: "sed -i 's/PASS/{{PASSWD|replace('/', '\\/')}}/g' {{playbook_dir}}/../../files/heat_templates/controller_vnfm_install.exp"
+  delegate_to: "localhost"
+
+- name: "Copy VNFM.pem in VNFM to Controller"
+  shell: "sshpass -p \"{{PASSWD}}\" scp -r {{playbook_dir}}/../../files/heat_templates/controller_vnfm_install.* {{USER}}@{{CONTROLLER_IP}}:{{HOME_DIR}}/"
+  delegate_to: localhost
+
+- shell: "cd {{HOME_DIR}} && chmod +x {{HOME_DIR}}/*.exp && chmod +x {{HOME_DIR}}/*.sh && sudo {{HOME_DIR}}/controller_vnfm_install.exp"
+  delegate_to: "{{CONTROLLER_IP}}"
+  remote_user: "{{USER}}"
+  become: yes
+  become_method: sudo
+
+- name: "Copy files add_to_keystore* to vnfm"
+  shell: "sshpass -p \"{{VNFM_PASSWORD}}\" scp -r {{playbook_dir}}/../../files/heat_templates/add_to_keystore.* {{VNFM_USER}}@{{VNFM_IP}}:/opt/tomcat_latest/ctrl_certs/"
+  delegate_to: localhost
+
+- shell: "cd /opt/tomcat_latest/ctrl_certs/ && chmod +x add_to_keystore.* && ./add_to_keystore.exp"
+  delegate_to: "{{VNFM_IP}}"
+  remote_user: "{{VNFM_USER}}"
+
+- shell: "sed -i 's/{{HOME_DIR|replace('/', '\\/')}}/HOME/g' {{playbook_dir}}/../../files/heat_templates/controller_vnfm_install.exp"
+  delegate_to: "localhost"
+
+- shell: "sed -i 's/{{PASSWD|replace('/', '\\/')}}/PASS/g' {{playbook_dir}}/../../files/heat_templates/controller_vnfm_install.exp"
+  delegate_to: "localhost"

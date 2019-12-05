@@ -1,0 +1,113 @@
+- name: Get Namespace
+  shell: "grep -o 'xmlns=.*>' {{file}} | grep -o '\".*\"'"
+  register: LVND_NAMESPACE
+  delegate_to: localhost
+
+- set_fact:
+    LVND_NAMESPACE: "{{LVND_NAMESPACE.stdout_lines.0}}"
+
+- name: Update LVND Version
+  xml:
+    xmlstring: "{{lookup('file', '{{file}}') | regex_replace('xmlns=.*>', '>')}}"
+    xpath: lvnd-list/version
+    value: "{{NEW_LVND_VERSION}}"
+  register: lvnd_desc_xml
+  delegate_to: localhost
+
+- name: Update NSD Version in LVND
+  xml:
+    xmlstring: "{{lvnd_desc_xml.xmlstring[39:]}}"
+    xpath: lvnd-list/nsd-version
+    value: "{{NEW_NSD_VERSION}}"
+  register: lvnd_desc_xml
+  delegate_to: localhost
+
+- set_fact:
+    lvnd_without_const_vnf: "{{lvnd_desc_xml.xmlstring[39:]}}"
+
+- xml:
+    xmlstring: "{{lvnd_desc_xml.xmlstring[39:]}}"
+    xpath: lvnd-list/lvn/constituent-vnf
+    content: text
+  ignore_errors: yes
+  register: vl
+  delegate_to: localhost
+
+- name: Get Constituent VNF list
+  xml:
+    xmlstring: "{{lvnd_desc_xml.xmlstring[39:]}}"
+    xpath: lvnd-list/lvn/constituent-vnf/vnfd-id
+    content: text
+  register: CONSTITUENT_VNF_LIST
+  delegate_to: localhost
+  when: not vl.failed
+
+- set_fact:
+    CONSTITUENT_VNF_LIST:
+        matches: []
+  when: CONSTITUENT_VNF_LIST.matches is not defined
+
+- set_fact:
+    CONSTITUENT_VNF_UPDT_IND: []
+
+- set_fact:
+    CONSTITUENT_VNF_UPDT_IND: "{{CONSTITUENT_VNF_UPDT_IND}} + [ { \"VNFD_ID\": \"{{node_matches['vnfd-id']}}\", \"NODE_INDEX\":  {{node_ind|int + 1}} } ]"
+  when: (not vl.failed) and (node_matches['vnfd-id'] in VNFD_UPGRADE_PARAMS)
+  loop: "{{CONSTITUENT_VNF_LIST.matches}}"
+  loop_control:
+    loop_var: node_matches
+    index_var: node_ind
+
+- debug: msg="{{CONSTITUENT_VNF_UPDT_IND}}"
+# - pause: minutes=60
+
+- name: Update VNFD versions in Constituent VNF
+  xml:
+    xmlstring: "{{lvnd_desc_xml.xmlstring[39:]}}"
+    xpath: "lvnd-list/lvn/constituent-vnf[{{repl['NODE_INDEX']}}]/version"
+    value: "{{VNFD_UPGRADE_PARAMS[repl['VNFD_ID']].NEW_VERSION}}"
+  loop: "{{CONSTITUENT_VNF_UPDT_IND}}"
+  loop_control:
+    loop_var: repl
+  register: lvnd_desc_xml
+  delegate_to: localhost
+  when: not vl.failed
+
+- debug: msg="{{lvnd_desc_xml}}"
+# - pause: minutes=60
+
+- set_fact:
+    lvnd_xml:
+        xmlstring: "{{lvnd_desc_xml.results[ (lvnd_desc_xml.results|length) - 1].xmlstring}}"
+  when: not vl.failed
+
+- include_tasks: update_lvnd_const_nsd_vers.yml inp_xpath="lvnd-list/lvn/constituent-vnf[{{repl}}]/vnf-depends-on/nsd-version"
+  with_sequence: "1-{{vl.count}}"
+  loop_control:
+    loop_var: repl
+  when: not vl.failed
+
+- set_fact:
+    lvnd_xml: "{{xml_val}}"
+  when: not vl.failed
+
+- set_fact:
+    lvnd_xml:
+        xmlstring: "{{lvnd_xml.xmlstring[39:]}}"
+  when: not vl.failed
+
+- set_fact:
+    lvnd_xml:
+        xmlstring: "{{lvnd_without_const_vnf}}"
+  when: vl.failed
+
+
+- include_tasks: update_lvnd_with_const_index.yml const_index="{{const_index}}"
+  with_sequence: "1-{{vl.count}}"
+  loop_control:
+      loop_var: const_index
+  when: not vl.failed
+
+
+- copy: content="{{lvnd_xml.xmlstring|replace('<lvnd>','<lvnd xmlns='+LVND_NAMESPACE+'>')}}" dest={{file}}
+  delegate_to: localhost

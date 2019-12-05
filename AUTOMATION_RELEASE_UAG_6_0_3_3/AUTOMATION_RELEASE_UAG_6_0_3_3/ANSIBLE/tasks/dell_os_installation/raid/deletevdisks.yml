@@ -1,0 +1,21 @@
+- name: Getting VDISKS
+  shell: "{{SSH_CMD}} racadm raid get vdisks"
+  register: VDISKS
+  delegate_to: localhost
+
+- set_fact:
+    VDISKS: "{{VDISKS.stdout_lines}}"
+
+- name: deleting vdisks
+  shell: "{{SSH_CMD}} racadm raid deletevd:{{vdisk_fqdd}}"
+  delegate_to: localhost
+  when: not VDISKS.0 is search('ERROR')
+  with_items: "{{VDISKS}}"
+  loop_control:
+    loop_var: vdisk_fqdd
+
+- include_tasks: createjobs.yml
+  when: (VDISKS|length > 0) and (not VDISKS.0 is search('ERROR')
+
+- pause: minutes=3
+  when: (VDISKS|length > 0) and (not VDISKS.0 is search('ERROR'))

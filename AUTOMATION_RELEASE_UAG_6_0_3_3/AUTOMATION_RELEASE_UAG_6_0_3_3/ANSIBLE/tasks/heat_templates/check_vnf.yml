@@ -1,0 +1,2 @@
+- fail: msg="One of the VNFs is not in Configured Active state"
+  when: (not vnf_status == "Configured Active")

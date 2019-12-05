@@ -1,0 +1,84 @@
+---
+
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+    - ../../vars/heat_templates/config.yml
+    - ./query_db.yml
+
+  tasks:
+    - include_tasks: setup_pwdless_login.yml
+      vars:
+          SSHIP: "{{item}}"
+          ACIP: localhost
+          SYSUSER: "{{CMS_IP_SYSUSER}}"
+          SYSPASS: "{{CMS_IP_SYSPASS}}"
+      with_items: ["{{ CMS_ACT_IP }}", "{{ CMS_STB_IP }}", localhost]
+
+    - include_tasks: CMS_Status_Check.yml
+      vars:
+          CMSUSER: "{{CMS_ACT_USER}}"
+          CMSIP: "{{CMS_ACT_IP}}"
+    - set_fact: STATUS_1_RESP_SYNCED={{RESP.stdout}}
+      when: RESP.stdout is defined
+
+    - debug:
+        msg="{{STATUS_1_RESP_SYNCED}}"
+
+    - include_tasks: CMS_Status_Check.yml
+      vars:
+          CMSUSER: "{{CMS_STB_USER}}"
+          CMSIP: "{{CMS_STB_IP}}"
+    - set_fact: STATUS_2_RESP_SYNCED={{RESP.stdout}}
+      when: RESP.stdout is defined
+
+    - debug:
+        msg="{{STATUS_2_RESP_SYNCED}}"
+
+
+    - set_fact:
+        ACT_IP: "{{CMS_ACT_IP}}"
+        STB_IP: "{{CMS_STB_IP}}"
+      when: "{{STATUS_1_RESP_SYNCED}}|lower == \"Active\"|lower"
+
+    - set_fact:
+        ACT_IP: "{{CMS_STB_IP}}"
+        STB_IP: "{{CMS_ACT_IP}}"
+      when: "{{STATUS_2_RESP_SYNCED}}|lower == \"Active\"|lower"
+
+    - debug:
+        msg="{{ACT_IP}}"
+
+    - debug:
+        msg="{{STB_IP}}"
+
+
+    - include_tasks: Server_ID_Check.yml
+      vars:
+          ACTIP: "{{ACT_IP}}"
+    - set_fact: ID_RESP_SYNCED={{RESP.stdout}}
+      when: RESP.stdout is defined
+
+    - debug:
+        msg="{{ID_RESP_SYNCED}}"
+
+    - include_tasks: NetconfManager_Restart.yml
+      vars:
+          CMSUSER: "{{CMS_ACT_USER}}"
+          CMSIP: "{{CMS_ACT_IP}}"
+      when: ID_RESP_SYNCED == "2"
+
+    - include_tasks: Server_ID_Check.yml
+      vars:
+          ACTIP: "{{ACT_IP}}"
+    - set_fact: ID_RESP_SYNCED={{RESP.stdout}}
+      when: RESP.stdout is defined
+
+    - debug:
+        msg="{{ID_RESP_SYNCED}}"
+
+    - include_tasks: CMS_DB_Upgrade_Tasks.yml
+      vars:
+          ACTIP: "{{ACT_IP}}"
+          STBIP: "{{STB_IP}}"
+      when: ID_RESP_SYNCED.stdout == "1"

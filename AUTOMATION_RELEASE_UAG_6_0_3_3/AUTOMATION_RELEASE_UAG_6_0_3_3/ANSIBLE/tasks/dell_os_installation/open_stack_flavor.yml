@@ -1,0 +1,16 @@
+- set_fact:
+    SSH_IP: "{{OAM_CONF[inventory_hostname]['OAM_IP']}}"
+
+- name: Create Project/Tenant
+  shell: "source {{KEYSTONE_SOURCE_FILE_PATH}} && openstack project create {{TENANT_NAME}}"
+  remote_user: "{{WRUSER}}"
+  delegate_to: "{{SSH_IP}}"
+
+- shell: "source {{KEYSTONE_SOURCE_FILE_PATH}} && {{item}}"
+  with_items: "{{CREATE_FLAVOR}}"
+  remote_user: "{{WRUSER}}"
+  delegate_to: "{{SSH_IP}}"
+
+#     - debug:
+#         msg: "{{item}}"
+#       with_items: "{{CREATE_FLAVOR}}"

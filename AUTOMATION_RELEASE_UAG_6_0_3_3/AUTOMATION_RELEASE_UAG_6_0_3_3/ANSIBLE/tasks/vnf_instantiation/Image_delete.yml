@@ -1,0 +1,5 @@
+---
+
+- include_tasks: ./Image_delete_incl.yml IMG_NAME={{ item.name }} IMG_PATH={{ item.path }}
+  with_items: "{{ IMAGE_INFO }}"
+  

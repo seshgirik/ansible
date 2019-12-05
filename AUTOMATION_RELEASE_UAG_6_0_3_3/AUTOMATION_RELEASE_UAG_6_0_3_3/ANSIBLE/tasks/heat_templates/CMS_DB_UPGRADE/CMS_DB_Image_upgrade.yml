@@ -1,0 +1,60 @@
+---
+   - set_fact:
+       IMAGE_CREATION_NAME: "CMS{{CMS_IMAGE_LINK.split('/')[-1].split('-')[4]}}-{{CMS_IMAGE_LINK.split('.')[-3].split('-')[-1]}}"
+
+   - debug:
+        msg="{{IMAGE_CREATION_NAME}}"
+
+   - include_tasks: setup_pwdless_login.yml
+     vars:
+       SSHIP: "{{CONTROLLER}}"
+       ACIP: localhost
+       SYSUSER: "{{CONTROLLER_SYSUSER}}"
+       SYSPASS: "{{CONTROLLER_SYSPASS}}"
+
+   - name: check cms_img is exist
+     stat:
+       path: "{{HOME_DIR}}/cms_img"
+     register: file_details
+     remote_user: "{{CONTROLLER_SYSUSER}}"
+     delegate_to: "{{CONTROLLER}}"
+
+   - shell: "source {{KEYSTONE_SOURCE_PATH}} && cd {{HOME_DIR}}/cms_img && openstack image delete {{CMS_IMAGE_DELETE_NAME}}"
+     when: file_details.stat.exists
+     remote_user: "{{CONTROLLER_SYSUSER}}"
+     delegate_to: "{{CONTROLLER}}"
+
+   - shell: "source {{KEYSTONE_SOURCE_PATH}} && openstack image delete {{CMS_IMAGE_DELETE_NAME}}"
+     when: not file_details.stat.exists
+     remote_user: "{{CONTROLLER_SYSUSER}}"
+     delegate_to: "{{CONTROLLER}}"
+
+   - pause: seconds=2
+
+   - name: "Download {{CMS_IMAGE_LINK}}"
+     shell: "cd {{HOME_DIR}} && wget '{{CMS_IMAGE_LINK}}' -O cms.{{CMS_IMAGE_LINK.split('.')[-1]}}"
+     remote_user: "{{CONTROLLER_SYSUSER}}"
+     delegate_to: "{{CONTROLLER}}"
+
+   - shell: "rm -rf {{HOME_DIR}}/cms_img"
+     when: file_details.stat.exists
+     remote_user: "{{CONTROLLER_SYSUSER}}"
+     delegate_to: "{{CONTROLLER}}"
+
+   - name: "Copy files *.yaml & *.env from {{playbook_dir}}/../../files/heat_templates/config_files/ directory in localhost to {{HOME_DIR}} in the remote host"
+     copy:
+       src: "./config_files/"
+       dest: "{{HOME_DIR}}"
+     remote_user: "{{CONTROLLER_SYSUSER}}"
+     delegate_to: "{{CONTROLLER}}"
+
+   - name: "Untar cms.{{CMS_IMAGE_LINK.split('.')[-1]}}"
+     shell: "cd {{HOME_DIR}} && mkdir cms_img && tar -xvf cms.{{CMS_IMAGE_LINK.split('.')[-1]}} -C ./cms_img && cd cms_img && mv *.qcow2 cms.qcow2"
+     remote_user: "{{CONTROLLER_SYSUSER}}"
+     delegate_to: "{{CONTROLLER}}"
+
+   - shell: "source {{KEYSTONE_SOURCE_PATH}} && cd {{HOME_DIR}}/cms_img && openstack image create {{IMAGE_CREATION_NAME}} --disk-format qcow2 --container-format=bare --file cms.qcow2"
+     remote_user: "{{CONTROLLER_SYSUSER}}"
+     delegate_to: "{{CONTROLLER}}"
+
+   - pause: seconds=10

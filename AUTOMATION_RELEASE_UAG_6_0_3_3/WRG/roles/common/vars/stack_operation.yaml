@@ -1,0 +1,15 @@
+
+###############################
+#if {VNF}_STACK is true, the stack will be created/deleted/status shown, otherwise it is skipped
+# status, create, delete 
+#
+## WRG_CPlane Stack Operations
+base_WRG_CPlane_Internal_Network_stack: false
+base_WRG_CPlane_External_Network_stack: false
+base_Security_Group_stack: false
+
+module_1_WRG_CPlane_AM_stack: true
+module_2_WRG_CPlane_RM_stack: true
+module_3_WRG_CPlane_DM_stack: true
+module_4_WRG_CPlane_CE_stack: true
+module_5_WRG_CPlane_SI_stack: true

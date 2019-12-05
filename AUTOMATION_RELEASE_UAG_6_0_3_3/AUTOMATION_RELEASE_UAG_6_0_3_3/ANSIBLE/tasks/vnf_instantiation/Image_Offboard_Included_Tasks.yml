@@ -1,0 +1,59 @@
+
+---
+
+- include_tasks: query_db.yml QUERY="SELECT id FROM image_config  WHERE name='{{ IMG_NAME }}'"
+
+- set_fact:
+    Image_Id: "{{ RESP.stdout_lines.0 }}"
+
+
+
+- include_tasks: query_db.yml QUERY="SELECT status FROM image_config_status  WHERE fk_image_config='{{Image_Id}}'"
+
+- set_fact:
+    status: "{{ RESP.stdout_lines.0 }}"
+
+
+- set_fact:
+    ImageName: "{{ IMG_NAME }}"
+    ImagePath: "{{ IMG_PATH }}"
+
+- include_tasks: ./https_request_no_template_quick.yml
+                    URL="{{ Image_Offboard_URL }}/null/{{ Image_Id }}"
+                    METHOD="DELETE"
+                    PAYLOAD="rowData={'lastUpdated':'','cloudProfileID':'{{ Cloud_Type}}-{{ POP_IP }}-{{ Tenant }}-{{ Tenant_User_Name }}','imageName':'{{ ImageName }}','imageId':'','cloudType':'{{ Cloud_Type }}','imageFilePath':'{{ ImagePath }}','id':'{{ Image_Id }}','status':'UPLOADED'}"
+
+# - include_tasks: ./https_request.yml
+#   vars:
+#       URL:      "{{ Image_Offboard_URL }}/null/{{ Image_Id }}"
+#       METHOD:   "DELETE"
+#       PAYLOAD:  "IMAGE_OFFBOARD.j2"
+#   when: (status|lower in "Uploaded"|lower) or (status|lower in "Failed"|lower)
+
+# - command: "mysql -u{{ MYSQL_USER }} -p{{ MYSQL_PASSWD }} {{ MYSQL_DB }} -sN -e \"SELECT status FROM image_config_status  WHERE fk_image_config='{{Image_Id}}'\" "
+#   register: STATUS_RESP
+#   remote_user: "{{CMS_IP_SYSUSER}}"
+#   retries: "{{DESCRIPTOR_RETRIES}}"
+#   delay: "{{ DELAY }}"
+#   until: ( STATUS_RESP.stdout_lines.0|lower in "Deleted"|lower) or (STATUS_RESP.stdout_lines.0|lower in "Failed"|lower)
+#   when: (status|lower in "Uploaded"|lower) or (status|lower in "Failed"|lower)
+#   ignore_errors: yes
+#
+# - debug:
+#     msg:
+#     - ""
+#     - ""
+#     - "################################################################"
+#     - "################################################################"
+#     - "###                                                          ###"
+#     - "###                                                          ###"
+#     - "###                                                          ###"
+#     - "###               IMAGE OFFBOARDING SUCCESSFUL!!!            ###"
+#     - "###                                                          ###"
+#     - "###                                                          ###"
+#     - "###                                                          ###"
+#     - "################################################################"
+#     - "################################################################"
+#     - ""
+#     - ""
+#   when: ( STATUS_RESP.stdout_lines.0|lower in "Deleted"|lower) or (STATUS_RESP.stdout_lines.0|lower in "Failed"|lower)

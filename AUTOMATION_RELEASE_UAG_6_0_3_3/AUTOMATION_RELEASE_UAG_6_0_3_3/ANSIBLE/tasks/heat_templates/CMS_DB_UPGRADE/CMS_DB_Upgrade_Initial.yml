@@ -1,0 +1,76 @@
+---
+
+  - name: check /tmp/sql_temp_data is exist
+    stat:
+       path: "/tmp/sql_temp_data/"
+    register: temp_path
+    remote_user: "{{CMS_ACT_USER}}"
+    delegate_to: "{{ACTIP}}"
+
+  - file:
+      path: "/tmp/sql_temp_data/"
+      state: absent
+    when: temp_path.stat.exists
+    remote_user: "{{CMS_ACT_USER}}"
+    delegate_to: "{{ACTIP}}"
+
+  - name: make dir
+    file:
+      path: "/tmp/sql_temp_data"
+      state: directory
+    remote_user: "{{CMS_ACT_USER}}"
+    delegate_to: "{{ACTIP}}"
+
+  - name: mysql DB upgrade
+    shell: "mysqldump --databases -u{{MYSQL_USER}}  -p{{MYSQL_PASSWD}}  cms  > cmsdump_{{DB_UPGRADE_SCRIPT_PATH.split('/')[-1].split(\"_rhel_7_2\")[0]}}.sql"
+    args:
+      chdir: /tmp/sql_temp_data/
+    remote_user: "{{CMS_ACT_USER}}"
+    delegate_to: "{{ACTIP}}"
+
+  - name: check /root/CMSbackup/ is exist
+    stat:
+       path: "/root/CMSbackup/"
+    register: file_details
+
+  - file:
+      path: /root/CMSbackup/
+      state: absent
+    when: file_details.stat.exists
+
+  - file:
+      path: /root/CMSbackup/
+      state: directory
+
+  - fetch:
+      src: "/tmp/sql_temp_data/cmsdump_{{DB_UPGRADE_SCRIPT_PATH.split('/')[-1].split(\"_rhel_7_2\")[0]}}.sql"
+      dest: /root/CMSbackup/
+      flat: yes
+      validate_checksum: yes
+    remote_user: "{{CMS_ACT_USER}}"
+    delegate_to: "{{ACTIP}}"
+
+  - name: command module
+    command: "wget {{DB_UPGRADE_SCRIPT_PATH}}"
+    args:
+      chdir: /tmp/sql_temp_data/
+    remote_user: "{{CMS_ACT_USER}}"
+    delegate_to: "{{ACTIP}}"
+
+  - name: command module
+    command: "tar -zxvf {{DB_UPGRADE_SCRIPT_PATH.split('/')[-1]}}"
+    args:
+      chdir: /tmp/sql_temp_data/
+    remote_user: "{{CMS_ACT_USER}}"
+    delegate_to: "{{ACTIP}}"
+
+  - debug:
+      msg="{{DB_UPGRADE_SCRIPT_PATH.split('/')[-1].split("_rhel_7_2")[0]}}"
+
+#  - include_tasks: ./query_db.yml 
+#    vars:
+#       QUERY: "tee=/tmp/db_upgrade_{{DB_UPGRADE_SCRIPT_PATH.split('/')[-1].split(\"_rhel_7_2\")[0]}}.log"
+
+  - include_tasks: ./source_db.yml 
+    vars:
+       QUERY: "/tmp/sql_temp_data/master_upgrade.sql"

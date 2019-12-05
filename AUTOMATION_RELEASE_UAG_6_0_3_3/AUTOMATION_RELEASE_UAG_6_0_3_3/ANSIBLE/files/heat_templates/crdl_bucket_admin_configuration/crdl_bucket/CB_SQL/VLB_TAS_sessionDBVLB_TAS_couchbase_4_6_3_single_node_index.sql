@@ -1,0 +1,5 @@
+CREATE PRIMARY INDEX `sessionDBVLB_TAS_PK` ON `sessionDBVLB_TAS` USING GSI;
+CREATE INDEX `sessionDBVLB_TAS_idx1` ON `sessionDBVLB_TAS`(`VMID`,`Timestamp`,`OP_TYPE`) WHERE ((`KEYFLAG` = "1") and (`KTAB` = "SipData")) USING GSI;
+CREATE INDEX `sessionDBVLB_TAS_idx2` ON `sessionDBVLB_TAS`(`APP_OID`) WHERE (`KTAB` = "mNATMap") USING GSI;
+CREATE INDEX `sessionDBVLB_TAS_idx3` ON `sessionDBVLB_TAS`(`VNFID`,`TIMESTAMP`,`APP_OID`) WHERE (`KTAB` = "mNATMap") USING GSI;
+CREATE INDEX `sessionDBVLB_TAS_idx4` ON `sessionDBVLB_TAS`(`vlbappinterfaceids`) USING GSI;

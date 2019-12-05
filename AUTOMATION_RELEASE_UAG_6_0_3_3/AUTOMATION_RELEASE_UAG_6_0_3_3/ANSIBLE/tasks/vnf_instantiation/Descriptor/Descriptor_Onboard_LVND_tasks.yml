@@ -1,0 +1,136 @@
+---
+
+
+    - name: Read LVND_Id attribute from XML
+      xml:
+         xmlstring: "{{lookup('file', '{{ XML_PATH }}') | regex_replace('xmlns=.*>', '>')}}"
+         xpath: "{{ DESCRIPTOR_ONBOARD_CON_INFO.LVND_Id }}"
+         content: text
+      register: xmlIDresp
+      delegate_to: localhost
+
+    - debug:
+        var: xmlIDresp.matches[0].id
+
+    - name: Read NSD_Version attribute from XML
+      xml:
+         xmlstring: "{{lookup('file', '{{ XML_PATH }}') | regex_replace('xmlns=.*>', '>')}}"
+         xpath: "{{ DESCRIPTOR_ONBOARD_CON_INFO.LVND_Version }}"
+         content: text
+      register: xmlVERresp
+      delegate_to: localhost
+
+    - debug:
+        var: xmlVERresp.matches[0].version
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select id from lvnd_descriptor where lvnd_id='{{xmlIDresp.matches[0].id}}' and version='{{xmlVERresp.matches[0].version}}'"
+      when: (xmlIDresp.matches[0].id is defined)  and  (xmlVERresp.matches[0].version is defined)
+    - set_fact: LVND_DB_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select name from lvnd_descriptor where id='{{LVND_DB_Id}}'"
+      when: LVND_DB_Id is defined
+    - set_fact: LVND_Name={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select status from lvnd_descriptor_status where fk_lvnd_descriptor='{{LVND_DB_Id}}'"
+      when: LVND_DB_Id is defined
+    - set_fact: LVND_Status={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select fk_nsd_descriptor from lvnd_descriptor where id='{{LVND_DB_Id}}'"
+      when: LVND_DB_Id is defined
+    - set_fact: LVND_NSD_DB_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select nsd_id from nsd_descriptor where id='{{LVND_NSD_DB_Id}}'"
+      when: LVND_NSD_DB_Id is defined
+    - set_fact: LVND_NSD_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select name from nsd_descriptor where id='{{LVND_NSD_DB_Id}}'"
+      when: LVND_NSD_DB_Id is defined
+    - set_fact: LVND_NSD_Name={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select version from nsd_descriptor where id='{{LVND_NSD_DB_Id}}'"
+      when: LVND_NSD_DB_Id is defined
+    - set_fact: LVND_NSD_Version={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select status from nsd_descriptor_status where id='{{LVND_NSD_DB_Id}}'"
+      when: LVND_NSD_DB_Id is defined
+    - set_fact: LVND_NSD_Id_Status={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../https_request_no_template.yml
+                        URL="{{DESCRIPTOR_ONBOARD_URL}}"
+                        METHOD="POST"
+                        PAYLOAD="rowData={\"fkNsdDescriptor\":{\"type\":\"NSD\",\"version\":\"{{LVND_NSD_Version}}\",\"descriptorId\":\"{{LVND_NSD_Id}}\",\"namespace\":\"urn:mitel:params:xml:vnf:yang:nsd\",\"name\":\"{{LVND_NSD_Name}}\",\"id\":\"{{LVND_NSD_DB_Id}}\",\"parentDescriptorId\":\"\",\"tenant\":\"{{Tenant_Name}}\",\"uniqueId\":\"{{LVND_NSD_Id}}-{{LVND_NSD_Version}}\",\"status\":\"{{LVND_NSD_Id_Status}}\"},\"type\":\"LVND\",\"version\":\"{{xmlVERresp.matches[0].version}}\",\"descriptorId\":\"{{xmlIDresp.matches[0].id}}\",\"namespace\":\"urn:ietf:params:xml:ns:yang:lvnd\",\"name\":\"{{LVND_Name}}\",\"id\":\"{{LVND_DB_Id}}\",\"parentDescriptorId\":\"{{LVND_NSD_Id}}\",\"tenant\":\"{{Tenant_Name}}\",\"uniqueId\":\"{{xmlIDresp.matches[0].id}}-{{xmlVERresp.matches[0].version}}\",\"status\":\"{{LVND_Status}}\"}"
+      when: (LVND_NSD_Version) and (LVND_NSD_Id) and (LVND_NSD_Name) and (LVND_NSD_DB_Id) and (LVND_NSD_Id_Status) and (xmlVERresp.matches[0].version) and (xmlIDresp.matches[0].id) and (LVND_Name) and (LVND_DB_Id) and (LVND_Status)
+
+
+#    - include_tasks: ../tasks/query_db.yml
+#      vars:
+#         QUERY: "select status from lvnd_descriptor_status where fk_lvnd_descriptor='{{LVND_DB_Id}}'"
+#      when: LVND_DB_Id is defined
+#    - set_fact: LVNDStatus={{RESP.stdout_lines.0}}
+#      when: RESP.stdout_lines.0 is defined
+
+    # - pause:
+    #     seconds: "{{DESCRIPTOR_ONBOARD_WAIT_TIME}}"
+
+
+    # - include_tasks: ../query_db.yml QUERY="select status from lvnd_descriptor_status where fk_lvnd_descriptor='{{LVND_DB_Id}}'"
+#      retries: "{{ DESCRIPTOR_RETRIES }}"
+#      delay: "{{ DELAY }}"
+#      until: ( RESP.stdout_lines.0|lower ==  "Onboarded"|lower ) or ( RESP.stdout_lines.0|lower == "Failed"|lower )
+
+    - command: "mysql -u{{ MYSQL_USER }} -p{{ MYSQL_PASSWD }} {{ MYSQL_DB }} -sN -e \"select status from lvnd_descriptor_status where fk_lvnd_descriptor='{{LVND_DB_Id}}'\" "
+      register: STATUS_RESP
+      remote_user: "{{CMS_IP_SYSUSER}}"
+      retries: "{{DESCRIPTOR_RETRIES}}"
+      delay: "{{ DELAY }}"
+      until: (not LVND_DB_Id) or ( ( STATUS_RESP.stdout_lines.0|lower in "Onboarded"|lower ) or ( STATUS_RESP.stdout_lines.0|lower in "InUse"|lower ) or ( STATUS_RESP.stdout_lines.0|lower in "Failed"|lower ) )
+      ignore_errors: yes
+
+
+    - name: fail the play if the previous command did not succeed
+      fail:
+        msg:
+        - ""
+        - ""
+        - "################################################################"
+        - "################################################################"
+        - "###                                                          ###"
+        - "###                                                          ###"
+        - "###                                                          ###"
+        - "###                  LVND STATUS: {{STATUS_RESP.stdout_lines.0.rjust(10)}}                 ###"
+        - "###     Somthing went wrong, Please check the logs or DB     ###"
+        - "###                                                          ###"
+        - "###                                                          ###"
+        - "###                                                          ###"
+        - "################################################################"
+        - "################################################################"
+        - ""
+        - ""
+      when: (STATUS_RESP.stdout_lines.0 is defined) and not ( ( STATUS_RESP.stdout_lines.0|lower in "Onboarded"|lower ) or ( STATUS_RESP.stdout_lines.0|lower in "InUse"|lower ) or ( STATUS_RESP.stdout_lines.0|lower in "Failed"|lower ) )
+    # - name: fail the play if the previous command did not succeed
+    #   fail: msg="LVND is in {{RESP.stdout_lines.0}} state... Somthing went wrong, Please check the logs or DB"
+    #   when: (RESP.stdout_lines.0 is defined) and not ( ( RESP.stdout_lines.0|lower in "Onboarded"|lower ) or ( RESP.stdout_lines.0|lower in "InUse"|lower ) or ( RESP.stdout_lines.0|lower in "Failed"|lower ) )

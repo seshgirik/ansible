@@ -1,0 +1,71 @@
+
+---
+
+- hosts: 127.0.0.1
+
+  vars_files:
+   - ./config/Config.yml
+   - ./config/urls.yml
+  # - .tmp/Scale_Out.j2
+
+
+
+  tasks:
+   
+     
+    - include_tasks: ./tasks/query_db.yml
+      vars:
+         QUERY: "select id from vnf_config where ip_address='{{ Scale_Out_VNF_IP}}'"
+      when: Scale_Out_VNF_IP is defined
+    - set_fact: Scale_Out_VNF_IP ={{RESP.stdout_lines.0 }}
+      when: RESP.stdout_lines.0 is defined
+  
+    - include_tasks: ./tasks/query_db.yml
+      vars:
+         QUERY: "select port from vnf_config where id='{{ VNF_Id}}'" 
+      when: VNF_Id is defined
+    - set_fact: VNF_Id ={{ RESP.stdout_lines.0 }}
+      when: RESP.stdout_lines.0 is defined
+      
+    - include_tasks: ./tasks/query_db.yml 
+      vars:
+         QUERY: "select fk_data_model from vnf_config where id='{{ VNF_Id}}'"
+      when: VNF_Id is defined 
+    - set_fact: VNF_Id ={{ RESP.stdout_lines.0 }}
+      when: RESP.stdout_lines.0 is defined
+      
+    - include_tasks: ./tasks/query_db.yml 
+      vars:
+         QUERY: "select vdu_id from vnf_config where ip_address='{{Scale_Out_VNF_IP}}'"
+      when: Scale_Out_VNF_IP is defined
+    - set_fact: Scale_Out_VNF_IP ={{ RESP.stdout_lines.0 }}
+      when: RESP.stdout_lines.0 is defined
+      
+    - include_tasks: ./tasks/query_db.yml 
+      vars:
+         QUERY: "select name  from vnf_session where fk_vnf_config='{{ VNF_Id}}'"
+      when: VNF_Id is defined 
+    - set_fact: VNF_Id ={{ RESP.stdout_lines.0 }}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ./tasks/query_db.yml
+      vars:
+         QUERY: "select resource_id  from vnf_session where fk_vnf_config='{{VNF_Id}}'"
+      when: VNF_Id is defined
+    - set_fact: VNF_Id ={{ RESP.stdout_lines.0 }}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ./tasks/query_db.yml
+      vars:
+         QUERY: "select resource_id  from vnf_session where fk_vnf_config='{{ $VNF_Id}}'"
+      when: VNF_Id is defined
+    - set_fact: VNF_Id ={{ RESP.stdout_lines.0 }}
+      when: RESP.stdout_lines.0 is defined
+
+    # name: Image Save
+    - include_tasks: ./tasks/https_request.yml
+      vars:
+         URL:        "{{ Scale_Out_URL }}"
+         METHOD:     "POST"
+         PAYLOAD:    "Scale_Out.j2"
+

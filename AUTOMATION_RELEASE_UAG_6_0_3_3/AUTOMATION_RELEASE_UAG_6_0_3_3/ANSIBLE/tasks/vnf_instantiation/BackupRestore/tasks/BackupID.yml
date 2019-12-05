@@ -1,0 +1,20 @@
+---
+
+- hosts: cms
+  vars_files:
+    - ../vars/urls.yml
+
+  gather_facts: no
+
+  tasks:
+
+#    - include_tasks:  ./setup_pwdless_login.yml
+
+    - include_tasks: ../tasks/https_get_request.yml
+      vars:
+          URL: "{{CMS_URL}}/cms-service/webapi/cmsManageService/getData/system_backup_file"
+          METHOD: "GET"
+
+    - debug:
+         msg: "ID::( {{item.id}} ) belongs to backupFilePath::( {{item.backupFilePath}} )"
+      with_items: "{{http_resp.json.context.entity}}"

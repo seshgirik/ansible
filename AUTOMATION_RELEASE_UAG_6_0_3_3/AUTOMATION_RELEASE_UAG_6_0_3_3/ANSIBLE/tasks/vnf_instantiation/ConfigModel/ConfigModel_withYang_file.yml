@@ -1,0 +1,106 @@
+---
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select id from vnfd_descriptor where vnfd_id='{{xmlIDresp.matches[0][\"vnfd-id\"]}}' and version='{{xmlVERresp.matches[0][\"descriptor-version\"]}}'"
+      when: (xmlIDresp.matches[0]["vnfd-id"] is defined)  and  (xmlVERresp.matches[0]["descriptor-version"] is defined)
+    - set_fact: VNFD_DB_Id_1={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select fk_nsd_descriptor from vnfd_descriptor where id='{{VNFD_DB_Id_1}}' and version='{{xmlVERresp.matches[0][\"descriptor-version\"]}}'"
+      when: (VNFD_DB_Id_1 is defined)  and  (xmlVERresp.matches[0]["descriptor-version"] is defined)
+    - set_fact: VNFD_NSD_Id_1={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select id from vdu_config_status where fk_vnfd_descriptor='{{VNFD_DB_Id_1}}'"
+      when: VNFD_DB_Id_1 is defined
+    - set_fact: VDU_DB_Id_1={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select id from nsd_descriptor where id='{{VNFD_NSD_Id_1}}'"
+      when: VNFD_NSD_Id_1 is defined
+    - set_fact: NSD_DB_Id_1={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select version from cms_version"
+    - set_fact: CMS_VERSION={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - name: Getting Access Token
+      uri:
+          url: "{{LOGIN_URL}}"
+          method: "POST"
+          body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+          status_code:  200
+          body_format: json
+          validate_certs: no
+      register: login_response
+      delegate_to: localhost
+
+#    - debug:
+#        msg: "{{VNFD_VDU_Id_1}}"
+
+    - shell: "curl -s -k -X POST -F file=@\"{{FOLDER_YANG_PATH_1}}; type=application/x-zip-compressed\" -F rowData='{\"id\":\"\",\"name\":\"{{NameToBeUsed[:49]}}\",\"namespace\":\"\",\"descriptorType\":\"modelWithDescriptor\",\"dataModelType\":\"modelWithSchema\",\"nsdId\":\"{{NSD_DB_Id_1}}\",\"vnfdId\":\"{{VNFD_DB_Id_1}}\",\"vduId\":\"{{VNFD_VDU_Id_1}}\",\"filePath\":\"{{FOLDER_YANG_PATH_1}}\",\"uploadDatetime\":\"\"}' --cookie '{{login_response.set_cookie}}' {{DESCRIPTOR_UPLOAD_URL}}/data_model"
+      register: curl_resp
+      delegate_to: localhost
+
+    - include_tasks: ../query_db.yml QUERY="select id, namespace from data_model"
+      when: curl_resp.stdout is search("already exists")
+
+    - shell: "printf '{{RESP.stdout}}' | awk '{print $2}'"
+      register: NAMESPACES_LIST
+      delegate_to: localhost
+      when: curl_resp.stdout is search("already exists")
+
+    - set_fact:
+        NAMESPACES_LIST_1: "{{NAMESPACES_LIST.stdout_lines}}"
+      when: NAMESPACES_LIST.stdout_lines is defined
+
+    - set_fact:
+        NAMESPACES_LIST_1: []
+      when: not NAMESPACES_LIST.stdout_lines is defined
+
+    - set_fact: ID_INDEX="{{CURRENT_INDEX}}"
+      when: curl_resp.stdout is search(CHECK_NAMESPACE)
+      loop: "{{NAMESPACES_LIST_1}}"
+      loop_control:
+        loop_var: CHECK_NAMESPACE
+        index_var: CURRENT_INDEX
+
+    - shell: "printf '{{RESP.stdout_lines[ID_INDEX]}}' | awk '{print $1}'"
+      register: FK_DATAMODEL_ID
+      delegate_to: localhost
+      when: curl_resp.stdout is search("already exists")
+
+
+    - shell: "curl -d 'listName=data_model&rowData={\"id\":\"\",\"name\":\"{{NameToBeUsed[:49]}}\",\"descriptorType\":\"modelWithDescriptor\",\"dataModelType\":\"modelWithExistingSchema\",\"nsdId\":\"{{NSD_DB_Id_1}}\",\"vnfdId\":\"{{VNFD_DB_Id_1}}\",\"vduId\":\"{{VNFD_VDU_Id_1}}\", \"fkDataModel\":\"{{FK_DATAMODEL_ID.stdout_lines.0}}\"}' --cookie '{{login_response.set_cookie}}' -H \"Content-Type: application/x-www-form-urlencoded\" -k -X POST {{DESCRIPTOR_UPLOAD_URL}}/data_model"
+      register: curl_resp_1
+      delegate_to: localhost
+      when: curl_resp.stdout is search("already exists")
+
+    - debug: msg="{{curl_resp_1}}"
+      when: curl_resp.stdout is search("already exists")
+#    - debug:
+#        msg: "{{curl_resp}}"
+
+#    - include_tasks: ../tasks/https_request.yml
+#                        URL="{{DESCRIPTOR_UPLOAD_URL}}/data_model"
+#                        METHOD="POST"
+#                        PAYLOAD="rowData='{"id":"","name":"'{{NameToBeUsed}}'","namespace":"","descriptorType":"modelWithDescriptor","dataModelType":"modelWithSchema","nsdId":"'{{NSD_DB_Id}}'","vnfdId":"'{{VNFD_DB_Id}}'","vduId":"'{{xmlVDUIDresp.matches[0].id}}'","filePath":"'{{FOLDER_YANG_PATH}}'","uploadDatetime":""}'"
+#                        -F file=@"$Folder_Yang_Path; type=application/x-zip-compressed" ## to be added
+#      when: "{{CMS_Version}}" == "CMSNFV-P_7_1_10_9"
+
+#    - include_tasks: ../tasks/https_request.yml
+#                        URL="{{DESCRIPTOR_UPLOAD_URL}}/data_model"
+#                        METHOD="POST"
+#                        PAYLOAD="rowData='{"id":"","name":"'{{NameToBeUsed}}'","namespace":"","descriptorType":"modelWithDescriptor","nsdId":"'{{NSD_DB_Id}}'","vnfdId":"'{{VNFD_DB_Id}}'","vduId":"'{{xmlVDUIDresp.matches[0].id}}'","dataModelType":"modelWithSchema","filePath":"'{{FOLDER_YANG_PATH}}'","uploadDatetime":""}'"
+#                        -F file=@"$Folder_Yang_Path; type=application/x-zip-compressed" ##to be added
+#      when: "{{CMS_Version}}" != "CMSNFV-P_7_1_10_9"

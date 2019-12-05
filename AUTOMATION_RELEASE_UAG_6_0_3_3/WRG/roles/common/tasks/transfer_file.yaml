@@ -1,0 +1,10 @@
+
+
+## download file from URL
+
+   - name: Create local temporary storage directory
+     file: state=directory path={{ HOST_TEMP_STORAGE }}
+
+   - name: "Copy file from {{ source }} to {{ local_dir }}"
+     copy: src={{ source }}  dest={{ local_dir }} mode=0755
+     #get_url: url={{ item }}  dest={{ local_dir }} mode=0755

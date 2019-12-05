@@ -1,0 +1,79 @@
+---
+
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select id from vnfd_descriptor where vnfd_id='{{xmlIDresp.matches[0][\"vnfd-id\"]}}' and version='{{xmlVERresp.matches[0][\"descriptor-version\"]}}'"
+      when: (xmlIDresp.matches[0]["vnfd-id"] is defined)  and  (xmlVERresp.matches[0]["descriptor-version"] is defined)
+    - set_fact: VNFD_DB_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select fk_vnf_data_config from vdu_config_status where fk_vnfd_descriptor='{{VNFD_DB_Id}}'"
+      when: VNFD_DB_Id is defined
+    - set_fact: data_config={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select fk_nsd_descriptor from vnfd_descriptor where id='{{VNFD_DB_Id}}' and version='{{xmlVERresp.matches[0][\"descriptor-version\"]}}'"
+      when: (VNFD_DB_Id is defined)  and  (xmlVERresp.matches[0]["descriptor-version"] is defined)
+    - set_fact: VNFD_NSD_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select id from vdu_config_status where fk_vnfd_descriptor='{{VNFD_DB_Id}}'"
+      when: VNFD_DB_Id is defined
+    - set_fact: VDU_DB_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select id from nsd_descriptor where id='{{VNFD_NSD_Id}}'"
+      when: VNFD_NSD_Id is defined
+    - set_fact: NSD_DB_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select status from nsd_descriptor_status where fk_nsd_descriptor='{{NSD_DB_Id}}'"
+      when: NSD_DB_Id is defined
+    - set_fact: NSD_Id_Status={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select id from data_model where vnfd_id='{{VNFD_DB_Id}}'"
+      when: VNFD_DB_Id is defined
+    - set_fact: Config_Model_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - name: fail the play when NSD_Id_Status is not DEPLOYED
+      fail: msg="Config Model Delete is not possible as NSD-Status is {{NSD_Id_Status}} and vnf_data_config {{data_config}} First delete associated data/Terminate NSD/delete Offline Config data"
+      when: (data_config is defined) and (NSD_Id_Status is defined) and ( data_config|lower != "NULL"|lower ) and ( NSD_Id_Status|lower != "Deployed"|lower )
+
+    - name: Getting Access Token
+      uri:
+          url: "{{LOGIN_URL}}"
+          method: "POST"
+          body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+          status_code:  200
+          body_format: json
+          validate_certs: no
+      register: login_response
+      delegate_to: localhost
+
+    - shell: "curl -s -k -X \"DELETE\" --cookie '{{login_response.set_cookie}}' {{DESCRIPTOR_UPLOAD_URL}}/data_model/null/{{Config_Model_Id}}"
+      delegate_to: localhost
+      register: curl_resp
+      
+    - name: "Print CURL Response"
+      debug:
+        msg: "{{curl_resp}}"
+      when: curl_resp is defined
+#    - include_tasks: ../http_req_NoBody.yml
+#                        URL="{{DESCRIPTOR_UPLOAD_URL}}/data_model/null/{{Config_Model_Id}}"
+#                        METHOD="DELETE"
+#      when: (data_config is defined) and (NSD_Id_Status is defined) and not (( {{data_config|lower}} != "NULL"|lower ) and ( {{NSD_Id_Status|lower}} != "Deployed"|lower ))

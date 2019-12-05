@@ -1,0 +1,24 @@
+---
+
+- hosts: cms
+  vars_files:
+    - ../../vars/vnf_instantiation/urls.yml
+    - ../../vars/vnf_instantiation/config.yml
+    - ../../vars/vnf_instantiation/Descriptor_ConfigFile_Yang.yml
+  gather_facts: no
+
+  tasks:
+
+   - include_tasks: setup_pwdless_login.yml
+#   - include_tasks: Terminate_NSD_Quick.yml
+   - include_tasks: OfflineConfig_Delete_Quick.yml
+   - include_tasks: ConfigData_Delete_Quick.yml
+   - include_tasks: ConfigModel_Delete_Quick.yml
+   - include_tasks: Descriptor_Offboard_Quick.yml
+   - include_tasks: Descriptor_Delete_Quick.yml
+#   - include_tasks: Image_Offboard.yml
+#   - include_tasks: Image_delete.yml
+#   - include_tasks: delete_cms_flavor.yml
+#   - include_tasks: Tenant_Del.yml
+#   - include_tasks: Provider_Del.yml
+#   - include_tasks: VNFM_Del.yml

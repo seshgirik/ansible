@@ -1,0 +1,92 @@
+---
+
+    - include_tasks: CMS_Status_Check.yml
+      vars:
+          CMSUSER: "{{CMS_STB_USER}}"
+          CMSIP: "{{STBIP}}"
+    - set_fact: STB_status={{RESP.stdout}}
+      when: RESP.stdout is defined
+
+    - include_tasks: CMS_Status_Check.yml
+      vars:
+          CMSUSER: "{{CMS_ACT_USER}}"
+          CMSIP: "{{ACTIP}}"
+    - set_fact: ACT_status={{RESP.stdout}}
+      when: RESP.stdout is defined
+
+    - name: "change {{STBIP}} status from {{STB_status}} to {{ACT_status}}"
+      shell: "service cms restart"
+      remote_user: "{{CMS_STB_USER}}"
+      delegate_to: "{{STBIP}}"
+      when: "{{STB_status}}|lower == \"Active\"|lower and {{ACT_status}}|lower == \"Standby\"|lower"
+
+# CMS Active status check for Active
+    - include_tasks: CMS_Status_Check.yml
+      vars:
+          CMSUSER: "{{CMS_ACT_USER}}"
+          CMSIP: "{{ACTIP}}"
+    - set_fact: ACT_status={{RESP.stdout}}
+      when: RESP.stdout is defined
+
+    - include_tasks: CMS_Status_Check.yml
+      vars:
+          CMSUSER: "{{CMS_ACT_USER}}"
+          CMSIP: "{{ACTIP}}"
+    - set_fact: ACT_status={{RESP.stdout}}
+      retries: "{{ CMS_RETRIES }}"
+      delay: "{{ CMS_DELAY }}"
+      until: "{{ACT_status}}|lower == \"Active\"|lower"
+
+# CMS Active status check for Configured
+    - include_tasks: CMS_Status_Configured.yml
+      vars:
+          CMSUSER: "{{CMS_ACT_USER}}"
+          CMSIP: "{{ACTIP}}"
+    - set_fact: ACT_con_status={{RESP.stdout}}
+      when: RESP.stdout is defined
+
+    - include_tasks: CMS_Status_Configured.yml
+      vars:
+          CMSUSER: "{{CMS_ACT_USER}}"
+          CMSIP: "{{ACTIP}}"
+    - set_fact: ACT_con_status={{RESP.stdout}}
+      retries: "{{ CMS_RETRIES }}"
+      delay: "{{ CMS_DELAY }}"
+      until: "{{ACT_con_status}}|lower == \"Configured\"|lower"
+
+    - pause: seconds=30
+
+# CMS Standby status check for Standby
+    - include_tasks: CMS_Status_Check.yml
+      vars:
+          CMSUSER: "{{CMS_STB_USER}}"
+          CMSIP: "{{STBIP}}"
+    - set_fact: STB_status={{RESP.stdout}}
+      when: RESP.stdout is defined
+
+    - include_tasks: CMS_Status_Check.yml
+      vars:
+          CMSUSER: "{{CMS_STB_USER}}"
+          CMSIP: "{{STBIP}}"
+    - set_fact: STB_status={{RESP.stdout}}
+      retries: "{{ CMS_RETRIES }}"
+      delay: "{{ CMS_DELAY }}"
+      until: "{{STB_status}}|lower == \"Standby\"|lower"
+
+# CMS Standby status check for Configured
+    - include_tasks: CMS_Status_Configured.yml
+      vars:
+          CMSUSER: "{{CMS_STB_USER}}"
+          CMSIP: "{{STBIP}}"
+    - set_fact: STB_con_status={{RESP.stdout}}
+      when: RESP.stdout is defined
+
+    - include_tasks: CMS_Status_Configured.yml
+      vars:
+          CMSUSER: "{{CMS_STB_USER}}"
+          CMSIP: "{{STBIP}}"
+    - set_fact: STB_con_status={{RESP.stdout}}
+      retries: "{{ CMS_RETRIES }}"
+      delay: "{{ CMS_DELAY }}"
+      until: "{{STB_con_status}}|lower == \"Configured\"|lower"
+

@@ -1,0 +1,8 @@
+---
+
+- name: Add Provider
+  include_tasks: https_request.yml 
+  vars:
+      URL:      "{{ Provider_Add_URL }}" 
+      METHOD:   "POST" 
+      PAYLOAD:  "PROVIDER.j2"

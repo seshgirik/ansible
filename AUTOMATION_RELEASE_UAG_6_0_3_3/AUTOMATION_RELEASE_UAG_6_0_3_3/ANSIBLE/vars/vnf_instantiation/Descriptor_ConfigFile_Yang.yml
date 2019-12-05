@@ -1,0 +1,12 @@
+---
+   DESCRIPTOR_ONBOARD_CON_INFO:
+        NSD_Id:           "/nsd/nsd-list/id"
+        NSD_Version:      "/nsd/nsd-list/version"
+        LVND_Id:          "/lvnd/lvnd-list/id"
+        LVND_Version:     "/lvnd/lvnd-list/version"
+        VNFD_Id:          "/vnfd/vnfd-list/vnfd-id"
+        VNFD_Version:     "/vnfd/vnfd-list/descriptor-version"
+        VNFD_VDU_Id:      "/vnfd/vnfd-list/vdu/id"
+        VLD_Id:           "/vld/vld-list/vl-id"
+        VLD_Version:      "/vld/vld-list/descriptor-version"
+        LCMD_Metadata_Id: "/vdu-descriptor/life-cycle-state-metadata/metadata-id"

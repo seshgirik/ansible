@@ -1,0 +1,16 @@
+- include_tasks: ./query_db.yml
+  vars:
+      QUERY: "select id from nsd_descriptor where nsd_id='{{NSD_Name}}'"
+- set_fact: NSD_DB_Id="{{RESP.stdout_lines.0}}"
+  when: RESP.stdout_lines.0 is defined
+
+- include_tasks: ./NSD/Terminate_NSD_tasks_ID.yml
+  vars:
+     NSD_Vers: "{{NSD_VERSION}}"
+     NSD_DB_Id1: "{{NSD_DB_Id|regex_replace(' ', '\n')}}"
+  when: (NSD_Version|lower == "All"|lower) or (NSD_Version|lower == " ")
+# 
+# - include_tasks: ./NSD/Terminate_NSD_tasks_VER.yml
+#   vars:
+#      NSD_Vers: "{{NSD_VERSION}}"
+#   when: not (NSD_Version|lower == "All"|lower) || (NSD_Version|lower == " ")

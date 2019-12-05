@@ -1,0 +1,75 @@
+---
+
+- hosts: controller
+  gather_facts: no
+  vars_files:
+    - ../../vars/heat_templates/config.yml
+
+  tasks:
+    - name: "Delete old host"
+      shell: "rm -rf ~/.ssh/known_hosts"
+      delegate_to: localhost
+      args:
+        warn: false
+
+    - include_tasks: vnfm_heat.yml CONTROLLER_IP="{{inventory_hostname}}"
+
+    - include_tasks: setup_pwdless_generic.yml PWDLESS_IP="{{VNFM1_IP}}" PWDLESS_PASSWD="{{VNFM1_PASSWORD}}" PWDLESS_USER="{{VNFM1_USER}}"
+
+    - name: "Copy file vnfm_backup/* from {{playbook_dir}}/../../files/heat_templates/ directory in localhost to /opt/Install/VnfmDBUpgrade/ in the remote host"
+      copy:
+        src: "{{playbook_dir}}/../../files/heat_templates/vnfm_backup/vnfm_db.tgz"
+        dest: "/tmp/"
+      remote_user: "{{VNFM1_USER}}"
+      delegate_to: "{{VNFM1_IP}}"
+
+    - include_tasks: setup_pwdless_generic.yml PWDLESS_IP="{{VNFM2_IP}}" PWDLESS_PASSWD="{{VNFM2_PASSWORD}}" PWDLESS_USER="{{VNFM2_USER}}"
+
+    - shell: "mv /opt/Install/VnfmDBUpgrade/VnfmDBImport.sh /opt/Install/VnfmDBUpgrade/VnfmDBImport_bck.sh"
+      remote_user: "{{VNFM1_USER}}"
+      delegate_to: "{{VNFM1_IP}}"
+
+    - name: "Copy file VnfmDBImport.sh from {{playbook_dir}}/../../files/heat_templates/ directory in localhost to /opt/Install/VnfmDBUpgrade/ in the remote host"
+      copy:
+        src: "{{playbook_dir}}/../../files/heat_templates/VnfmDBImport.sh"
+        dest: "/opt/Install/VnfmDBUpgrade/"
+      remote_user: "{{VNFM1_USER}}"
+      delegate_to: "{{VNFM1_IP}}"
+
+    - shell: "cd /tmp/ && tar -xzf /tmp/vnfm_db.tgz && mv /tmp/vnfm_db_* /tmp/vnfm_db_folder"
+      remote_user: "{{VNFM1_USER}}"
+      delegate_to: "{{VNFM1_IP}}"
+
+    - shell: "chmod +x /opt/Install/VnfmDBUpgrade/VnfmDBImport.sh && source /etc/profile && /opt/Install/VnfmDBUpgrade/VnfmDBImport.sh /tmp/vnfm_db_folder"
+      remote_user: "{{VNFM1_USER}}"
+      delegate_to: "{{VNFM1_IP}}"
+
+    - shell: "service vnfm restart"
+      remote_user: "{{VNFM1_USER}}"
+      delegate_to: "{{VNFM1_IP}}"
+
+    - shell: "service vnfm restart"
+      remote_user: "{{VNFM2_USER}}"
+      delegate_to: "{{VNFM2_IP}}"
+
+    - shell: 'mysql -u controlDb -pmavenir cms -sN -e "select id, name, ipType, protocolType, ip_address, port, user_name, password, mode, status, maintenance_mode, created_datetime from vnfm_config"'
+      register: RESP
+      remote_user: "{{CMS_SYS_USER}}"
+      delegate_to: "{{CMS_IP}}"
+
+    - name: Getting Access Token
+      uri:
+          url: "https://{{CMS_IP}}:18080/cms-service/webapi/login"
+          method: "POST"
+          body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+          status_code:  200
+          body_format: json
+          validate_certs: no
+      register: login_response
+
+    - shell: "curl -s  -k -X POST -d \"rowData={'id':{{VNFM_DETAILS.split('\t')[0]}},'name':'{{VNFM_DETAILS.split('\t')[1]}}','ipType':'{{VNFM_DETAILS.split('\t')[2]}}','protocolType':'{{VNFM_DETAILS.split('\t')[3]}}','ipAddress':'{{VNFM_DETAILS.split('\t')[4]}}','port':{{VNFM_DETAILS.split('\t')[5]}},'userName':'{{VNFM_DETAILS.split('\t')[6]}}','password':'{{VNFM_DETAILS.split('\t')[7]}}','mode':'{{VNFM_DETAILS.split('\t')[8]}}','status':'{{VNFM_DETAILS.split('\t')[9]}}','maintenanceMode':'DISABLE_MAINTENANCE_MODE','createdDatetime':'{{VNFM_DETAILS.split('\t')[11]}}'}\"  --cookie '{{login_response.set_cookie}}' https://{{CMS_IP}}:18080/cms-service/webapi/maintenance/vnfm_config"
+      register: HTTP_RES
+      delegate_to: localhost
+      loop: "{{RESP.stdout_lines}}"
+      loop_control:
+        loop_var: VNFM_DETAILS

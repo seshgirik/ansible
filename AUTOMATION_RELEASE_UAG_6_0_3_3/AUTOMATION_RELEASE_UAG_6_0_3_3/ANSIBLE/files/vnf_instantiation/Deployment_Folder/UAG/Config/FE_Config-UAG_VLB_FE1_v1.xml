@@ -1,0 +1,144 @@
+<sys xmlns="urn:mavenir:ns:yang:vlbfe:1.0.19.0">
+<platform>
+<LogConfig>
+			<cfgName>oid_index_0</cfgName>
+			<DefaultLevel>LOG_CONFIG_LEVEL_DEBUG</DefaultLevel>
+			<ConfigType>SYSTEM</ConfigType>
+		</LogConfig>
+<interfaceVnfMapping>
+			<mapName>SIPRE-emxrouter</mapName>
+			<interfaceId>683</interfaceId>
+			<vnfType>SIPRE</vnfType>
+			<versionID>0</versionID>
+		</interfaceVnfMapping>
+<interfaceVnfMapping>
+			<mapName>SIPRE-lbcAgent</mapName>
+			<interfaceId>658</interfaceId>
+			<vnfType>SIPRE</vnfType>
+			<versionID>0</versionID>
+		</interfaceVnfMapping>
+<interfaceVnfMapping>
+			<mapName>DIAMRE-emxrouter</mapName>
+			<interfaceId>683</interfaceId>
+			<vnfType>DIAMRE</vnfType>
+			<versionID>0</versionID>
+		</interfaceVnfMapping>
+<interfaceVnfMapping>
+			<mapName>DIAMRE-lbcAgent</mapName>
+			<interfaceId>658</interfaceId>
+			<vnfType>DIAMRE</vnfType>
+			<versionID>0</versionID>
+		</interfaceVnfMapping>
+<interfaceVnfMapping>
+			<mapName>SC-emxrouter</mapName>
+			<interfaceId>683</interfaceId>
+			<vnfType>SCVNF</vnfType>
+			<versionID>0</versionID>
+		</interfaceVnfMapping>
+<interfaceVnfMapping>
+			<mapName>SC-lbcAgent</mapName>
+			<interfaceId>658</interfaceId>
+			<vnfType>SCVNF</vnfType>
+			<versionID>0</versionID>
+		</interfaceVnfMapping>
+<interfaceVnfMapping>
+			<mapName>GTRE-emxrouter</mapName>
+			<interfaceId>683</interfaceId>
+			<vnfType>GTRE</vnfType>
+			<versionID>0</versionID>
+		</interfaceVnfMapping>
+<interfaceVnfMapping>
+			<mapName>GTRE-lbcAgent</mapName>
+			<interfaceId>658</interfaceId>
+			<vnfType>GTRE</vnfType>
+			<versionID>0</versionID>
+		</interfaceVnfMapping>
+<interfaceVnfMapping>
+			<mapName>VLB-LBCController</mapName>
+			<interfaceId>659</interfaceId>
+			<vnfType>VLB</vnfType>
+			<versionID>0</versionID>
+		</interfaceVnfMapping>
+<ext_route>
+				<destination>0.0.0.0</destination>
+				<maskSize>0</maskSize>
+				<gateway1>10.10.233.65</gateway1>
+				<interface>fpeth1</interface>
+			</ext_route>
+<ext_route_ProtGrp_map>
+				<mapName>DEFAULT</mapName>
+				<fkext_route>0.0.0.0</fkext_route>
+				<fkprot_grp>ADM</fkprot_grp>
+</ext_route_ProtGrp_map>
+</platform>
+<dbadapter>
+<DBAdapterDBConfig>
+			<name>SCNfvCouchbase</name>
+			<dbName>SCNfvCouchbase</dbName>
+			<dbType>DB_COUCHBASE</dbType>
+			<dbIPAddress>192.168.14.150</dbIPAddress>
+			<dbPort>0</dbPort>
+			<dbSchemaName>SCNfvCouchbase</dbSchemaName>
+			<noOfRetries>60</noOfRetries>
+			<dbUserName>SCNfvCouchbase</dbUserName>
+			<dbPassword>mavenir</dbPassword>
+			<timeStamp>0</timeStamp>
+		</DBAdapterDBConfig>
+</dbadapter>
+<fpath>
+<dpMgr>
+			<startup_params>fp_mask=-m0x1 -S0=4096 fp_opts=--nb-mbuf=65536,-tc0=0:1:2 --vlan-strip</startup_params>
+			<compType>AM</compType>
+		</dpMgr>
+<dpPrograms>
+			<name>cmgrd</name>
+		</dpPrograms>
+<dpPrograms>
+			<name>fpmd</name>
+		</dpPrograms>
+<dpPrograms>
+			<name>hitflagsd</name>
+		</dpPrograms>
+<dpPrograms>
+			<name>ifflagsd</name>
+			<type>DP_DAEMON_DYNAMIC</type>
+		</dpPrograms>
+<dpPrograms>
+			<name>xmsd</name>
+		</dpPrograms>
+<dpPrograms>
+			<name>zebra</name>
+			<type>DP_DAEMON_DYNAMIC</type>
+		</dpPrograms>
+<dpPhysicalPort>
+			<name>eth1</name>
+			<compType>AM</compType>
+			<type>DP_PORT_TYPE_MEDIA</type>
+			<isInFastPath>TRUE</isInFastPath>
+			<mtu>1500</mtu>
+		</dpPhysicalPort>
+<dpPhysicalPort>
+			<name>eth2</name>
+			<compType>AM</compType>
+			<type>DP_PORT_TYPE_MEDIA</type>
+			<isInFastPath>TRUE</isInFastPath>
+			<mtu>1500</mtu>
+		</dpPhysicalPort>
+<dpPhysicalPort>
+			<name>eth3</name>
+			<compType>AM</compType>
+			<type>DP_PORT_TYPE_MEDIA</type>
+			<isInFastPath>TRUE</isInFastPath>
+			<mtu>1400</mtu>
+		</dpPhysicalPort>
+<mpgu_fp>
+			<name>0</name>
+			<enable_errind>TRUE</enable_errind>
+			<enable_dl_inner_reass>FALSE</enable_dl_inner_reass>
+		</mpgu_fp>
+<fe_int>
+			<name>FE-int</name>
+			<fkext_ip>FE-int</fkext_ip>
+		</fe_int>
+</fpath>
+</sys>

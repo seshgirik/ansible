@@ -1,0 +1,21 @@
+
+---
+
+  -  hosts: openstack_client_host
+     vars_files:
+         - roles/common/vars/environment_file.yaml
+         - roles/common/vars/stack_operation.yaml
+     vars:
+         - ui_create_stack: false
+         - ui_delete_stack: true
+         - ui_status_stack: false
+
+     roles: 
+         - common
+         - base_admin
+         - base_tenant
+         - AM
+#         - RM
+#         - DM
+#         - TPALL
+

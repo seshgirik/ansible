@@ -1,0 +1,24 @@
+RAID_CONFIG:
+    "10.10.74.100":
+        "IDRAC_IP": 10.10.74.100
+        "USER": root
+        "TYPE": CONTROLLER
+        "PASS": mavenir#123
+        "RAID_BLUE_PRINT":
+            - "RAIDONE": 1, 2
+            - "NONRAIDED": 2
+            - "RAIDZERO": 1, 2
+
+    "10.10.74.101":
+        "IDRAC_IP": 10.10.74.101
+        "USER": root
+        "TYPE": STORAGE
+        "PASS": mavenir#123
+        "RAID_BLUE_PRINT":
+            - "RAIDZERO": 4, 3
+            - "NONRAIDED": 10
+            - "RAIDONE": 2, 1
+
+
+
+

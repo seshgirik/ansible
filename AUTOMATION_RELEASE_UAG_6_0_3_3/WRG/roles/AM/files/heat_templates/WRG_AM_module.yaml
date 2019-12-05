@@ -1,0 +1,469 @@
+## Mavenir WRG Cloud Deployment version 1.2
+heat_template_version: 2016-04-08
+description: This template deploys a WRG setup.
+
+parameters:
+###  Glance Images UUID
+  WRG_AM_image_name:
+    type: string
+    label: WRG Image
+    description: WRG Glance Image UUID.
+
+### Flavor
+  WRG_AM_flavor_name:
+    type: string
+    label: Flavor
+    description: WRG VM  instance nova flavor.
+
+### WRG_AM_names:
+  WRG_AM_names:
+    type: comma_delimited_list
+    description: VM Name for the resource.
+
+### WRG_AM_nodenames:
+  WRG_AM_nodenames:
+    type: comma_delimited_list
+    description: VM Node Name for the resource.
+
+### MTU Values for Other Networks
+  MTU_SIZE:
+    type: number
+    description: MTU Value for Other Networks
+
+### base Network UUID
+  base_net_id:
+    type: string
+    label: base network ID
+    description: Neutron UUID for base traffic
+
+### Fixed IPs for Instances
+  WRG_AM_base_ips:
+    type: comma_delimited_list
+    description: Fixed IP assignments for WRG VM on base network 
+ 
+
+### Fixed virtual IPs in base for Instances
+  WRG_AM_base_virtual_ips:
+    type: comma_delimited_list
+    description: Fixed IP assignments for WRG VM on base network 
+
+### base Network UUID
+  fabric_net_id:
+    type: string
+    label: fabric network ID
+    description: Neutron UUID for fabric traffic
+
+### Fixed IPs for Instances
+  WRG_AM_fabric_ips:
+    type: comma_delimited_list
+    description: Fixed IP assignments for WRG VM on fabric network 
+
+### Fixed virtual IPs in fabric for Instances
+  WRG_AM_fabric_virtual_ips:
+    type: comma_delimited_list
+    description: Fixed IP assignments for WRG VM on fabric network 
+
+### Fixed replication IPs in fabric for Instances
+  WRG_AM_fabric_replication_ips:
+    type: comma_delimited_list
+    description: Fixed IP assignments for WRG VM on fabric network 
+
+### Fixed ipv6 IPs in fabric for Instances
+  WRG_AM_fabric_ipv6_ips:
+    type: comma_delimited_list
+    description: Fixed IP assignments for WRG VM on fabric network 
+
+### base Network UUID
+  oam_net_id:
+    type: string
+    label: oam network ID
+    description: Neutron UUID for oam traffic
+
+### Fixed IPs for Instances
+  WRG_AM_oam_ips:
+    type: comma_delimited_list
+    description: Fixed IP assignments for WRG VM on oam network 
+
+### base Network UUID
+  ntbkp_net_id:
+    type: string
+    label: ntbkp network ID
+    description: Neutron UUID for ntbkp traffic
+
+### Fixed IPs for Instances
+  WRG_AM_ntbkp_ips:
+    type: comma_delimited_list
+    description: Fixed IP assignments for WRG VM on ntbkp network 
+
+### Subnet CIDRs in base for Instances
+  WRG_base_net_virtual_subnet_cidr:
+    type: string
+    description: CIDR for virtual subnet on base network 
+
+### Subnet CIDRs in fabric for Instances
+  WRG_fabric_net_virtual_subnet_cidr:
+    type: string
+    description: CIDR for virtual subnet on fabric network 
+
+  WRG_fabric_net_ipv6_subnet_cidr:    
+    type: string
+    description: CIDR for virtual subnet on fabric network 
+### ADM HA IP for base Network
+  WRG_base_ADM_HA_ip:
+    type: string
+    description:  ADM HA IP for base Network 
+
+### MTU Values for Base and FabriC
+  MTU_base_fabric:
+    type: number
+    description: MTU Value for Base and Fabric Networks
+
+### Bootable Volumes 
+  WRG_AM_volume_name_list:
+    type: comma_delimited_list
+    description: WRG Volume names
+
+  WRG_AM_volume_size_list:
+    type: comma_delimited_list
+    description: Size of WRG Volumes
+
+### Availability Zones
+  WRG_availability_zone_list:
+    type: comma_delimited_list
+    description: Avaliability Zone of instances
+
+resources:
+  AM_ha_server_group:
+    type: OS::Nova::ServerGroup
+    properties:
+     name: AM_ha_server_group
+     policies: [ 'anti-affinity' ]
+
+  WRG_AM_0_base_net_0_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: base_net_id }
+      name: WRG_AM_0_base_net_0_port
+      fixed_ips:
+          -  { "ip_address": { get_param: [WRG_AM_base_ips, 0] }}
+      allowed_address_pairs:
+          -  { "ip_address": { get_param: WRG_base_ADM_HA_ip }}
+          -  { "ip_address": { get_param: [WRG_AM_base_virtual_ips, 0] }}
+          -  ip_address: "0.0.0.0/0"
+
+  WRG_AM_0_fabric_net_1_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: fabric_net_id }
+      name: WRG_AM_0_fabric_net_1_port
+      fixed_ips:
+          -  { "ip_address": { get_param: [WRG_AM_fabric_ips, 0] }}
+      allowed_address_pairs:
+          -  { "ip_address": { get_param: [WRG_AM_fabric_virtual_ips, 0] }}
+          -  { "ip_address": { get_param: [WRG_AM_fabric_replication_ips, 0] }}
+          -  { "ip_address": { get_param: [WRG_AM_fabric_ipv6_ips, 0] }}
+          -  ip_address: "0.0.0.0/0"
+
+  WRG_AM_0_oam_net_2_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: oam_net_id }
+      name: WRG_AM_0_oam_net_2_port
+      fixed_ips:
+          -  { "ip_address": { get_param: [WRG_AM_oam_ips, 0] }}
+
+  WRG_AM_0_ntbkp_net_3_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: ntbkp_net_id }
+      name: WRG_AM_0_ntbkp_net_3_port
+      fixed_ips:
+          -  { "ip_address": { get_param: [WRG_AM_ntbkp_ips, 0] }}
+
+  WRG_AM_1_base_net_0_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: base_net_id }
+      name: WRG_AM_1_base_net_0_port
+      fixed_ips:
+          -  { "ip_address": { get_param: [WRG_AM_base_ips, 1] }}
+      allowed_address_pairs:
+          -  { "ip_address": { get_param: WRG_base_ADM_HA_ip }}
+          -  { "ip_address": { get_param: [WRG_AM_base_virtual_ips, 1] }}
+          -  ip_address: "0.0.0.0/0"
+
+  WRG_AM_1_fabric_net_1_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: fabric_net_id }
+      name: WRG_AM_1_fabric_net_1_port
+      fixed_ips:
+          -  { "ip_address": { get_param: [WRG_AM_fabric_ips, 1] }}
+      allowed_address_pairs:
+          -  { "ip_address": { get_param: [WRG_AM_fabric_virtual_ips, 1] }}
+          -  { "ip_address": { get_param: [WRG_AM_fabric_replication_ips, 1] }}
+          -  { "ip_address": { get_param: [WRG_AM_fabric_ipv6_ips, 1] }}
+          -  ip_address: "0.0.0.0/0"
+
+  WRG_AM_1_oam_net_2_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: oam_net_id }
+      name: WRG_AM_1_oam_net_2_port
+      fixed_ips:
+          -  { "ip_address": { get_param: [WRG_AM_oam_ips, 1] }}
+
+  WRG_AM_1_ntbkp_net_3_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: ntbkp_net_id }
+      name: WRG_AM_1_ntbkp_net_3_port
+      fixed_ips:
+          -  { "ip_address": { get_param: [WRG_AM_ntbkp_ips, 1] }}
+
+  WRG_AM_volume_id_0:
+    type: OS::Cinder::Volume
+    properties:
+      name: { get_param: [WRG_AM_volume_name_list, 0] }
+      size: { get_param: [WRG_AM_volume_size_list, 0] }
+      image: { get_param: WRG_AM_image_name}
+
+  WRG_AM_volume_id_1:
+    type: OS::Cinder::Volume
+    properties:
+      name: { get_param: [WRG_AM_volume_name_list, 1] }
+      size: { get_param: [WRG_AM_volume_size_list, 1] }
+      image: { get_param: WRG_AM_image_name}
+
+
+  WRG_AM_Instance_0:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: [WRG_AM_names, 0] }
+      flavor: { get_param: WRG_AM_flavor_name }
+      block_device_mapping_v2: [{ device_name: "vda", volume_id : { get_resource: WRG_AM_volume_id_0 }, delete_on_termination : "true" }]
+      networks:
+        - port: { get_resource: WRG_AM_0_base_net_0_port } 
+        - port: { get_resource: WRG_AM_0_fabric_net_1_port } 
+        - port: { get_resource: WRG_AM_0_oam_net_2_port } 
+        - port: { get_resource: WRG_AM_0_ntbkp_net_3_port } 
+      scheduler_hints:
+        group: { get_resource: AM_ha_server_group }
+      availability_zone: { get_param: [WRG_availability_zone_list, 0] }
+      metadata: {"metering.stack": {get_param: "OS::stack_id"}}
+      config_drive: true
+      user_data_format: RAW
+      user_data:
+        str_replace:
+           template: |
+               network:
+                  #bond0
+                  WRG_base_net:
+                     TYPE: bond
+                     IFNAME: bond0
+                     IPADDR: $NETIP0
+                     PREFIX: $NETPF0
+                     SLAVE: eth0
+                     GATEWAY: $NETGW0
+                     OPTS: "mode=1 miimon=100"
+                     MTU: $MTU_base_fabric
+
+                  #bond1
+                  WRG_fabric_net:
+                     TYPE: bond
+                     IFNAME: bond1
+                     IPADDR: $NETIP1
+                     PREFIX: $NETPF1
+                     SLAVE: eth1
+                     GATEWAY: $NETGW1
+                     OPTS: "mode=1 miimon=100"
+                     MTU: $MTU_base_fabric
+
+                  WRG_oam_net:
+                     TYPE: Ethernet
+                     IFNAME: eth2
+                     IPADDR: $NETIP2
+                     PREFIX: $NETPF2
+                     DEFAULTGW: yes
+                     GATEWAY: $NETGW2
+                     MTU: $MTU_SIZE
+
+                  WRG_ntbkp_net:
+                     TYPE: Ethernet
+                     IFNAME: eth3
+                     IPADDR: $NETIP3
+                     PREFIX: $NETPF3
+                     GATEWAY: $NETGW3
+                     MTU: $MTU_SIZE
+               runcmd: |  
+                        #!/bin/sh
+                        wall "Starting the script execution for runcmd section"
+                        set -x
+                        exec > /var/log/runcmd.log 2>&1
+                        hostnamectl set-hostname $NODENAME.mavenir1.com
+                        sed -i -e 's/^PasswordAuthentication.*/PasswordAuthentication  yes/g' /etc/ssh/sshd_config
+                        sed -i -e "$ a\ifup eth1" -e "$ a\ifup bond1" /etc/rc.d/rc.local
+                        sed -i -e "$ a\IPADDR=$NETIP0" -e "$ a\GATEWAY=$NETGW0" -e "$ a\PREFIX=$NETPF0" /etc/sysconfig/network-scripts/ifcfg-bond0
+                        sed -i -e "$ a\IPADDR=$NETIP1" -e "$ a\GATEWAY=$NETGW1" -e "$ a\PREFIX=$NETPF1"  /etc/sysconfig/network-scripts/ifcfg-bond1
+                        shelf=`echo $NODENAME | awk -F"-" '{print $1}'`
+                        slot=`echo $NODENAME | awk -F"-" '{print $2}'`
+                        sed -i -e "s/shelf.*/shelf $shelf/g" -e "s/slot.*/slot $slot/g" /etc/shelf.cfg
+                        sed -i "s/VMNAME=.*/VMNAME=$NODENAME/g" /etc/mavenir/postdeploy.cfg
+                        sed -i "s/VMTYPE=.*/VMTYPE=AM/g" /etc/mavenir/postdeploy.cfg
+                        sed -i "s/HOSTNAME=.*/HOSTNAME=$NODENAME/g" /etc/sysconfig/network
+                        sed -i -e "s/172.16.33/`echo $NETIP0|cut -f1,2,3 -d '.'`/g" /etc/resolv.conf
+                        
+                        chmod +x /home/change_ip.sh
+                        /bin/bash /home/change_ip.sh "$NETCIDR0" "$base_virtual_subnet_CIDR" "$NETCIDR1" "$fabric_virtual_subnet_CIDR" "$fabric_ipv6_subnet_CIDR"
+                        echo -e '#!/bin/bash\n# chkconfig: 345 99 10\nvar1=$(echo $NETIP0|cut -f1,2,3 -d ".")\nwhile true;do\n pcs status\n if [ $? -eq 0 ];then\n  sleep 10\n  pcs cluster cib > cluster.xml\n  cp -f cluster.xml updated.xml\n  sed -i updated.xml -e "s/172.16.33/$var1/g"\n  pcs cluster cib-push updated.xml diff-against=cluster.xml\n  break\n fi\n sleep 5\ndone\npcs cluster auth -u hacluster -p mavcluster\n/usr/sbin/chkconfig pcs_run_once off\n/usr/sbin/chkconfig --del pcs_run_once' > /etc/init.d/pcs_run_once
+                        chmod +x /etc/init.d/pcs_run_once
+                        chkconfig pcs_run_once on
+
+                        /usr/local/bin/mysql -uroot -pmavenir < /home/WRG_CPlane_AM_db.sql
+                        chmod +x /home/WRG_CPlane_post_install.sh
+                        /home/WRG_CPlane_post_install.sh
+
+
+                        chkconfig cfginit off
+                        chkconfig IMS on
+                        
+                        sync;sync;shutdown -r +1 
+           params:
+              $NODENAME: { get_param: [WRG_AM_nodenames, 0] }
+              $MTU_SIZE: { get_param: MTU_SIZE }
+              $MTU_base_fabric: { get_param: MTU_base_fabric}
+              $ADMHAIP: { get_param: WRG_base_ADM_HA_ip}
+              $NETIP0: { get_attr: [WRG_AM_0_base_net_0_port, fixed_ips, 0, ip_address] }
+              $NETGW0: { get_attr: [WRG_AM_0_base_net_0_port, subnets, 0, gateway_ip] }
+              $NETPF0: { str_split: [ '/', {get_attr: [WRG_AM_0_base_net_0_port, subnets, 0, cidr]}, 1 ] }
+              $NETCIDR0: { get_attr: [WRG_AM_0_base_net_0_port, subnets, 0, cidr] }
+              $NETIP1: { get_attr: [WRG_AM_0_fabric_net_1_port, fixed_ips, 0, ip_address] }
+              $NETGW1: { get_attr: [WRG_AM_0_fabric_net_1_port, subnets, 0, gateway_ip] }
+              $NETPF1: { str_split: [ '/', {get_attr: [WRG_AM_0_fabric_net_1_port, subnets, 0, cidr]}, 1 ] }
+              $NETCIDR1: { get_attr: [WRG_AM_0_fabric_net_1_port, subnets, 0, cidr] }
+              $base_virtual_subnet_CIDR: { get_param: WRG_base_net_virtual_subnet_cidr }
+              $fabric_virtual_subnet_CIDR: { get_param: WRG_fabric_net_virtual_subnet_cidr }
+              $fabric_ipv6_subnet_CIDR: { get_param: WRG_fabric_net_ipv6_subnet_cidr }
+              $NETIP2: { get_attr: [WRG_AM_0_oam_net_2_port, fixed_ips, 0, ip_address] }
+              $NETGW2: { get_attr: [WRG_AM_0_oam_net_2_port, subnets, 0, gateway_ip] }
+              $NETPF2: { str_split: [ '/', {get_attr: [WRG_AM_0_oam_net_2_port, subnets, 0, cidr]}, 1 ] } 
+              $NETCIDR2: { get_attr: [WRG_AM_0_oam_net_2_port, subnets, 0, cidr] }
+              $NETIP3: { get_attr: [WRG_AM_0_ntbkp_net_3_port, fixed_ips, 0, ip_address] }
+              $NETGW3: { get_attr: [WRG_AM_0_ntbkp_net_3_port, subnets, 0, gateway_ip] }
+              $NETPF3: { str_split: [ '/', {get_attr: [WRG_AM_0_ntbkp_net_3_port, subnets, 0, cidr]}, 1 ] } 
+              $NETCIDR3: { get_attr: [WRG_AM_0_ntbkp_net_3_port, subnets, 0, cidr] }
+
+  WRG_AM_Instance_1:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: [WRG_AM_names, 1] }
+      flavor: { get_param: WRG_AM_flavor_name }
+      block_device_mapping_v2: [{ device_name: "vda", volume_id : { get_resource: WRG_AM_volume_id_1 }, delete_on_termination : "true" }]
+      networks:
+        - port: { get_resource: WRG_AM_1_base_net_0_port } 
+        - port: { get_resource: WRG_AM_1_fabric_net_1_port } 
+        - port: { get_resource: WRG_AM_1_oam_net_2_port } 
+        - port: { get_resource: WRG_AM_1_ntbkp_net_3_port } 
+      scheduler_hints:
+        group: { get_resource: AM_ha_server_group }
+      availability_zone: { get_param: [WRG_availability_zone_list, 1] }
+      metadata: {"metering.stack": {get_param: "OS::stack_id"}}
+      config_drive: true
+      user_data_format: RAW
+      user_data:
+        str_replace:
+           template: |
+               network:
+                  #bond0
+                  WRG_base_net:
+                     TYPE: bond
+                     IFNAME: bond0
+                     IPADDR: $NETIP0
+                     PREFIX: $NETPF0
+                     SLAVE: eth0
+                     GATEWAY: $NETGW0
+                     OPTS: "mode=1 miimon=100"
+                     MTU: $MTU_base_fabric
+
+                  #bond1
+                  WRG_fabric_net:
+                     TYPE: bond
+                     IFNAME: bond1
+                     IPADDR: $NETIP1
+                     PREFIX: $NETPF1
+                     SLAVE: eth1
+                     GATEWAY: $NETGW1
+                     OPTS: "mode=1 miimon=100"
+                     MTU: $MTU_base_fabric
+
+                  WRG_oam_net:
+                     TYPE: Ethernet
+                     IFNAME: eth2
+                     IPADDR: $NETIP2
+                     PREFIX: $NETPF2
+                     DEFAULTGW: yes
+                     GATEWAY: $NETGW2
+                     MTU: $MTU_SIZE
+
+                  WRG_ntbkp_net:
+                     TYPE: Ethernet
+                     IFNAME: eth3
+                     IPADDR: $NETIP3
+                     PREFIX: $NETPF3
+                     GATEWAY: $NETGW3
+                     MTU: $MTU_SIZE
+               runcmd: |  
+                        #!/bin/sh
+                        wall "Starting the script execution for runcmd section"
+                        set -x
+                        exec > /var/log/runcmd.log 2>&1
+                        hostnamectl set-hostname $NODENAME.mavenir1.com
+                        sed -i -e 's/^PasswordAuthentication.*/PasswordAuthentication  yes/g' /etc/ssh/sshd_config
+                        sed -i -e "$ a\ifup eth1" -e "$ a\ifup bond1" /etc/rc.d/rc.local
+                        sed -i -e "$ a\IPADDR=$NETIP0" -e "$ a\GATEWAY=$NETGW0" -e "$ a\PREFIX=$NETPF0" /etc/sysconfig/network-scripts/ifcfg-bond0
+                        sed -i -e "$ a\IPADDR=$NETIP1" -e "$ a\GATEWAY=$NETGW1" -e "$ a\PREFIX=$NETPF1"  /etc/sysconfig/network-scripts/ifcfg-bond1
+                        shelf=`echo $NODENAME | awk -F"-" '{print $1}'`
+                        slot=`echo $NODENAME | awk -F"-" '{print $2}'`
+                        sed -i -e "s/shelf.*/shelf $shelf/g" -e "s/slot.*/slot $slot/g" /etc/shelf.cfg
+                        sed -i "s/VMNAME=.*/VMNAME=$NODENAME/g" /etc/mavenir/postdeploy.cfg
+                        sed -i "s/VMTYPE=.*/VMTYPE=AM/g" /etc/mavenir/postdeploy.cfg
+                        sed -i "s/HOSTNAME=.*/HOSTNAME=$NODENAME/g" /etc/sysconfig/network
+                        sed -i -e "s/172.16.33/`echo $NETIP0|cut -f1,2,3 -d '.'`/g" /etc/resolv.conf
+                        
+                        chmod +x /home/change_ip.sh
+                        /bin/bash /home/change_ip.sh "$NETCIDR0" "$base_virtual_subnet_CIDR" "$NETCIDR1" "$fabric_virtual_subnet_CIDR" "$fabric_ipv6_subnet_CIDR"
+                        echo -e '#!/bin/bash\n# chkconfig: 345 99 10\nvar1=$(echo $NETIP0|cut -f1,2,3 -d ".")\nwhile true;do\n pcs status\n if [ $? -eq 0 ];then\n  sleep 10\n  pcs cluster cib > cluster.xml\n  cp -f cluster.xml updated.xml\n  sed -i updated.xml -e "s/172.16.33/$var1/g"\n  pcs cluster cib-push updated.xml diff-against=cluster.xml\n  break\n fi\n sleep 5\ndone\npcs cluster auth -u hacluster -p mavcluster\n/usr/sbin/chkconfig pcs_run_once off\n/usr/sbin/chkconfig --del pcs_run_once' > /etc/init.d/pcs_run_once
+                        chmod +x /etc/init.d/pcs_run_once
+                        chkconfig pcs_run_once on
+                        /usr/local/bin/mysql -uroot -pmavenir < /home/WRG_CPlane_AM_db.sql
+                        chmod +x /home/WRG_CPlane_post_install.sh
+                        /home/WRG_CPlane_post_install.sh
+
+                        chkconfig cfginit off
+                        chkconfig IMS on
+                        
+                        sync;sync;shutdown -r +1 
+           params:
+              $NODENAME: { get_param: [WRG_AM_nodenames, 1] }
+              $MTU_SIZE: { get_param: MTU_SIZE }
+              $MTU_base_fabric: { get_param: MTU_base_fabric}
+              $ADMHAIP: { get_param: WRG_base_ADM_HA_ip}
+              $NETIP0: { get_attr: [WRG_AM_1_base_net_0_port, fixed_ips, 0, ip_address] }
+              $NETGW0: { get_attr: [WRG_AM_1_base_net_0_port, subnets, 0, gateway_ip] }
+              $NETPF0: { str_split: [ '/', {get_attr: [WRG_AM_1_base_net_0_port, subnets, 0, cidr]}, 1 ] }
+              $NETCIDR0: { get_attr: [WRG_AM_1_base_net_0_port, subnets, 0, cidr] }
+              $NETIP1: { get_attr: [WRG_AM_1_fabric_net_1_port, fixed_ips, 0, ip_address] }
+              $NETGW1: { get_attr: [WRG_AM_1_fabric_net_1_port, subnets, 0, gateway_ip] }
+              $NETPF1: { str_split: [ '/', {get_attr: [WRG_AM_1_fabric_net_1_port, subnets, 0, cidr]}, 1 ] }
+              $NETCIDR1: { get_attr: [WRG_AM_1_fabric_net_1_port, subnets, 0, cidr] }
+              $base_virtual_subnet_CIDR: { get_param: WRG_base_net_virtual_subnet_cidr }
+              $fabric_virtual_subnet_CIDR: { get_param: WRG_fabric_net_virtual_subnet_cidr }
+              $fabric_ipv6_subnet_CIDR: { get_param: WRG_fabric_net_ipv6_subnet_cidr }
+              $NETIP2: { get_attr: [WRG_AM_1_oam_net_2_port, fixed_ips, 0, ip_address] }
+              $NETGW2: { get_attr: [WRG_AM_1_oam_net_2_port, subnets, 0, gateway_ip] }
+              $NETPF2: { str_split: [ '/', {get_attr: [WRG_AM_1_oam_net_2_port, subnets, 0, cidr]}, 1 ] } 
+              $NETCIDR2: { get_attr: [WRG_AM_1_oam_net_2_port, subnets, 0, cidr] }
+              $NETIP3: { get_attr: [WRG_AM_1_ntbkp_net_3_port, fixed_ips, 0, ip_address] }
+              $NETGW3: { get_attr: [WRG_AM_1_ntbkp_net_3_port, subnets, 0, gateway_ip] }
+              $NETPF3: { str_split: [ '/', {get_attr: [WRG_AM_1_ntbkp_net_3_port, subnets, 0, cidr]}, 1 ] } 
+              $NETCIDR3: { get_attr: [WRG_AM_1_ntbkp_net_3_port, subnets, 0, cidr] }

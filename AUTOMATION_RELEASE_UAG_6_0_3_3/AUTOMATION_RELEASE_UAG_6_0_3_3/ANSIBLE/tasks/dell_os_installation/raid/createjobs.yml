@@ -1,0 +1,7 @@
+#Ctrl_FQDD is input
+- name: "Creating Real Time JOB"
+  shell: "{{SSH_CMD}} racadm jobqueue create {{CTRL_FQDD}} -s TIME_NOW --realtime"
+  register: job_creation
+  delegate_to: localhost
+
+- debug: msg="{{job_creation}}"

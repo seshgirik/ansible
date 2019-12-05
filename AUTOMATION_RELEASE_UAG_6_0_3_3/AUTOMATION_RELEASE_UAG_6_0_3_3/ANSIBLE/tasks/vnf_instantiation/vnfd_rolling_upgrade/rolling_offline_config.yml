@@ -1,0 +1,34 @@
+- include_tasks: query_db.yml QUERY="select vnf_data_config.id, vdu_config_status.vdu_id, vnfd_descriptor.version, vdu_config_status.id  from vdu_config_status inner join vnfd_descriptor on vdu_config_status.fk_vnfd_descriptor=vnfd_descriptor.id inner join data_model on data_model.vnfd_id=vdu_config_status.fk_vnfd_descriptor inner join vnf_data_config on data_model.id=vnf_data_config.fk_data_model where vdu_config_status.fk_vnfd_descriptor in (select vnfd_descriptor.id from vnfd_descriptor where vnfd_descriptor.fk_nsd_descriptor=(select nsd_descriptor.id from nsd_descriptor where name='{{NSD_Name}}' AND version='{{NEW_NSD_VERSION}}')) AND vnf_data_config.name LIKE '%Snapshot%';"
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####          NOTHING FOUND FOR OFFLINE CONFIG                                                                                                      "
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: "not RESP.stdout_lines.0 is defined"
+
+- name: Getting Access Token
+  uri:
+      url: "{{LOGIN_URL}}"
+      method: "POST"
+      body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+      status_code:  200
+      body_format: json
+      validate_certs: no
+  register: login_response
+  delegate_to: localhost
+
+- include_tasks: ./https_request_no_template_quick.yml
+  vars:
+    URL: "{{VNF_OFFLINE_CONFIG_URL}}"
+    METHOD: "POST"
+    PAYLOAD: "rowData={\"configuredId\":\"{{OFFLINE_CONFIG_VAR.split('\t')[0]}}\",\"configuredName\":\"\",\"fkDataModel\":null,\"fkVnfdDescriptor\":null,\"vdu\":\"{{OFFLINE_CONFIG_VAR.split('\t')[1]}}-{{OFFLINE_CONFIG_VAR.split('\t')[2]}}\",\"vduId\":\"{{OFFLINE_CONFIG_VAR.split('\t')[3]}}\"}"
+  loop: "{{RESP.stdout_lines}}"
+  loop_control:
+    loop_var: OFFLINE_CONFIG_VAR

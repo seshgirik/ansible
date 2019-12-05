@@ -1,0 +1,16 @@
+---
+
+      - include_tasks : ../find_files.yml
+                            FILE_PATH="{{XML_PATH}}"
+                            FILE_PATTERN="{{XML_PATTERN}}"
+
+      - name: build array of DESCRIPTOR_OFFBOARD_PATHS
+        set_fact: DESCRIPTOR_OFFBOARD_PATHS="{{DESCRIPTOR_OFFBOARD_PATHS}}+['{{fileitem.path}}']"
+        with_items: "{{files_found.files}}"
+        loop_control:
+            loop_var: fileitem
+
+#      - name: loop over result
+#        debug:
+#          msg="{{XML_PATTERN}}{{item.path}}"
+#        with_items: "{{ files_found.files }}"

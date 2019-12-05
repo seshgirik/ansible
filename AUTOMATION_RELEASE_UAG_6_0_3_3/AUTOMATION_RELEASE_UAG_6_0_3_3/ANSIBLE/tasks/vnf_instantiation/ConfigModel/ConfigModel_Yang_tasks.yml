@@ -1,0 +1,29 @@
+---
+
+     - debug:
+         var: YANG_VDU_FILE_NAME
+     - debug:
+         var: xmlVDUIDresp.matches[0].id
+     - debug:
+         var: YANG_FILES_NAME
+
+     - include_tasks: ./ConfigModel_withYang_file.yml
+       vars:
+          NameToBeUsed: "{{YANG_FILES_NAME.split('.')[-2]}}-{{xmlVERresp.matches[0][\"descriptor-version\"]}}"
+          FOLDER_YANG_PATH_1: "{{FOLDER_YANG_PATH}}"
+          VNFD_VDU_Id_1: "{{VNFD_VDU_Id_2}}"
+          NSD_Version_1: "{{NSD_Version_2}}"
+          VNFD_Id_1: "{{VNFD_Id_2}}"
+       when: (YANG_VDU_FILE_NAME == xmlVDUIDresp.matches[0].id) and ( YANG_FILES[YANG_VDU_FILE_NAME] is search(".zip") ) and (YANG_FILES[YANG_VDU_FILE_NAME] == YANG_FILES_NAME)
+
+     - include_tasks: ./ConfigModel_noYang_file.yml
+       vars:
+          NameToBeUsed: "{{YANG_FILES[YANG_VDU_FILE_NAME]}}-{{xmlVERresp.matches[0][\"descriptor-version\"]}}"
+          VNFD_VDU_Id_1: "{{VNFD_VDU_Id_2}}"
+          NSD_Version_1: "{{NSD_Version_2}}"
+          VNFD_Id_1: "{{VNFD_Id_2}}"
+       when: (YANG_VDU_FILE_NAME == xmlVDUIDresp.matches[0].id) and (not YANG_FILES[YANG_VDU_FILE_NAME] is search(".zip") )
+
+     - debug:
+         msg: "Does not match"
+       when: (YANG_VDU_FILE_NAME != xmlVDUIDresp.matches[0].id)

@@ -1,0 +1,105 @@
+- set_fact:
+    CONFIG_DATA_ADD_CMDS: []
+    NAMESPACES_IN_CONFIG: []
+    DATA_MODEL_DB_IDS: []
+
+- set_fact:
+    CONFIG_DATA_ADD_CMDS: "{{CONFIG_DATA_ADD_CMDS}} + [{ 'VDU_ID':'{{item.key}}', 'CONFIG_FILE_NAME': '{{item.value}}' }]"
+  with_dict: "{{CONFIG_FILES}}"
+
+- shell: cat `grep -r '<id>{{CONFIG_DATA_ADD_CMD.VDU_ID}}</id>' {{DESCRIPTOR_PATH}}/{{DESCRIPTOR_INFO.0}}/ | awk '{print $1}' | grep VNFD | cut -d ':' -f1` | grep -e '<vnfd-id>' -e '<descriptor-version>' | sed -e 's,.*<vnfd-id>\([^<]*\)</vnfd-id>.*,\1,g' | sed -e 's,.*<descriptor-version>\([^<]*\)</descriptor-version>.*,\1,g'
+  register: VNFD_CONFIG_RESP
+  delegate_to: localhost
+  loop: "{{CONFIG_DATA_ADD_CMDS}}"
+  loop_control:
+    loop_var: CONFIG_DATA_ADD_CMD
+    index_var: DATA_CMD_INDEX
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####          Couldn't find VNFD containing given VDU ID in Config section of config file "
+      - "#####          Please check  {{CONFIG_DATA_ADD_CMDS[DATA_CMD_INDEX]['VDU_ID']}}: {{CONFIG_DATA_ADD_CMDS[DATA_CMD_INDEX]['CONFIG_FILE_NAME']}}"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: not CMD_RESP.stdout_lines.1 is defined
+  loop: "{{VNFD_CONFIG_RESP.results}}"
+  loop_control:
+    loop_var: CMD_RESP
+    index_var: DATA_CMD_INDEX
+
+- shell: "grep '<sys xmlns=' {{DESCRIPTOR_PATH}}/{{DESCRIPTOR_INFO.0}}/Config/{{CONFIG_DATA_ADD_CMD['CONFIG_FILE_NAME']}}  | awk -F'\"' '{print $2}'"
+  register: NAMESPACES
+  delegate_to: localhost
+  loop: "{{CONFIG_DATA_ADD_CMDS}}"
+  loop_control:
+    loop_var: CONFIG_DATA_ADD_CMD
+    index_var: DATA_CMD_INDEX
+
+- set_fact:
+    NAMESPACES_IN_CONFIG: "{{NAMESPACES_IN_CONFIG}} + [ '{{ item.stdout.split('\n')[0] }}' ]"
+  with_items: "{{NAMESPACES.results}}"
+
+- set_fact:
+    QUERY_BUILDER: ""
+    ORDER_BUILDER: ""
+    CONFIG_DATA_CONFIG_MODEL_IDS: []
+
+- set_fact:
+    QUERY_BUILDER: "{{QUERY_BUILDER}} OR ( vnfd_id = (select id from vnfd_descriptor where vnfd_id='{{CMD_RESP.stdout_lines.0}}' AND version='{{CMD_RESP.stdout_lines.1}}') AND namespace LIKE '%{{NAMESPACES_IN_CONFIG[MODEL_CMD_INDEX]}}%' ) "
+    ORDER_BUILDER: "{{ORDER_BUILDER}} WHEN (select id from vnfd_descriptor where vnfd_id='{{CMD_RESP.stdout_lines.0}}' AND version='{{CMD_RESP.stdout_lines.1}}') THEN '{{MODEL_CMD_INDEX}}'"
+  loop: "{{VNFD_CONFIG_RESP.results}}"
+  loop_control:
+    loop_var: CMD_RESP
+    index_var: MODEL_CMD_INDEX
+
+- set_fact:
+    QUERY_BUILDER: "{{QUERY_BUILDER[3:]}}"
+
+- include_tasks: ./query_db.yml QUERY="select id from data_model where {{QUERY_BUILDER}} ORDER BY CASE vnfd_id {{ORDER_BUILDER}} END"
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####          Expected {{CONFIG_DATA_ADD_CMDS|length}} Config Models, found {{RESP.stdout_lines|length}}"
+      - "#####          Please Check Namespaces of Config Files against Config Models"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: not RESP.stdout_lines|length == CONFIG_DATA_ADD_CMDS|length
+
+- set_fact:
+    DATA_MODEL_DB_IDS: "{{DATA_MODEL_DB_IDS}} + [ '{{DB_OUT}}' ]"
+  loop: "{{RESP.stdout_lines}}"
+  loop_control:
+    loop_var: DB_OUT
+
+- name: Getting Access Token
+  uri:
+      url: "{{LOGIN_URL}}"
+      method: "POST"
+      body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+      status_code:  200
+      body_format: json
+      validate_certs: no
+  register: login_response
+  delegate_to: localhost
+
+- include_tasks: ./Quick/ConfigData_Add/ConfigData_Add.yml DATA_MODEL_DB_ID="{{DM_DB_ID}}" CONFIG_FILE_NAME="{{CONFIG_DATA_ADD_CMDS[CONTROL_INDEX]['CONFIG_FILE_NAME']}}" VDU_ID="{{CONFIG_DATA_ADD_CMDS[CONTROL_INDEX]['VDU_ID']}}"
+  loop: "{{DATA_MODEL_DB_IDS}}"
+  loop_control:
+    loop_var: DM_DB_ID
+    index_var: CONTROL_INDEX

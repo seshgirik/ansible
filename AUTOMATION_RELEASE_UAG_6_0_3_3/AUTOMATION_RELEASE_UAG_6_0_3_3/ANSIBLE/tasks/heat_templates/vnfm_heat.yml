@@ -1,0 +1,93 @@
+---
+
+# - hosts: "{{CONTROLLER_IP}}"
+#   gather_facts: no
+#   vars_files:
+#     - ../../vars/heat_templates/config.yml
+#
+#   tasks:
+
+    - include_tasks: setup_pwdless_generic.yml PWDLESS_IP="{{CONTROLLER_IP}}" PWDLESS_PASSWD="{{PASSWD}}" PWDLESS_USER="{{USER}}"
+
+    - name: "Getting server group ID from {{VNFM_SERVER_GROUP_NAME}}"
+      shell: "source {{KEYSTONE_SOURCE_PATH}} && openstack server group list | grep -i {{VNFM_SERVER_GROUP_NAME}} |awk '{print $2}'"
+      register: VNFM_SRV_GRP_RESP
+      delegate_to: "{{CONTROLLER_IP}}"
+      remote_user: "{{USER}}"
+      when: (VNFM_STANDALONE|lower == "false") and (USE_SERVER_GROUP|lower == "true")
+
+    - name: "Updating VNFM_IPv4_Active1.env with servergroup ID"
+      shell: "sed -i 's/WILL_BE_UPDATED_DURING_RUNTIME/{{VNFM_SRV_GRP_RESP.stdout_lines.0}}/g' {{playbook_dir}}/../../files/heat_templates/config_files/VNFM_IPv4_Active1.env"
+      delegate_to: localhost
+      when: (USE_SERVER_GROUP|lower == "true")
+
+    - name: "Updating VNFM_IPv4_Active2.env with servergroup ID"
+      shell: "sed -i 's/WILL_BE_UPDATED_DURING_RUNTIME/{{VNFM_SRV_GRP_RESP.stdout_lines.0}}/g' {{playbook_dir}}/../../files/heat_templates/config_files/VNFM_IPv4_Active2.env"
+      delegate_to: localhost
+      when: (USE_SERVER_GROUP|lower == "true")
+
+    - name: "Deleting servergroup VNFM_IPv4_Active1.env"
+      shell: "sed -i \"s/srvgroup_name: 'WILL_BE_UPDATED_DURING_RUNTIME'//g\" {{playbook_dir}}/../../files/heat_templates/config_files/VNFM_IPv4_Active1.env"
+      delegate_to: localhost
+      when: (USE_SERVER_GROUP|lower == "false")
+
+    - name: "Deleting servergroup VNFM_IPv4_Active2.env"
+      shell: "sed -i \"s/srvgroup_name: 'WILL_BE_UPDATED_DURING_RUNTIME'//g\" {{playbook_dir}}/../../files/heat_templates/config_files/VNFM_IPv4_Active2.env"
+      delegate_to: localhost
+      when: (USE_SERVER_GROUP|lower == "false")
+
+    - name: "Downloading {{VNFM_IMAGE_LINK}}"
+      shell: "cd {{HOME_DIR}} && wget '{{VNFM_IMAGE_LINK}}' -O vnfm.{{VNFM_IMAGE_LINK.split('.')[-1]}}"
+      delegate_to: "{{CONTROLLER_IP}}"
+      remote_user: "{{USER}}"
+
+    - shell: "rm -rf {{HOME_DIR}}/vnfm_img && rm -rf {{HOME_DIR}}/cms_img"
+      delegate_to: "{{CONTROLLER_IP}}"
+      remote_user: "{{USER}}"
+
+    - name: "Copy files *.yaml & *.env from {{playbook_dir}}/../../files/heat_templates/config_files/ directory in localhost to {{HOME_DIR}} in the remote host"
+      copy:
+        src: "{{playbook_dir}}/../../files/heat_templates/config_files/"
+        dest: "{{HOME_DIR}}"
+      delegate_to: "{{CONTROLLER_IP}}"
+      remote_user: "{{USER}}"
+
+    - name: "Untar vnfm.{{VNFM_IMAGE_LINK.split('.')[-1]}}"
+      shell: "cd {{HOME_DIR}} && mkdir vnfm_img && tar -xvf vnfm.{{VNFM_IMAGE_LINK.split('.')[-1]}} -C ./vnfm_img && cd vnfm_img && mv *.qcow2 vnfm.qcow2"
+      delegate_to: "{{CONTROLLER_IP}}"
+      remote_user: "{{USER}}"
+
+    - shell: "source {{KEYSTONE_SOURCE_PATH}} && cd {{HOME_DIR}}/vnfm_img && openstack image create {{VNFM_IMAGE_CREATION_NAME}} --disk-format qcow2 --container-format=bare --file vnfm.qcow2"
+      delegate_to: "{{CONTROLLER_IP}}"
+      remote_user: "{{USER}}"
+
+    - shell: "source {{KEYSTONE_SOURCE_PATH}} && cd {{HOME_DIR}} && openstack stack create -t {{VNFM_ACTIVE1_YAML_NAME}} -e VNFM_IPv4_Standalone.env {{VNFM_ACTIVE1_STACK_NAME}}"
+      delegate_to: "{{CONTROLLER_IP}}"
+      remote_user: "{{USER}}"
+      when: (VNFM_STANDALONE|lower == "true")
+
+    - shell: "source {{KEYSTONE_SOURCE_PATH}} && cd {{HOME_DIR}} && openstack stack create -t {{VNFM_ACTIVE1_YAML_NAME}} -e VNFM_IPv4_Active1.env {{VNFM_ACTIVE1_STACK_NAME}}"
+      delegate_to: "{{CONTROLLER_IP}}"
+      remote_user: "{{USER}}"
+      when: (VNFM_STANDALONE|lower == "false")
+
+    - pause: minutes=15
+      when: (CMS_STANDALONE|lower == "false") or (VNFM_STANDALONE|lower == "false")
+
+    # - shell: "sshpass -p {{VNFM1_PASSWORD}} ssh -o StrictHostKeyChecking=no {{VNFM1_USER}}@{{VNFM1_IP}} \"ldconfig && /opt/Install/NewInstallation.sh\""
+    #   when: (VNFM_STANDALONE|lower == "false")
+    #   delegate_to: localhost
+    # - pause: seconds=30
+
+    - shell: "source {{KEYSTONE_SOURCE_PATH}} && cd {{HOME_DIR}} && openstack stack create -t {{VNFM_ACTIVE2_YAML_NAME}} -e VNFM_IPv4_Active2.env {{VNFM_ACTIVE2_STACK_NAME}}"
+      delegate_to: "{{CONTROLLER_IP}}"
+      remote_user: "{{USER}}"
+      when: (VNFM_STANDALONE|lower == "false")
+
+    - pause: minutes=15
+      when: (CMS_STANDALONE|lower == "false") or (VNFM_STANDALONE|lower == "false")
+
+    # - shell: "sshpass -p {{VNFM2_PASSWORD}} ssh -o StrictHostKeyChecking=no {{VNFM2_USER}}@{{VNFM2_IP}} \"ldconfig && /opt/Install/NewInstallation.sh\""
+    #   delegate_to: "{{CONTROLLER_IP}}"
+    #   when: (VNFM_STANDALONE|lower == "false")
+    #   delegate_to: localhost

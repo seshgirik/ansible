@@ -1,0 +1,17 @@
+#[]FQDD, Ctrl_FQDD, raid
+#incl deletejobs.yml
+#incl raided.yml
+#racadm raid createvd:*Ctrl_FQDD* -rl -r1 -pdkey:{{FQDD|join(',')}}
+
+#incl createjobs.yml *Ctrl_FQDD* <----
+- set_fact:
+    NUM_R1_VDISKS: "{{raid_num_props.split(',')[0]|int}}"
+
+- set_fact:
+    NUM_PDISKS_IN_R1_VDISK: "{{raid_num_props.split(',')[1]|int}}"
+
+- include_tasks: raidone_config.yml
+  with_sequence: "1-{{NUM_R1_VDISKS}}"
+  ignore_errors: yes
+  loop_control:
+    loop_var: rone_config_number

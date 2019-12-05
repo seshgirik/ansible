@@ -1,0 +1,79 @@
+- set_fact:
+    CONFIG_MODEL_ADD_CMDS: []
+
+- set_fact:
+    CONFIG_MODEL_ADD_CMDS: "{{CONFIG_MODEL_ADD_CMDS}} + [{ 'VDU_ID':'{{item.key}}', 'YANG_FILE_NAME': '{{item.value}}' }]"
+  with_dict: "{{YANG_FILES}}"
+
+
+- shell: cat `grep -r '<id>{{CONFIG_MODEL_ADD_CMD.VDU_ID}}</id>' {{DESCRIPTOR_PATH}}/{{DESCRIPTOR_INFO.0}}/ | awk '{print $1}' | grep VNFD | cut -d ':' -f1` | grep -e '<vnfd-id>' -e '<descriptor-version>' | sed -e 's,.*<vnfd-id>\([^<]*\)</vnfd-id>.*,\1,g' | sed -e 's,.*<descriptor-version>\([^<]*\)</descriptor-version>.*,\1,g'
+  register: VNFD_CONFIG_RESP
+  delegate_to: localhost
+  loop: "{{CONFIG_MODEL_ADD_CMDS}}"
+  loop_control:
+    loop_var: CONFIG_MODEL_ADD_CMD
+    index_var: MODEL_CMD_INDEX
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####          Couldn't find VNFD containing given VDU ID in Yang section of config file "
+      - "#####          Please check  {{CONFIG_MODEL_ADD_CMDS[MODEL_CMD_INDEX]['VDU_ID']}}: {{CONFIG_MODEL_ADD_CMDS[MODEL_CMD_INDEX]['YANG_FILE_NAME']}}"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: not CMD_RESP.stdout_lines.1 is defined
+  loop: "{{VNFD_CONFIG_RESP.results}}"
+  loop_control:
+    loop_var: CMD_RESP
+    index_var: MODEL_CMD_INDEX
+
+- set_fact:
+    QUERY_BUILDER: ""
+    ORDER_BUILDER: ""
+    CONFIG_MODEL_VNFD_DB_IDS: []
+    CONFIG_MODEL_NSD_DB_IDS: []
+
+- set_fact:
+    QUERY_BUILDER: "{{QUERY_BUILDER}} OR ( vnfd_id='{{CMD_RESP.stdout_lines.0}}' AND version='{{CMD_RESP.stdout_lines.1}}') "
+    ORDER_BUILDER: "{{ORDER_BUILDER}} WHEN '{{CMD_RESP.stdout_lines.0}}' THEN '{{MODEL_CMD_INDEX}}'"
+  loop: "{{VNFD_CONFIG_RESP.results}}"
+  loop_control:
+    loop_var: CMD_RESP
+    index_var: MODEL_CMD_INDEX
+
+- set_fact:
+    QUERY_BUILDER: "{{QUERY_BUILDER[3:]}}"
+
+- include_tasks: ./query_db.yml QUERY="select id ,fk_nsd_descriptor from vnfd_descriptor where {{QUERY_BUILDER}} ORDER BY CASE vnfd_id {{ORDER_BUILDER}} END"
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####          Expected {{CONFIG_MODEL_ADD_CMDS|length}} VNFDs, found {{RESP.stdout_lines|length}}"
+      - "#####          Please Check if all the VNFDs are uploaded"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: not RESP.stdout_lines|length == CONFIG_MODEL_ADD_CMDS|length
+
+- set_fact:
+    CONFIG_MODEL_VNFD_DB_IDS: "{{CONFIG_MODEL_VNFD_DB_IDS}} + [ '{{DB_OUT.split('\t')[0]}}' ]"
+    CONFIG_MODEL_NSD_DB_IDS: "{{CONFIG_MODEL_NSD_DB_IDS}} + [ '{{DB_OUT.split('\t')[1]}}' ]"
+  loop: "{{RESP.stdout_lines}}"
+  loop_control:
+    loop_var: DB_OUT
+
+- include_tasks: Quick/ConfigModel_Add/ConfigModel_Add.yml

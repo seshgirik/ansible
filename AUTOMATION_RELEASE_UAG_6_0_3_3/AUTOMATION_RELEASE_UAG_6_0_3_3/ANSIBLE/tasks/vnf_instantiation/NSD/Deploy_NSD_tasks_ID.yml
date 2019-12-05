@@ -1,0 +1,4 @@
+---
+
+      - include_tasks : ./Deploy_NSD_tasks_ID_xml.yml NSD_DB_Id="{{item}}"
+        with_items: "{{ NSD_DB_Id1 }}"

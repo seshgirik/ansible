@@ -1,0 +1,7 @@
+---
+
+    - name: Checking CMS status Configured
+      shell: 'service cms status | grep "op_state" | cut -d ":" -f2 | cut -d "\"" -f2'
+      register: RESP
+      remote_user: "{{CMSUSER}}"
+      delegate_to: "{{CMSIP}}"

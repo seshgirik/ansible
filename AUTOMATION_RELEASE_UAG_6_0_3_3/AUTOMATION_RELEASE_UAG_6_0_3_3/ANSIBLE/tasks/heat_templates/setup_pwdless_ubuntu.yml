@@ -1,0 +1,24 @@
+# - name: "Delete old host"
+#   shell: "rm -rf ~/.ssh/known_hosts"
+#   delegate_to: localhost
+#   args:
+#     warn: false
+- set_fact:
+    SSH_IP: "{{inventory_hostname}}"
+
+- name: "Getting SSH KEY"
+  shell: "echo $(cat ~/.ssh/id_rsa.pub)"
+  register: id_rsa_pub
+  delegate_to: localhost
+
+- set_fact:
+    SSH_KEY: "{{id_rsa_pub.stdout}}"
+
+- fail:
+    msg: "SSH public key not found. Please generate the public key using ssh-keygen.{{SSH_KEY}}"
+  when: SSH_KEY==""
+
+- name: Setting up passwordless login
+  command: "sshpass -p {{PASSWD}} ssh-copy-id -o StrictHostKeyChecking=no {{USER}}@{{SSH_IP}}"
+  register: lg_res
+  delegate_to: localhost

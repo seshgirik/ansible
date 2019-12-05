@@ -1,0 +1,9 @@
+
+---
+
+  - name: Query DB
+    command: 'mysql -u{{ MYSQL_USER }} -p{{ MYSQL_PASSWD }} {{ MYSQL_DB }} -sN -e "{{ QUERY }}"'
+    register: RESP
+    remote_user: "{{CMS_ACT_USER}}"
+    delegate_to: "{{ACTIP}}"
+

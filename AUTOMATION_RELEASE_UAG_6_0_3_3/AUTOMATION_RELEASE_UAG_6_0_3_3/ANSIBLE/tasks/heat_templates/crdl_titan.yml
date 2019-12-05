@@ -1,0 +1,169 @@
+# - name: "Creating CRDL Server group"
+#   shell: "source {{KEYSTONE_SOURCE_PATH}} && openstack server group create {{CRDL_SERVER_GROUP_NAME}} --policy {{CRDL_SERVER_GROUP_POLICY}}"
+#   remote_user: "{{USER}}"
+#
+# - name: "Getting server group ID from {{CRDL_SERVER_GROUP_NAME}}"
+#   shell: "source {{KEYSTONE_SOURCE_PATH}} && openstack server group list | grep -i {{CRDL_SERVER_GROUP_NAME}} |awk '{print $2}'"
+#   remote_user: "{{USER}}"
+#   register: CRDL_SRV_GRP_RESP
+#
+# - name: "Updating *.env with servergroup ID"
+#   shell: "sed -i 's/WILL_BE_UPDATED_DURING_RUNTIME/{{CRDL_SRV_GRP_RESP.stdout_lines.0}}/g' {{playbook_dir}}/../../files/heat_templates/crdl/*.env"
+#   delegate_to: localhost
+
+- name: "Download {{CRDL_ADMIN_IMAGE_LINK}}"
+  shell: "cd {{HOME_DIR}} && wget '{{CRDL_ADMIN_IMAGE_LINK}}' -O crdl_admin.{{CRDL_ADMIN_IMAGE_LINK.split('.')[-1]}}"
+  remote_user: "{{USER}}"
+
+- name: "Downloading {{CRDL_CLUSTER_IMAGE_LINK}}"
+  shell: "cd {{HOME_DIR}} && wget '{{CRDL_CLUSTER_IMAGE_LINK}}' -O crdl_cluster.{{CRDL_CLUSTER_IMAGE_LINK.split('.')[-1]}}"
+  remote_user: "{{USER}}"
+
+- shell: "rm -rf {{HOME_DIR}}/crdl_admin_img && rm -rf {{HOME_DIR}}/crdl_cluster_img && rm -rf {{HOME_DIR}}/crdl_volume_env && rm -rf {{HOME_DIR}}/crdl_admin_env && rm -rf {{HOME_DIR}}/crdl_cluster_env"
+  remote_user: "{{USER}}"
+
+- shell: "mkdir {{HOME_DIR}}/crdl_admin_img && mkdir {{HOME_DIR}}/crdl_cluster_img && mkdir {{HOME_DIR}}/crdl_volume_env && mkdir {{HOME_DIR}}/crdl_admin_env && mkdir {{HOME_DIR}}/crdl_cluster_env"
+  remote_user: "{{USER}}"
+
+- name: "Copy volume .env files"
+  shell: "sshpass -p {{PASSWD}} /usr/bin/scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r {{playbook_dir}}/../../files/heat_templates/crdl/*Volume* {{USER}}@{{inventory_hostname}}:{{HOME_DIR}}/crdl_volume_env/"
+  delegate_to: localhost
+
+- name: "Copy volume .yaml file"
+  shell: "sshpass -p {{PASSWD}} /usr/bin/scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r {{playbook_dir}}/../../files/heat_templates/crdl/{{CRDL_VOLUME_YAML_NAME}} {{USER}}@{{inventory_hostname}}:{{HOME_DIR}}/crdl_volume_env/"
+  delegate_to: localhost
+
+- name: "Untar crdl_admin.{{CRDL_ADMIN_IMAGE_LINK.split('.')[-1]}}"
+  shell: "cd {{HOME_DIR}} && tar -xvf crdl_admin.{{CRDL_ADMIN_IMAGE_LINK.split('.')[-1]}} -C ./crdl_admin_img && cd crdl_admin_img/ &&  mv *.qcow2 crdl_admin.qcow2"
+  remote_user: "{{USER}}"
+
+- name: "Untar crdl_cluster.{{CRDL_CLUSTER_IMAGE_LINK.split('.')[-1]}}"
+  shell: "cd {{HOME_DIR}} && tar -xvf crdl_cluster.{{CRDL_CLUSTER_IMAGE_LINK.split('.')[-1]}} -C ./crdl_cluster_img && cd crdl_cluster_img/ &&  mv *.qcow2 crdl_cluster.qcow2"
+  remote_user: "{{USER}}"
+
+- name: "Delete crdl_admin.{{CRDL_ADMIN_IMAGE_LINK.split('.')[-1]}}"
+  shell: "cd {{HOME_DIR}} && rm -rf crdl_admin.{{CRDL_ADMIN_IMAGE_LINK.split('.')[-1]}}"
+  remote_user: "{{USER}}"
+
+- name: "Delete crdl_cluster.{{CRDL_CLUSTER_IMAGE_LINK.split('.')[-1]}}"
+  shell: "cd {{HOME_DIR}} && rm -rf crdl_cluster.{{CRDL_CLUSTER_IMAGE_LINK.split('.')[-1]}}"
+  remote_user: "{{USER}}"
+
+- name: Creating Admin Image
+  shell: "source {{ADMIN_RC}} && cd {{HOME_DIR}}/crdl_admin_img && if openstack image list|grep -q {{CRDL_ADMIN_IMAGE_CREATION_NAME}}; then echo 'Admin Image Exists'; else openstack image create {{CRDL_ADMIN_IMAGE_CREATION_NAME}} --disk-format qcow2 --container-format=bare --file crdl_admin.qcow2; fi"
+  remote_user: "{{USER}}"
+  loop: "{{KEYSTONE_ADMINS.split(',')}}"
+  loop_control:
+    loop_var: ADMIN_RC
+    index_var: ADMIN_RC_INDEX
+
+- name: Creating Cluster Image
+  shell: "source {{CLUSTER_RC}} && cd {{HOME_DIR}}/crdl_cluster_img && if openstack image list|grep -q {{CRDL_CLUSTER_IMAGE_CREATION_NAME}}; then echo 'Cluster Image Exists'; else openstack image create {{CRDL_CLUSTER_IMAGE_CREATION_NAME}} --disk-format qcow2 --container-format=bare --file crdl_cluster.qcow2; fi"
+  remote_user: "{{USER}}"
+  loop: "{{KEYSTONE_CLUSTERS.split(',')}}"
+  loop_control:
+    loop_var: CLUSTER_RC
+    index_var: CLUSTER_RC_INDEX
+
+##############
+### VOLUMES
+##############
+
+- name: Creating Admin Volumes
+  shell: "source {{ADMIN_RC}} && cd {{HOME_DIR}}/crdl_volume_env/ && for vol_env in `(ls *{{ADMIN_TENANTS.split(',')[ADMIN_RC_INDEX]}}*.env)`; do stack_prefix='';stack_name_part=`(sed -n 2p $vol_env | cut -d':' -f2 | awk '{print $1}')`;new_stack_name=$stack_prefix$stack_name_part;if openstack stack list|grep -q $new_stack_name; then echo 'Admin Volume Exists'; else openstack stack create -t {{CRDL_VOLUME_YAML_NAME}} -e $vol_env $new_stack_name;fi; done;"
+  remote_user: "{{USER}}"
+  loop: "{{KEYSTONE_ADMINS.split(',')}}"
+  loop_control:
+    loop_var: ADMIN_RC
+    index_var: ADMIN_RC_INDEX
+
+- name: Creating Cluster Volumes
+  shell: "source {{CLUSTER_RC}} && cd {{HOME_DIR}}/crdl_volume_env/ && for vol_env in `(ls *{{CLUSTER_TENANTS.split(',')[CLUSTER_RC_INDEX]}}*.env)`; do stack_prefix='';stack_name_part=`(sed -n 2p $vol_env | cut -d':' -f2 | awk '{print $1}')`;new_stack_name=$stack_prefix$stack_name_part;if openstack stack list|grep -q $new_stack_name; then echo 'Cluster Volume Exists'; else openstack stack create -t {{CRDL_VOLUME_YAML_NAME}} -e $vol_env $new_stack_name;fi; done;"
+  remote_user: "{{USER}}"
+  loop: "{{KEYSTONE_CLUSTERS.split(',')}}"
+  loop_control:
+    loop_var: CLUSTER_RC
+    index_var: CLUSTER_RC_INDEX
+
+################
+### END VOLUMES
+################
+
+- include_tasks: update_volume_ids.yml RC_FILE_PATH="{{ADMIN_RC}}" C_TENANT="{{ADMIN_TENANTS.split(',')[ADMIN_RC_INDEX]}}"
+  loop: "{{KEYSTONE_ADMINS.split(',')}}"
+  loop_control:
+    loop_var: ADMIN_RC
+    index_var: ADMIN_RC_INDEX
+
+- include_tasks: update_volume_ids.yml RC_FILE_PATH="{{CLUSTER_RC}}" C_TENANT="{{CLUSTER_TENANTS.split(',')[CLUSTER_RC_INDEX]}}"
+  loop: "{{KEYSTONE_CLUSTERS.split(',')}}"
+  loop_control:
+    loop_var: CLUSTER_RC
+    index_var: CLUSTER_RC_INDEX
+
+- pause: minutes=10
+
+- name: "Copy Admin .env files"
+  shell: "sshpass -p {{PASSWD}} /usr/bin/scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r {{playbook_dir}}/../../files/heat_templates/crdl/*Node_Admin* {{USER}}@{{inventory_hostname}}:{{HOME_DIR}}/crdl_admin_env/"
+  delegate_to: localhost
+
+- name: "Copy Admin .yaml file"
+  shell: "sshpass -p {{PASSWD}} /usr/bin/scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r {{playbook_dir}}/../../files/heat_templates/crdl/{{CRDL_ADMIN_YAML_NAME}} {{USER}}@{{inventory_hostname}}:{{HOME_DIR}}/crdl_admin_env/"
+  delegate_to: localhost
+
+- name: "Copy Cluster .env files"
+  shell: "sshpass -p {{PASSWD}} /usr/bin/scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r {{playbook_dir}}/../../files/heat_templates/crdl/*Node_Cluster* {{USER}}@{{inventory_hostname}}:{{HOME_DIR}}/crdl_cluster_env/"
+  delegate_to: localhost
+
+- name: "Copy Cluster .yaml file"
+  shell: "sshpass -p {{PASSWD}} /usr/bin/scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r {{playbook_dir}}/../../files/heat_templates/crdl/{{CRDL_CLUSTER_YAML_NAME}} {{USER}}@{{inventory_hostname}}:{{HOME_DIR}}/crdl_cluster_env/"
+  delegate_to: localhost
+
+################
+### ADMIN NODES
+################
+
+#group: 28e64d45-51dd-4a11-8a27-05c166db21f5
+
+- name: Creating Admin Nodes
+  shell: "source {{ADMIN_RC}} && cd {{HOME_DIR}}/crdl_admin_env/ && for admin_env in `(ls *{{ADMIN_TENANTS.split(',')[ADMIN_RC_INDEX]}}*.env)`; do stack_prefix='';stack_name_part=`(cat $admin_env | grep CRDL_names | cut -d':' -f2 | cut -d'[' -f2 | cut -d']' -f1)`;new_stack_name=$stack_prefix$stack_name_part;`(sed -i \"s/SERVER_GROUP_SED_REPLACE/group: {{CRDL_SERVER_GROUP_ADMIN_IDS.split(',')[ADMIN_RC_INDEX]}}/g\" {{CRDL_ADMIN_YAML_NAME}})`;if openstack stack list|grep -q $new_stack_name; then echo 'Admin Stack Exists'; else openstack stack create -t {{CRDL_ADMIN_YAML_NAME}} -e $admin_env $new_stack_name;fi;`(sed -i \"s/group: {{CRDL_SERVER_GROUP_ADMIN_IDS.split(',')[ADMIN_RC_INDEX]}}/SERVER_GROUP_SED_REPLACE/g\" {{CRDL_ADMIN_YAML_NAME}})`; done;"
+  remote_user: "{{USER}}"
+  loop: "{{KEYSTONE_ADMINS.split(',')}}"
+  loop_control:
+    loop_var: ADMIN_RC
+    index_var: ADMIN_RC_INDEX
+
+###################
+### END ADMIN NODES
+###################
+
+
+#################
+### CLUSTER NODES
+#################
+
+- name: Creating Cluster Nodes
+  shell: "source {{CLUSTER_RC}} && cd {{HOME_DIR}}/crdl_cluster_env/ && for cluster_env in `(ls *{{CLUSTER_TENANTS.split(',')[CLUSTER_RC_INDEX]}}*.env)`; do stack_prefix='';stack_name_part=`(cat $cluster_env | grep CRDL_names | cut -d':' -f2 | cut -d'[' -f2 | cut -d']' -f1)`;new_stack_name=$stack_prefix$stack_name_part;`(sed -i \"s/SERVER_GROUP_SED_REPLACE/group: {{CRDL_SERVER_GROUP_CLUSTER_IDS.split(',')[CLUSTER_RC_INDEX]}}/g\" {{CRDL_CLUSTER_YAML_NAME}})`;if openstack stack list|grep -q $new_stack_name; then echo 'Cluster Stack Exists'; else openstack stack create -t {{CRDL_CLUSTER_YAML_NAME}} -e $cluster_env $new_stack_name;fi;`(sed -i \"s/group: {{CRDL_SERVER_GROUP_CLUSTER_IDS.split(',')[CLUSTER_RC_INDEX]}}/SERVER_GROUP_SED_REPLACE/g\" {{CRDL_CLUSTER_YAML_NAME}})`; done;"
+  remote_user: "{{USER}}"
+  loop: "{{KEYSTONE_CLUSTERS.split(',')}}"
+  loop_control:
+    loop_var: CLUSTER_RC
+    index_var: CLUSTER_RC_INDEX
+
+#####################
+### END CLUSTER NODES
+#####################
+
+- pause: minutes=40
+
+- include_tasks: crdl_titan_bucket_config.yml CLUSTER_RC_PATH="{{CLUSTER_RC}}" DATA_INDEX="{{CLUSTER_RC_INDEX}}"
+  loop: "{{KEYSTONE_CLUSTERS.split(',')}}"
+  loop_control:
+    loop_var: CLUSTER_RC
+    index_var: CLUSTER_RC_INDEX
+
+- include_tasks: crdl_titan_admin_config.yml C_TENANT="{{CLUSTER_TENANTS.split(',')[CLUSTER_RC_INDEX]}}" DATA_INDEX="{{CLUSTER_RC_INDEX}}"
+  loop: "{{KEYSTONE_CLUSTERS.split(',')}}"
+  loop_control:
+    loop_var: CLUSTER_RC
+    index_var: CLUSTER_RC_INDEX

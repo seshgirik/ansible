@@ -1,0 +1,24 @@
+- set_fact:
+    seq: []
+
+- set_fact:
+    START_1: 1
+    END_1: 3
+    SEND_NULL: true
+  when: START|int >= END|int
+
+- set_fact:
+    START_1: "{{START}}"
+    END_1: "{{END}}"
+    SEND_NULL: false
+  when: START|int < END|int
+
+- set_fact:
+    seq: "{{ seq }} + [ {{ seq_item }} ]"
+  with_sequence: start="{{START_1}}" end="{{(END_1|int-1)}}"
+  loop_control:
+      loop_var: seq_item
+
+- set_fact:
+    seq: []
+  when: START|int >= END|int

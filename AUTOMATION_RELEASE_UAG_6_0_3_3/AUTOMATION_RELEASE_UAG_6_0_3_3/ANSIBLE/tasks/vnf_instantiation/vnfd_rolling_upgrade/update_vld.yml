@@ -1,0 +1,83 @@
+#CHANGE_VLD_VERSION
+- name: Get Namespace
+  shell: "grep -o 'xmlns=.*>' {{file}} | grep -o '\".*\"'"
+  register: VLD_NAMESPACE
+  delegate_to: localhost
+
+- set_fact:
+    VLD_NAMESPACE: "{{VLD_NAMESPACE.stdout_lines.0}}"
+
+- name: Get VLD Version
+  xml:
+    xmlstring: "{{lookup('file', '{{file}}') | regex_replace('xmlns=.*>', '>')}}"
+    xpath: vld-list/descriptor-version
+    content: text
+  register: VLD_VERSION_OUT
+  delegate_to: localhost
+
+- set_fact:
+    VLD_VERSION_OUT: "{{VLD_VERSION_OUT.matches[0]['descriptor-version']}}"
+
+- set_fact:
+    NEWER_VLD_VERSION: "{{VLD_VERSION_OUT|replace(OLD_VLD_VERSION, NEW_VLD_VERSION)}}"
+
+- name: Update VLD Version
+  xml:
+    xmlstring: "{{lookup('file', '{{file}}') | regex_replace('xmlns=.*>', '>')}}"
+    xpath: vld-list/descriptor-version
+    value: "{{NEWER_VLD_VERSION}}"
+  register: vld_desc_xml
+  delegate_to: localhost
+
+- name: Get vnfAllocPoolMap list
+  xml:
+    xmlstring: "{{vld_desc_xml.xmlstring[39:]}}"
+    xpath: vld-list/vl-properties/vnfAllocPoolMap/vnfd-id
+    content: text
+  register: VNF_ALLOC_POOL_LIST
+  delegate_to: localhost
+  ignore_errors: yes
+
+- set_fact:
+    VNF_ALLOC_POOL_LIST:
+        matches: []
+  when: VNF_ALLOC_POOL_LIST.matches is not defined
+
+- set_fact:
+    VLD_VNFD_UPDT_IND: []
+
+- set_fact:
+    VLD_VNFD_UPDT_IND: "{{VLD_VNFD_UPDT_IND}} + [ { \"VNFD_ID\": \"{{node_matches['vnfd-id']}}\", \"NODE_INDEX\":  {{node_ind|int + 1}} } ]"
+  when: node_matches['vnfd-id'] in VNFD_UPGRADE_PARAMS
+  loop: "{{VNF_ALLOC_POOL_LIST.matches}}"
+  loop_control:
+    loop_var: node_matches
+    index_var: node_ind
+
+# - name: Update VLD Version
+#   xml:
+#     xmlstring: "{{lookup('file', '{{file}}') | regex_replace('xmlns=.*>', '>')}}"
+#     xpath: vld-list/descriptor-version
+#     value: "{{VLD_VERSION_OUT|replace(OLD_VLD_VERSION, NEW_VLD_VERSION)}}"
+#   register: vld_desc_xml
+#   delegate_to: localhost
+#   when: VLD_VNFD_UPDT_IND[0] is defined
+
+- name: Update VNFD versions in VLD
+  xml:
+    xmlstring: "{{vld_desc_xml.xmlstring[39:]}}"
+    xpath: "vld-list/vl-properties/vnfAllocPoolMap[{{repl['NODE_INDEX']}}]/version"
+    value: "{{VNFD_UPGRADE_PARAMS[repl['VNFD_ID']].NEW_VERSION}}"
+  loop: "{{VLD_VNFD_UPDT_IND}}"
+  loop_control:
+    loop_var: repl
+  register: vld_xml
+  delegate_to: localhost
+
+- copy: content="{{vld_xml.results[ (vld_xml.results|length) - 1 ].xmlstring[39:]|replace('<vld>','<vld xmlns='+VLD_NAMESPACE+'>')}}" dest={{file}}
+  when: vld_xml.results[0] is defined
+  delegate_to: localhost
+
+- copy: content="{{vld_desc_xml.xmlstring[39:]|replace('<vld>','<vld xmlns='+VLD_NAMESPACE+'>')}}" dest={{file}}
+  when: vld_xml.results[0] is not defined
+  delegate_to: localhost

@@ -1,0 +1,40 @@
+---
+
+# no of this logic, NSD_Version id defined in ./vars/Config.yml
+#    - include_tasks : ../tasks/find_files.yml
+#      vars:
+#         FILE_PATH: "{{ DESCRIPTOR_PATH }}/{{ DESCRIPTOR_INFO[0] }}/"
+#         FILE_PATTERN: "NSD*.xml"
+#    - set_fact: XML_PATH={{files_found.files[0].path}}
+
+#    - debug:
+#        var: XML_PATH
+
+#    - name: Read NSD_Version attribute from XML
+#      xml:
+#         xmlstring: "{{lookup('file', '{{ XML_PATH }}') | regex_replace('xmlns=.*>', '>')}}"
+#         xpath: "{{ DESCRIPTOR_ONBOARD_CON_INFO.NSD_Version }}"
+#         content: text
+#      register: xmlVERresp
+
+# no of this logic, NSD_Version id defined in ./vars/Config.yml
+
+    - include_tasks: ./query_db.yml
+      vars:
+          QUERY: "select id from nsd_descriptor where nsd_id='{{NSD_Name}}'"
+    - set_fact: NSD_DB_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+
+    - include_tasks: ./NSD/Deploy_NSD_tasks_ID.yml
+      vars:
+         NSD_Vers: "{{NSD_VERSION}}"
+         NSD_DB_Id1: "{{NSD_DB_Id | regex_replace(' ' , '\n')}}"
+      when: (NSD_VERSIONS|lower == "All"|lower) or (NSD_VERSIONS|lower == " ")
+
+#     - include_tasks: ./NSD/Deploy_NSD_tasks_VER.yml
+#       vars:
+#          NSD_Vers: "{{NSD_VERSION}}"
+#          #NSD_Vers: "{{NSD_Version|regex_replace('=', '\n')|regex_replace(',', '\n')}}"
+# #         NSD_DB_Id2: "{{NSD_DB_Id}}"
+#       when: not (NSD_VERSIONS|lower == "All"|lower) or (NSD_VERSIONS|lower == " ")

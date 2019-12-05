@@ -1,0 +1,34 @@
+- include_tasks: query_db.yml QUERY="SELECT id FROM image_config  WHERE name='{{ IMG_NAME }}'"
+
+- set_fact:
+    Image_Id: "{{ RESP.stdout_lines.0 }}"
+  when: RESP.stdout_lines.0 is defined
+
+
+- include_tasks: query_db.yml QUERY="SELECT status FROM image_config_status  WHERE fk_image_config='{{Image_Id}}'"
+  when: Image_Id is defined
+
+- set_fact:
+    status: "{{ RESP.stdout_lines.0 }}"
+  when: RESP.stdout_lines.0 is defined
+
+- set_fact:
+      ImageName: "{{ IMG_NAME }}"
+      ImagePath: "{{ IMG_PATH }}"
+
+- name: Getting Access Token
+  uri:
+      url: "{{LOGIN_URL}}"
+      method: "POST"
+      body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+      status_code:  200
+      body_format: json
+      validate_certs: no
+  register: login_response
+  delegate_to: localhost
+
+- shell: "curl -s -k -X \"DELETE\" --cookie '{{login_response.set_cookie}}' {{ Image_Save_URL }}/image_config/null/{{ Image_Id }}"
+  delegate_to: localhost
+  register: curl_resp
+  # when: (  status|lower  in "Deleted"| lower )  or  (  status| lower  in "Failed"|lower ) or (  status| lower  in "saved"|lower )
+  ignore_errors: yes

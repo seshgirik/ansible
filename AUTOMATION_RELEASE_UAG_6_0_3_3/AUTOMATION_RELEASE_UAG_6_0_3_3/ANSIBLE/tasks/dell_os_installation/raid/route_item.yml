@@ -1,0 +1,5 @@
+- include_tasks: "{{route_item.key|lower}}.yml raid_num_props={{route_item.value}}"
+  with_dict: "{{ITEM}}"
+  loop_control:
+      loop_var: route_item
+

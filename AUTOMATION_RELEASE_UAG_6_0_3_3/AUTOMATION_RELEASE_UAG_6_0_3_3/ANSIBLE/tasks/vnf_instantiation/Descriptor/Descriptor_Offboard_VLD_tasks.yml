@@ -1,0 +1,156 @@
+---
+
+
+    - name: Read VLD_Id attribute from XML
+      xml:
+         xmlstring: "{{lookup('file', '{{ XML_PATH }}') | regex_replace('xmlns=.*>', '>')}}"
+         xpath: "{{ DESCRIPTOR_ONBOARD_CON_INFO.VLD_Id }}"
+         content: text
+      register: xmlIDresp
+      delegate_to: localhost
+
+    - debug:
+        var: "{{xmlIDresp.matches[0]['vl-id']}}"
+
+    - name: Read NSD_Version attribute from XML
+      xml:
+         xmlstring: "{{lookup('file', '{{ XML_PATH }}') | regex_replace('xmlns=.*>', '>')}}"
+         xpath: "{{ DESCRIPTOR_ONBOARD_CON_INFO.VLD_Version }}"
+         content: text
+      register: xmlVERresp
+      delegate_to: localhost
+
+    - debug:
+        var: "{{xmlVERresp.matches[0]['descriptor-version']}}"
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select id from vld_descriptor where vld_id='{{xmlIDresp.matches[0][\"vl-id\"]}}' and version='{{xmlVERresp.matches[0][\"descriptor-version\"]}}'"
+      when: (xmlIDresp.matches[0]["vl-id"] is defined)  and  (xmlVERresp.matches[0]["descriptor-version"] is defined)
+    - set_fact: VLD_DB_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select name from vld_descriptor where id='{{VLD_DB_Id}}'"
+      when: VLD_DB_Id is defined
+    - set_fact: VLD_Name={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select status from vld_descriptor_status where fk_vld_descriptor='{{VLD_DB_Id}}'"
+      when: VLD_DB_Id is defined
+    - set_fact: VLD_Status={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select fk_nsd_descriptor from vld_descriptor where id='{{VLD_DB_Id}}'"
+      when: VLD_DB_Id is defined
+    - set_fact: VLD_NSD_DB_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select nsd_id from nsd_descriptor where id='{{VLD_NSD_DB_Id}}'"
+      when: VLD_NSD_DB_Id is defined
+    - set_fact: VLD_NSD_Id={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select name from nsd_descriptor where id='{{VLD_NSD_DB_Id}}'"
+      when: VLD_NSD_DB_Id is defined
+    - set_fact: VLD_NSD_Name={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select version from nsd_descriptor where id='{{VLD_NSD_DB_Id}}'"
+      when: VLD_NSD_DB_Id is defined
+    - set_fact: VLD_NSD_Version={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - include_tasks: ../query_db.yml
+      vars:
+         QUERY: "select status from nsd_descriptor_status where id='{{VLD_NSD_DB_Id}}'"
+      when: VLD_NSD_DB_Id is defined
+    - set_fact: VLD_NSD_Id_Status={{RESP.stdout_lines.0}}
+      when: RESP.stdout_lines.0 is defined
+
+    - name: Getting Access Token
+      uri:
+          url: "{{LOGIN_URL}}"
+          method: "POST"
+          body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+          status_code:  200
+          body_format: json
+          validate_certs: no
+      register: login_response
+      delegate_to: localhost
+
+    - shell: "curl -s -k -X \"DELETE\" --cookie '{{login_response.set_cookie}}' {{DESCRIPTOR_OFFBOARD_URL}}/VLD/{{VLD_DB_Id}}"
+      delegate_to: localhost
+      register: curl_resp
+
+    - debug: msg="{{curl_resp}}"
+
+#    - include_tasks: ../https_request.yml
+#                        URL="{{DESCRIPTOR_OFFBOARD_URL}}/VLD/{{VLD_DB_Id}}"
+#                        METHOD="DELETE"
+#                        PAYLOAD="rowData={"fkNsdDescriptor":{"type":"NSD","version":"'{{VLD_NSD_Version}}'","descriptorId":"'{{VLD_NSD_Id}}'","namespace":"urn:mitel:params:xml:vnf:yang:nsd","name":"'{{VLD_NSD_Name}}'","id":'{{VLD_NSD_DB_Id}}',"parentDescriptorId":"","uniqueId":"","status":"'{{VLD_NSD_Id_Status}}'"},"type":"VLD","version":"'{{xmlVERresp.matches[0]["descriptor-version"]}}'","descriptorId":"'{{xmlIDresp.matches[0]["vl-id"]}}'","namespace":"urn:mitel:params:xml:ns:yang:vld","name":"'{{VLD_Name}}'","id":'{{VLD_DB_Id}}',"tenant":"'{{Tenant_Name}}'","parentDescriptorId":"'{{VLD_NSD_Id}}'","uniqueId":"","status":"'{{VLD_Status}}'"}"
+#      when: (VLD_NSD_Id) and (VLD_NSD_Name) and (VLD_NSD_DB_Id) and (VLD_NSD_Id_Status) and (xmlIDresp.matches[0]["vl-id"]) and (VLD_Name) and (VLD_DB_Id) and (VLD_Status)
+
+
+
+    # - include_tasks: ../query_db.yml
+    #   vars:
+    #      QUERY: "select status from vld_descriptor_status where fk_vld_descriptor='{{VLD_DB_Id}}'"
+    #   when: VLD_DB_Id is defined
+    # - set_fact: VLDStatus={{RESP.stdout_lines.0}}
+    #   when: RESP.stdout_lines.0 is defined
+    #
+    #
+    #
+    # - include_tasks: ../query_db.yml
+    #   vars:
+    #      QUERY: "select status from vld_descriptor_status where fk_vld_descriptor='{{VLD_DB_Id}}'"
+    #   when: VLD_DB_Id is defined
+    # - set_fact: VLDStatus={{RESP.stdout_lines.0}}
+    #   when: RESP.stdout_lines.0 is defined
+    #   retries: "{{ DESCRIPTOR_RETRIES }}"
+    #   delay: "{{ DELAY }}"
+    #   until: ( not VLD_DB_Id ) or ( {{VLDStatus|lower}} in "Deleted"|lower ) or ( {{VLDStatus|lower}} in "Failed"|lower )
+    - command: "mysql -u{{ MYSQL_USER }} -p{{ MYSQL_PASSWD }} {{ MYSQL_DB }} -sN -e \"select status from vld_descriptor_status where fk_vld_descriptor='{{VLD_DB_Id}}'\" "
+      register: STATUS_RESP
+      remote_user: "{{CMS_IP_SYSUSER}}"
+      retries: "{{DESCRIPTOR_RETRIES}}"
+      delay: "{{ DELAY }}"
+      until: ( not LVND_DB_Id ) or ( STATUS_RESP.stdout_lines.0|lower in "Deleted"|lower ) or ( STATUS_RESP.stdout_lines.0|lower in "Failed"|lower ) or ( STATUS_RESP.stdout_lines.0|lower in "Saved"|lower )
+      ignore_errors: yes
+
+    - name: fail the play if the previous command did not succeed
+      fail:
+        msg:
+        - ""
+        - ""
+        - "################################################################"
+        - "################################################################"
+        - "###                                                          ###"
+        - "###                                                          ###"
+        - "###                                                          ###"
+        - "###                  LVND STATUS: {{STATUS_RESP.stdout_lines.0.rjust(10)}}                 ###"
+        - "###     Somthing went wrong, Please check the logs or DB     ###"
+        - "###                                                          ###"
+        - "###                                                          ###"
+        - "###                                                          ###"
+        - "################################################################"
+        - "################################################################"
+        - ""
+        - ""
+      when: not ( ( STATUS_RESP.stdout_lines.0|lower in "Deleted"|lower ) or ( STATUS_RESP.stdout_lines.0|lower in "Failed"|lower ) or ( STATUS_RESP.stdout_lines.0|lower in "Saved"|lower ) )
+
+    # - name: fail the play if the previous command did not succeed
+    #   fail: msg="VLD is in {{VLDStatus}} state... Somthing went wrong, Please check the logs or DB"
+    #   when: (VLDStatus is defined) and not ( ( VLDStatus|lower in "Deleted"|lower ) or ( VLDStatus|lower in "Failed"|lower ) )

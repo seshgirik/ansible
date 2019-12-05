@@ -1,0 +1,89 @@
+.
+├── host_vars
+├── inventory.ini
+├── README
+├── roles
+│   ├── AM
+│   │   ├── files
+│   │   │   └── heat_templates
+│   │   │       ├── WRG_AM_module.env
+│   │   │       └── WRG_AM_module.yaml
+│   │   ├── tasks
+│   │   │   └── main.yaml
+│   │   └── vars
+│   │       └── main.yaml
+│   ├── CE
+│   │   ├── files
+│   │   │   └── heat_templates
+│   │   │       ├── WRG_CE_module.env
+│   │   │       └── WRG_CE_module.yaml
+│   │   ├── tasks
+│   │   │   └── main.yaml
+│   │   └── vars
+│   │       └── main.yaml
+│   ├── common
+│   │   ├── files
+│   │   │   ├── admin_credentialsrc
+│   │   │   ├── blade.cfg
+│   │   │   ├── change_ip.sh
+│   │   │   ├── credentialsrc
+│   │   │   ├── mavenir1.zone
+│   │   │   ├── qcow2_images
+│   │   │   ├── scripts
+│   │   │   │   ├── create_heat_stack.sh
+│   │   │   │   ├── stack_operation.py
+│   │   │   │   ├── update_env_file.sh
+│   │   │   │   ├── update_env.py
+│   │   │   │   ├── upload_to_glance.sh
+│   │   │   │   └── upload_to_qcow2_image.sh
+│   │   │   ├── WRG_CPlane_AM_db.sql
+│   │   │   └── WRG_CPlane_post_install.sh
+│   │   ├── tasks
+│   │   │   ├── create_heat_stack.yaml
+│   │   │   ├── delete_glance_image.yaml
+│   │   │   ├── delete_heat_stack.yaml
+│   │   │   ├── main.yaml
+│   │   │   ├── print_stack_status.yaml
+│   │   │   ├── transfer_file.yaml
+│   │   │   ├── transfer_image.yaml
+│   │   │   ├── upload_files_to_image.yaml
+│   │   │   ├── upload_glance_image.yaml
+│   │   │   └── validate_heat_template.yaml
+│   │   └── vars
+│   │       ├── environment_file.yaml
+│   │       ├── main.yaml
+│   │       └── stack_operation.yaml
+│   ├── DM
+│   │   ├── files
+│   │   │   └── heat_templates
+│   │   │       ├── WRG_DM_module.env
+│   │   │       └── WRG_DM_module.yaml
+│   │   ├── tasks
+│   │   │   └── main.yaml
+│   │   └── vars
+│   │       └── main.yaml
+│   ├── RM
+│   │   ├── files
+│   │   │   └── heat_templates
+│   │   │       ├── WRG_RM_module.env
+│   │   │       └── WRG_RM_module.yaml
+│   │   ├── tasks
+│   │   │   ├── main.yaml
+│   │   │   └── set_multiqueue_in_glance_image.yaml
+│   │   └── vars
+│   │       └── main.yaml
+│   └── SI
+│       ├── files
+│       │   └── heat_templates
+│       │       ├── WRG_SI_module.env
+│       │       └── WRG_SI_module.yaml
+│       ├── tasks
+│       │   └── main.yaml
+│       └── vars
+│           └── main.yaml
+├── vnf_create.yaml
+├── vnf_delete.yaml
+└── vnf_status.yaml
+
+33 directories, 52 files
+

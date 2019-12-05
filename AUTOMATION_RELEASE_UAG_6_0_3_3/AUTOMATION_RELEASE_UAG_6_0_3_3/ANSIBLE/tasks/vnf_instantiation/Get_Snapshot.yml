@@ -1,0 +1,22 @@
+---
+
+- name: Get snapshot list for given vnfId
+  uri:
+     #url:          "{{LIST_SNAPSHOT_URL}}{{VNFID}}"
+     url:          "https://10.1.35.221:18080/cms-service/webapi/cmsManageService/snapshot/vnf/?vnfId={{VNFID}}"
+     method:       "GET"
+     validate_certs: no
+     status_code:  200
+  register: snapshots
+
+
+- name: Query config data and save as xml
+  include_tasks: ./tasks/Download_Sanpshot_xml.yml 
+      SNAPSHOT_NAME: "{{item.value}}"
+  with_dict: "{{snapshots.json.context.entity}}"
+
+- name: Create Snapshot list
+  lineinfile:
+    path: /tmp/Snapshots.txt
+    line: "{{item.value}}"
+  with_dict: "{{snapshots.json.context.entity}}"

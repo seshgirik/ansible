@@ -1,0 +1,29 @@
+- set_fact:
+    SSH_CMD_N: "sshpass -p {{r_pass}} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=dev/null {{r_user}}@{{ip_addr}}"
+
+- name: "Getting SSH KEY"
+  shell: "echo $(cat ~/.ssh/id_rsa.pub)"
+  register: id_rsa_pub
+  delegate_to: localhost
+
+- set_fact:
+    SSH_KEY: "{{id_rsa_pub.stdout}}"
+
+- fail:
+    msg: "SSH public key not found. Please generate the public key using ssh-keygen.{{SSH_KEY}}"
+  when: SSH_KEY==""
+
+- name: Setting up passwordless login
+  command: "{{SSH_CMD_N}} racadm sshpkauth -i 2 -k 1 -t \"{{SSH_KEY}}\""
+  register: lg_res
+  delegate_to: localhost
+
+
+- shell: "{{SSH_CMD_N}} racadm config -g cfgServerInfo -o cfgServerBootOnce 1"
+  delegate_to: localhost
+
+- shell: "{{SSH_CMD_N}} racadm config -g cfgServerInfo -o cfgServerFirstBootDevice PXE"
+  delegate_to: localhost
+
+- shell: "{{SSH_CMD_N}} racadm serveraction powercycle"
+  delegate_to: localhost

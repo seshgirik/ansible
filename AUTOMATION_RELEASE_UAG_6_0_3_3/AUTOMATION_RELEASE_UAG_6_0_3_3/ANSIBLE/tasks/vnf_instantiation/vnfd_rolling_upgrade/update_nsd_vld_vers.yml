@@ -1,0 +1,17 @@
+- name: Get Namespace
+  shell: "grep -o 'xmlns=.*>' {{FILE_UPDT}} | grep -o '\".*\"'"
+  register: NSD_NAMESPACE
+  delegate_to: localhost
+
+- set_fact:
+    MODDED_XML_STR: "{{lookup('file', '{{FILE_UPDT}}') | regex_replace('xmlns=.*>', '>')}}"
+
+- xml:
+    xmlstring: "{{MODDED_XML_STR}}"
+    xpath: "{{XPATH_UPDT}}"
+    value: "{{VAL_UPDT['version']}}"
+  register: new_nsd_xml
+  delegate_to: localhost
+
+- copy: content="{{new_nsd_xml.xmlstring[39:]|replace('<nsd>','<nsd xmlns='+NSD_NAMESPACE.stdout_lines.0+'>')}}" dest="{{FILE_UPDT}}"
+  delegate_to: localhost

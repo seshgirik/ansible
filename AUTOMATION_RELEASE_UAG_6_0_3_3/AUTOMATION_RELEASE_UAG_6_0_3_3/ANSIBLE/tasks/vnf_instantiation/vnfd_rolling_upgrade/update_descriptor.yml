@@ -1,0 +1,14 @@
+- include_tasks: update_nsd.yml
+  when: file.split("/")[-1] is search("NSD")
+#
+- include_tasks: update_vld.yml
+  when: file.split("/")[-1] is search("VLD")
+
+- include_tasks: update_lvnd.yml
+  when: file.split("/")[-1] is search("LVND")
+
+- include_tasks: update_vnfd.yml
+  when: file.split("/")[-1] is search("VNFD")
+
+- include_tasks: update_lcmd.yml
+  when: file.split("/")[-1] is search("LCMD")

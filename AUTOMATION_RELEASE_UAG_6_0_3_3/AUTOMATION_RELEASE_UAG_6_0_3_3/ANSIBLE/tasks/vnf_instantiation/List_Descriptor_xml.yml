@@ -1,0 +1,17 @@
+---
+
+- name: Find file with pattern {{ XML_PATTERN }}
+  include_tasks : ./find_files.yml
+  vars:
+    FILE_PATH: "{{ XML_PATH }}"
+    FILE_PATTERN: "{{ XML_PATTERN }}"
+
+
+- name: loop over result
+  include_tasks: ./Descriptor_Save_Conclude.yml
+  vars:
+    desc_file_index: "{{ ( (desc_file.path.split('/')|length) - 1 ) | int }}"
+    desc_file_name: "{{ desc_file.path.split('/')[(desc_file_index | int)] }}"
+  with_items: "{{ files_found.files }}"
+  loop_control:
+    loop_var: desc_file

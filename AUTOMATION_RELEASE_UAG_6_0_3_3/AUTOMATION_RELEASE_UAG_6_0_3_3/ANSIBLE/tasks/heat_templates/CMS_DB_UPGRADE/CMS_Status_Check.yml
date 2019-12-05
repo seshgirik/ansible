@@ -1,0 +1,7 @@
+---
+
+    - name: Checking CMS status
+      shell: 'service cms status | grep "ha_mode" | cut -d ":" -f2 | cut -d "\"" -f2'
+      register: RESP
+      remote_user: "{{CMSUSER}}"
+      delegate_to: "{{CMSIP}}"

@@ -1,0 +1,19 @@
+
+---
+
+
+   - name: "Retrieve Glance Image ID"
+     shell: "source {{ HOST_TEMP_STORAGE }}/{{ CREDENTIALS_RC_FILE | basename }} ;/usr/bin/openstack image list | grep {{VNF_IMAGE_LOCATION | basename | regex_replace('^(.*).qcow2$', '\\1') }} | awk -F\"|\" '{print $2}' | head -1 | tr -d '[:space:]'"
+     register: image_id
+     ignore_errors: true
+
+   - debug: var=image_id.stdout
+
+   - name: "Enable multi queue in Glance Image "
+     shell: "source {{ HOST_TEMP_STORAGE }}/{{ CREDENTIALS_RC_FILE | basename }} ;/usr/bin/openstack image set  --property hw_vif_multiqueue_enabled=true {{image_id.stdout}}" 
+     register: mq_command_result
+     failed_when: 
+         - "'No image with an ID of' not in mq_command_result.stderr  and mq_command_result.rc !=0"
+     changed_when: "'No image with an ID of' not in mq_command_result.stderr"
+     when: image_id.stdout != ""
+

@@ -1,0 +1,205 @@
+- include_tasks: query_db.yml QUERY="select nsd_descriptor.nsd_id, nsd_descriptor.name, nsd_descriptor.id, nsd_descriptor.version, nsd_descriptor.tenant, nsd_descriptor_status.status, lvnd_descriptor.version, lvnd_descriptor.lvnd_id, lvnd_descriptor.name, lvnd_descriptor.id, lvnd_descriptor_status.status, lvnd_descriptor_status.fk_lvnd_descriptor from nsd_descriptor INNER JOIN nsd_descriptor_status ON nsd_descriptor.id=nsd_descriptor_status.fk_nsd_descriptor INNER JOIN lvnd_descriptor ON lvnd_descriptor.fk_nsd_descriptor=nsd_descriptor.id INNER JOIN lvnd_descriptor_status ON lvnd_descriptor_status.fk_lvnd_descriptor=lvnd_descriptor.id where nsd_descriptor.name='{{NSD_Name}}' AND nsd_descriptor.version='{{NEW_NSD_VERSION}}'"
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####          NSD with NAME: {{NSD_Name }} and VERSION: {{NEW_NSD_VERSION}} NOT FOUND "
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: not RESP.stdout_lines.0 is defined
+
+- set_fact:
+    NSD_ID: "{{RESP.stdout_lines.0.split('\t')[0]}}"
+    NSD_NAME: "{{RESP.stdout_lines.0.split('\t')[1]}}"
+    NSD_DB_ID: "{{RESP.stdout_lines.0.split('\t')[2]}}"
+    NSD_DB_VERSION: "{{RESP.stdout_lines.0.split('\t')[3]}}"
+    NSD_TENANT_NAME: "{{RESP.stdout_lines.0.split('\t')[4]}}"
+    NSD_STATUS: "{{RESP.stdout_lines.0.split('\t')[5]}}"
+    LVND_DB_VERSION: "{{RESP.stdout_lines.0.split('\t')[6]}}"
+    LVND_ID: "{{RESP.stdout_lines.0.split('\t')[7]}}"
+    LVND_NAME: "{{RESP.stdout_lines.0.split('\t')[8]}}"
+    LVND_DB_ID: "{{RESP.stdout_lines.0.split('\t')[9]}}"
+    LVND_STATUS: "{{RESP.stdout_lines.0.split('\t')[10]}}"
+    LVND_FK: "{{RESP.stdout_lines.0.split('\t')[11]}}"
+
+- include_tasks: query_db.yml QUERY="select lcmd_descriptor.lcmd_id, lcmd_descriptor.name, lcmd_descriptor.id, vnfd_descriptor.version, vnfd_descriptor.vnfd_id, vnfd_descriptor.name, vnfd_descriptor.id, vnfd_descriptor_status.status, vnfd_descriptor.id, lcmd_descriptor_status.status, vnfd_descriptor.version, vnfd_descriptor.vnfd_id, vnfd_descriptor.name, vnfd_descriptor.id from lcmd_descriptor inner join vnfd_descriptor on lcmd_descriptor.fk_vnfd_descriptor=vnfd_descriptor.id inner join vnfd_descriptor_status on vnfd_descriptor_status.fk_vnfd_descriptor=vnfd_descriptor.id inner join lcmd_descriptor_status on lcmd_descriptor_status.fk_lcmd_descriptor = lcmd_descriptor.id where lcmd_descriptor.fk_vnfd_descriptor in (select id from vnfd_descriptor where fk_nsd_descriptor={{NSD_DB_ID}})"
+
+- set_fact:
+    LCMD_VNFD_VALUES: "{{RESP.stdout_lines}}"
+
+- name: Getting Access Token
+  uri:
+      url: "{{LOGIN_URL}}"
+      method: "POST"
+      body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+      status_code:  200
+      body_format: json
+      validate_certs: no
+  register: login_response
+  delegate_to: localhost
+
+- include_tasks: ./https_request_no_template_quick.yml
+                    URL="{{DESCRIPTOR_ONBOARD_URL}}"
+                    METHOD="POST"
+                    PAYLOAD="rowData={\"descriptorId\":\"'{{LCMD_VALUE_SET.split('\t')[0]}}'\",\"namespace\":\"urn:mitel:params:xml:vnf:yang:vdu\",\"name\":\"'{{LCMD_VALUE_SET.split('\t')[1]}}'\",\"id\":\"{{LCMD_VALUE_SET.split('\t')[2]}}\",\"fkVnfdDescriptor\":{\"fkNsdDescriptor\":{\"descriptorId\":\"{{NSD_ID}}\",\"namespace\":\"urn:mitel:params:xml:vnf:yang:nsd\",\"name\":\"{{NSD_NAME}}\",\"id\":\"{{NSD_DB_ID}}\",\"type\":\"NSD\",\"version\":\"{{NSD_DB_VERSION}}\",\"parentDescriptorId\":\"\",\"tenant\":\"{{NSD_TENANT_NAME}}\",\"status\":\"{{NSD_STATUS}}\"},\"type\":\"VNFD\",\"version\":\"{{LCMD_VALUE_SET.split('\t')[3]}}\",\"descriptorId\":\"{{LCMD_VALUE_SET.split('\t')[4]}}\",\"namespace\":\"urn:mitel:params:xml:vnf:yang:vnfd\",\"name\":\"{{LCMD_VALUE_SET.split('\t')[5]}}\",\"id\":\"{{LCMD_VALUE_SET.split('\t')[6]}}\",\"parentDescriptorId\":\"{{NSD_DB_ID}}\",\"tenant\":\"{{NSD_TENANT_NAME}}\",\"status\":\"{{LCMD_VALUE_SET.split('\t')[7]}}\"},\"type\":\"LCMD\",\"parentDescriptorId\":\"{{LCMD_VALUE_SET.split('\t')[8]}}\",\"status\":\"{{LCMD_VALUE_SET.split('\t')[9]}}\"}"
+  loop: "{{LCMD_VNFD_VALUES}}"
+  loop_control:
+    loop_var: LCMD_VALUE_SET
+
+- command: "mysql -u{{ MYSQL_USER }} -p{{ MYSQL_PASSWD }} {{ MYSQL_DB }} -sN -e \"select count(lcmd_descriptor_status.status) from lcmd_descriptor_status where lcmd_descriptor_status.fk_lcmd_descriptor in (select id from lcmd_descriptor where fk_vnfd_descriptor in (select vnfd_descriptor.id from vnfd_descriptor where vnfd_descriptor.fk_nsd_descriptor='{{NSD_DB_ID}}'))  and ((not status='Onboarded') AND (not status='InUse'))\" "
+  register: STATUS_RESP
+  remote_user: "{{CMS_IP_SYSUSER}}"
+  retries: "{{DESCRIPTOR_RETRIES}}"
+  delay: "{{ DELAY }}"
+  until: STATUS_RESP.stdout_lines.0 == "0"
+  ignore_errors: yes
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####          FAILED TO ONBOARD ALL LCMD(s) - {{STATUS_RESP.stdout_lines.0}} LCMD(s) are not in Onboarded/InUse state"
+      - "#####          Please Resolve the Issue and Try Again"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: STATUS_RESP.stdout_lines.0 != "0"
+#
+# [LCMD, VNFD, VLD, NSD, LVND]
+
+- include_tasks: ./https_request_no_template_quick.yml
+                    URL="{{DESCRIPTOR_ONBOARD_URL}}"
+                    METHOD="POST"
+                    PAYLOAD="rowData={\"fkVnfdDescriptor\":{\"descriptorId\":\"{{NSD_ID}}\",\"namespace\":\"urn:mitel:params:xml:vnf:yang:nsd\",\"name\":\"{{NSD_NAME}}\",\"id\":\"{{NSD_DB_ID}}\",\"type\":\"NSD\",\"version\":\"{{NSD_DB_VERSION}}\",\"parentDescriptorId\":\"\",\"tenant\":\"{{NSD_TENANT_NAME}}\",\"status\":\"{{NSD_STATUS}}\"},\"type\":\"VNFD\",\"version\":\"{{VNFD_VALUE_SET.split('\t')[10]}}\",\"descriptorId\":\"{{VNFD_VALUE_SET.split('\t')[11]}}\",\"namespace\":\"urn:mitel:params:xml:vnf:yang:vnfd\",\"name\":\"{{VNFD_VALUE_SET.split('\t')[12]}}\",\"id\":\"{{VNFD_VALUE_SET.split('\t')[13]}}\",\"parentDescriptorId\":\"{{NSD_DB_ID}}\",\"tenant\":\"{{NSD_TENANT_NAME}}\",\"status\":\"{{VNFD_VALUE_SET.split('\t')[7]}}\"}"
+  loop: "{{LCMD_VNFD_VALUES}}"
+  loop_control:
+   loop_var: VNFD_VALUE_SET
+
+- command: "mysql -u{{ MYSQL_USER }} -p{{ MYSQL_PASSWD }} {{ MYSQL_DB }} -sN -e \"select count(vnfd_descriptor_status.status) from vnfd_descriptor_status where fk_vnfd_descriptor in (select id from vnfd_descriptor where fk_nsd_descriptor='{{NSD_DB_ID}}') AND ((not status='Onboarded') AND (not status='InUse'))\" "
+  register: STATUS_RESP
+  remote_user: "{{CMS_IP_SYSUSER}}"
+  retries: "{{DESCRIPTOR_RETRIES}}"
+  delay: "{{ DELAY }}"
+  until: STATUS_RESP.stdout_lines.0 == "0"
+  ignore_errors: yes
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####          FAILED TO ONBOARD ALL VNFD(s) - {{STATUS_RESP.stdout_lines.0}} VNFD(s) are not in Onboarded/InUse state"
+      - "#####          Please Resolve the Issue and Try Again"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: STATUS_RESP.stdout_lines.0 != "0"
+
+
+- include_tasks: query_db.yml QUERY="select vld_id, name, id from vld_descriptor where fk_nsd_descriptor='{{NSD_DB_ID}}'"
+- include_tasks: ./https_request_no_template_quick.yml
+                    URL="{{DESCRIPTOR_ONBOARD_URL}}"
+                    METHOD="POST"
+                    PAYLOAD="rowData={\"fkNsdDescriptor\":{\"descriptorId\":\"{{NSD_ID}}\",\"namespace\":\"urn:mitel:params:xml:ns:yang:nsd\",\"name\":\"{{NSD_NAME}}\",\"id\":\"{{NSD_DB_ID}}\",\"type\":\"NSD\",\"parentDescriptorId\":\"\",\"status\":\"{{NSD_STATUS}}\"},\"type\":\"VLD\",\"descriptorId\":\"{{VLD_VALUE_SET.split('\t')[0]}}\",\"namespace\":\"urn:mitel:params:xml:ns:yang:vld\",\"name\":\"{{VLD_VALUE_SET.split('\t')[1]}}\",\"id\":\"{{VLD_VALUE_SET.split('\t')[2]}}\",\"parentDescriptorId\":\"{{NSD_DB_ID}}\",\"tenant\":\"{{NSD_TENANT_NAME}}\",\"status\":\"{{NSD_STATUS}}\"}"
+  loop: "{{RESP.stdout_lines}}"
+  loop_control:
+    loop_var: VLD_VALUE_SET
+
+- command: "mysql -u{{ MYSQL_USER }} -p{{ MYSQL_PASSWD }} {{ MYSQL_DB }} -sN -e \"select count(vld_descriptor_status.status) from vld_descriptor_status where fk_vld_descriptor in (select id from vld_descriptor where fk_nsd_descriptor='{{NSD_DB_ID}}') AND ((not status='Onboarded') AND (not status='InUse'))\" "
+  register: STATUS_RESP
+  remote_user: "{{CMS_IP_SYSUSER}}"
+  retries: "{{DESCRIPTOR_RETRIES}}"
+  delay: "{{ DELAY }}"
+  until: STATUS_RESP.stdout_lines.0 == "0"
+  ignore_errors: yes
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####          FAILED TO ONBOARD ALL VLD(s) - {{STATUS_RESP.stdout_lines.0}} VLD(s) are not in Onboarded/InUse state"
+      - "#####          Please Resolve the Issue and Try Again"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: STATUS_RESP.stdout_lines.0 != "0"
+
+- include_tasks: ./https_request_no_template_quick.yml
+                    URL="{{DESCRIPTOR_ONBOARD_URL}}"
+                    METHOD="POST"
+                    PAYLOAD="rowData={\"descriptorId\":\"{{NSD_ID}}\",\"namespace\":\"urn:mitel:params:xml:ns:yang:nsd\",\"name\":\"{{NSD_NAME}}\",\"id\":\"{{NSD_DB_ID}}\",\"type\":\"NSD\",\"parentDescriptorId\":\"\",\"status\":\"{{NSD_STATUS}}\"}"
+
+- command: "mysql -u{{ MYSQL_USER }} -p{{ MYSQL_PASSWD }} {{ MYSQL_DB }} -sN -e \"select count(nsd_descriptor_status.status) from nsd_descriptor_status where fk_nsd_descriptor='{{NSD_DB_ID}}' AND ((not status='Onboarded') AND (not status='InUse') AND (not status='DEPLOYED'))\" "
+  register: STATUS_RESP
+  remote_user: "{{CMS_IP_SYSUSER}}"
+  retries: "{{DESCRIPTOR_RETRIES}}"
+  delay: "{{ DELAY }}"
+  until: STATUS_RESP.stdout_lines.0 == "0"
+  ignore_errors: yes
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####          FAILED TO ONBOARD ALL NSD - NSD is not in Onboarded/InUse state"
+      - "#####          Please Resolve the Issue and Try Again"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: STATUS_RESP.stdout_lines.0 != "0"
+
+
+- include_tasks: ./https_request_no_template_quick.yml
+                    URL="{{DESCRIPTOR_ONBOARD_URL}}"
+                    METHOD="POST"
+                    PAYLOAD="rowData={\"fkNsdDescriptor\":{\"type\":\"NSD\",\"version\":\"{{NSD_DB_VERSION}}\",\"descriptorId\":\"{{NSD_ID}}\",\"namespace\":\"urn:mitel:params:xml:vnf:yang:nsd\",\"name\":\"{{NSD_NAME}}\",\"id\":\"{{NSD_DB_ID}}\",\"parentDescriptorId\":\"\",\"tenant\":\"{{NSD_TENANT_NAME}}\",\"uniqueId\":\"{{NSD_ID}}-{{NSD_DB_VERSION}}\",\"status\":\"{{NSD_STATUS}}\"},\"type\":\"LVND\",\"version\":\"{{LVND_DB_VERSION}}\",\"descriptorId\":\"{{LVND_ID}}\",\"namespace\":\"urn:ietf:params:xml:ns:yang:lvnd\",\"name\":\"{{LVND_NAME}}\",\"id\":\"{{LVND_DB_ID}}\",\"parentDescriptorId\":\"{{NSD_ID}}\",\"tenant\":\"{{NSD_TENANT_NAME}}\",\"uniqueId\":\"{{NSD_ID}}-{{NSD_DB_VERSION}}\",\"status\":\"{{LVND_STATUS}}\"}"
+
+- command: "mysql -u{{ MYSQL_USER }} -p{{ MYSQL_PASSWD }} {{ MYSQL_DB }} -sN -e \"select count(lvnd_descriptor_status.status) from lvnd_descriptor_status where fk_lvnd_descriptor='{{LVND_DB_ID}}' AND ((not status='Onboarded') AND (not status='InUse'))\" "
+  register: STATUS_RESP
+  remote_user: "{{CMS_IP_SYSUSER}}"
+  retries: "{{DESCRIPTOR_RETRIES}}"
+  delay: "{{ DELAY }}"
+  until: STATUS_RESP.stdout_lines.0 == "0"
+  ignore_errors: yes
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####          FAILED TO ONBOARD LVND - LVND is not in Onboarded/InUse state"
+      - "#####          Please Resolve the Issue and Try Again"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: STATUS_RESP.stdout_lines.0 != "0"

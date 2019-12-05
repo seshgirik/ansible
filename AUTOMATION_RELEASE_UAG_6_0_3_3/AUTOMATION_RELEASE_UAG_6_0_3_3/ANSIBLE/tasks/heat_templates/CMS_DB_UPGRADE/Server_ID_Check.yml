@@ -1,0 +1,7 @@
+---
+
+    - name: Checking Server ID of Active
+      shell: "grep \"server-id\" /etc/my.cnf | cut -d '=' -f2"
+      register: RESP 
+      remote_user: "{{CMS_ACT_USER}}"
+      delegate_to: "{{ACTIP}}"

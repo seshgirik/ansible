@@ -1,0 +1,11 @@
+---
+
+      - include_tasks : ../find_files.yml
+                            FILE_PATH="{{PATH}}"
+                            FILE_PATTERN="*.zip"
+
+      - name: build array of CONFIGMODEL_ADD_YANG_PATHS
+        set_fact: CONFIGMODEL_ADD_YANG_PATHS="{{CONFIGMODEL_ADD_YANG_PATHS}}+['{{fileitem.path}}']"
+        with_items: "{{files_found.files}}"
+        loop_control:
+            loop_var: fileitem

@@ -1,0 +1,1555 @@
+<sys xmlns="urn:mavenir:ns:yang:tc:1.1.5.0">
+<dbadapter>
+<DBAdapterDBConfig>
+            <name>UAG</name>
+            <dbName>UAG</dbName>
+            <dbType>DB_COUCHBASE</dbType>
+            <dbIPAddress>172.16.77.10,172.16.77.11,172.16.77.12</dbIPAddress>
+            <dbPort>0</dbPort>
+            <dbUserName>SCNfvCouchbase</dbUserName>
+            <dbPassword>mavenir</dbPassword>
+            <dbSchemaName>SCNfvCouchbase</dbSchemaName>
+            <noOfRetries>60</noOfRetries>
+            <timeStamp>0</timeStamp>
+        </DBAdapterDBConfig>
+</dbadapter>
+<platform>
+<AuditComponent>
+        <exchId>74</exchId>
+        <exchIdDepend>96</exchIdDepend>
+        <category>AUDIT_CATEGORY_INTERNAL</category>
+        <subCategory>AUDIT_SUB_CATEGORY_INVALID</subCategory>
+      </AuditComponent>
+<AuditComponent>
+        <exchId>96</exchId>
+        <exchIdDepend>4294967295</exchIdDepend>
+        <category>AUDIT_CATEGORY_INTERNAL</category>
+        <subCategory>AUDIT_SUB_CATEGORY_INVALID</subCategory>
+      </AuditComponent>
+<AuditProfile>
+        <profileName>AuditProfile</profileName>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:39</timeStamp>
+        <batchCount>20</batchCount>
+        <batchInterval>200</batchInterval>
+        <queryInterval>2000</queryInterval>
+        <startReqTimeout>2000</startReqTimeout>
+        <startReqRetries>3</startReqRetries>
+        <stopReqTimeout>2000</stopReqTimeout>
+        <stopReqRetries>3</stopReqRetries>
+        <pauseReqTimeout>2000</pauseReqTimeout>
+        <pauseReqRetries>3</pauseReqRetries>
+        <continueTimeout>2000</continueTimeout>
+        <continueRetries>3</continueRetries>
+        <libRetryInterval>1000</libRetryInterval>
+      </AuditProfile>
+<OnDemandAudit>
+        <cfgName>0</cfgName>
+        <internal>AUDIT_IGNORE</internal>
+        <externalBssap>AUDIT_IGNORE</externalBssap>
+        <externalMegaco>AUDIT_IGNORE</externalMegaco>
+        <fkAuditProfile>AuditProfile</fkAuditProfile>
+      </OnDemandAudit>
+<SystemAudit>
+        <auditName>0</auditName>
+        <systemWide>AUDIT_DISABLED</systemWide>
+        <internal>AUDIT_DISABLED</internal>
+        <externalBssap>AUDIT_DISABLED</externalBssap>
+        <externalMegaco>AUDIT_DISABLED</externalMegaco>
+        <startHour>0</startHour>
+        <startMin>0</startMin>
+        <maxDuration>7200</maxDuration>
+        <fkAuditProfile>AuditProfile</fkAuditProfile>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:39</timeStamp>
+      </SystemAudit>
+<SystemBackup>
+        <backupName>0</backupName>
+        <dailyBackup>BACKUP_DISABLED</dailyBackup>
+        <startMin>0</startMin>
+        <startHour>1</startHour>
+        <backupTimeout>30</backupTimeout>
+        <deleteTimeInterval>7</deleteTimeInterval>
+        <backupPath>/data/Backup</backupPath>
+        <emsTriggerIdx>0</emsTriggerIdx>
+        <backupFileFormat>MYSQL</backupFileFormat>
+      </SystemBackup>
+<OvldApp>
+        <id>0</id>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:38</timeStamp>
+        <service_type>AUDIT</service_type>
+        <level>1</level>
+      </OvldApp>
+<OvldComponent>
+        <id>0</id>
+        <name>ovldc0</name>
+        <enable_memory>1</enable_memory>
+        <measurement_interval>5</measurement_interval>
+        <averaging_samples>15</averaging_samples>
+        <ovld_cpu_thresh1>30</ovld_cpu_thresh1>
+        <ovld_cpu_abate_thresh1>25</ovld_cpu_abate_thresh1>
+        <ovld_cpu_thresh2>50</ovld_cpu_thresh2>
+        <ovld_cpu_abate_thresh2>45</ovld_cpu_abate_thresh2>
+        <ovld_cpu_thresh3>70</ovld_cpu_thresh3>
+        <ovld_cpu_abate_thresh3>65</ovld_cpu_abate_thresh3>
+        <ovld_cpu_thresh4>90</ovld_cpu_thresh4>
+        <ovld_cpu_abate_thresh4>85</ovld_cpu_abate_thresh4>
+        <ovld_mem_thresh1>30</ovld_mem_thresh1>
+        <ovld_mem_abate_thresh1>25</ovld_mem_abate_thresh1>
+        <ovld_mem_thresh2>50</ovld_mem_thresh2>
+        <ovld_mem_abate_thresh2>45</ovld_mem_abate_thresh2>
+        <ovld_mem_thresh3>70</ovld_mem_thresh3>
+        <ovld_mem_abate_thresh3>65</ovld_mem_abate_thresh3>
+        <ovld_mem_thresh4>90</ovld_mem_thresh4>
+        <ovld_mem_abate_thresh4>85</ovld_mem_abate_thresh4>
+        <cpuUsageCalcMethod>AVERAGE_CPU</cpuUsageCalcMethod>
+		<cpu_core_excluded>0,1</cpu_core_excluded>
+      </OvldComponent>
+<OvldDiskInfo>
+        <partition>/</partition>
+        <comType>AM</comType>
+        <minor_thresh>50</minor_thresh>
+        <major_thresh>75</major_thresh>
+        <critical_thresh>90</critical_thresh>
+      </OvldDiskInfo>
+<OvldDropAction>
+        <type>DROP_TYPE_RM</type>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:38</timeStamp>
+        <thresh1>10</thresh1>
+        <thresh2>33</thresh2>
+        <thresh3>50</thresh3>
+        <thresh4>90</thresh4>
+      </OvldDropAction>
+<OvldSystem>
+        <id>0</id>
+        <ovld_enabled>1</ovld_enabled>
+      </OvldSystem>
+<SMConfig>
+        <cfgName>SMConfig</cfgName>
+        <interval>2</interval>
+        <count>5</count>
+        <switchOnNetFailure>TRUE</switchOnNetFailure>
+        <heartBeatEventInterval>0</heartBeatEventInterval>
+      </SMConfig>
+<fqdn_local_ext_ip_map>
+        <mapName>23</mapName>
+        <fkfqdn_local>h248</fkfqdn_local>
+        <fkrealm>realm-RA</fkrealm>
+        <fkext_ip>H248</fkext_ip>
+      </fqdn_local_ext_ip_map>
+<fqdn_template>
+        <name>h248</name>
+        <domain>softbank.ne.jp</domain>
+        <hostname>h248</hostname>
+      </fqdn_template>
+<DMOConfig>
+        <name>DMOConfig</name>
+        <inactivityPeriod>60</inactivityPeriod>
+      </DMOConfig>
+<realm>
+        <name>realm-RA</name>
+        <net_intf_type>NET_INTERFACE_RA</net_intf_type>
+        <isTrusted>1</isTrusted>
+      </realm>
+<realm_intf_map>
+        <mapName>11</mapName>
+        <fkrealm>realm-RA</fkrealm>
+        <fkintf>eth2</fkintf>
+        <fknodeid>ADM</fknodeid>
+      </realm_intf_map>
+<InternalIPAddressPool>
+        <name>TC_GRP</name>
+        <startAddress>192.168.36.2</startAddress>
+        <netmaskSize>24</netmaskSize>
+      </InternalIPAddressPool>
+<InternalIPAddressPoolToProtGrpMap>
+        <mapName>0</mapName>
+        <fkInternalIPPool>TC_GRP</fkInternalIPPool>
+        <fkprot_grp>ADM</fkprot_grp>
+        <interface>fpeth1</interface>
+        <poolType>POOL_TYPE_APPLICATION</poolType>
+        <maxConfigurable>2</maxConfigurable>
+        <numAddressPerCard>1</numAddressPerCard>
+      </InternalIPAddressPoolToProtGrpMap>
+</platform>
+<appcommon>
+<programArgument>
+          <name>tcMgr</name>
+          <programName>tcMgr</programName>
+          <vnfType>TC</vnfType>
+          <argument>--numWorkerThreads=4 --type=1</argument>
+        </programArgument>
+<actOnSipRspCode>
+        <keyname>0</keyname>
+        <minRspCode>408</minRspCode>
+        <maxRspCode>408</maxRspCode>
+        <act>SIP_RSP_ACT_TRY_NEXT</act>
+      </actOnSipRspCode>
+<SvcErr_InterCc_map>
+        <keyname>14</keyname>
+        <flag>3</flag>
+        <scenario>Service_MO</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_SM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>19</keyname>
+        <flag>3</flag>
+        <scenario>Service_MT</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_SM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>24</keyname>
+        <flag>6</flag>
+        <scenario>Service_MO</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_SM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>29</keyname>
+        <flag>6</flag>
+        <scenario>Service_MT</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_SM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>34</keyname>
+        <flag>7</flag>
+        <scenario>Service_MO</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_SM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>39</keyname>
+        <flag>7</flag>
+        <scenario>Service_MT</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_SM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>4</keyname>
+        <flag>10</flag>
+        <scenario>Service_MO</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_FT_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>44</keyname>
+        <flag>8</flag>
+        <scenario>Service_MO</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_SM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>49</keyname>
+        <flag>8</flag>
+        <scenario>Service_MT</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_SM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>54</keyname>
+        <flag>9</flag>
+        <scenario>Service_MO</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_FT_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>59</keyname>
+        <flag>9</flag>
+        <scenario>Service_MT</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_FT_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>64</keyname>
+        <flag>2</flag>
+        <scenario>Service_MO</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_SM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>69</keyname>
+        <flag>2</flag>
+        <scenario>Service_MT</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_SM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>74</keyname>
+        <flag>4</flag>
+        <scenario>Service_MO</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_LM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>79</keyname>
+        <flag>4</flag>
+        <scenario>Service_MT</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_LM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>84</keyname>
+        <flag>5</flag>
+        <scenario>Service_MO</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_LM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>89</keyname>
+        <flag>5</flag>
+        <scenario>Service_MT</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_LM_SMPP_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>9</keyname>
+        <flag>10</flag>
+        <scenario>Service_MT</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_FT_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>94</keyname>
+        <flag>12</flag>
+        <scenario>Service_MO</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_FT_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<SvcErr_InterCc_map>
+        <keyname>99</keyname>
+        <flag>12</flag>
+        <scenario>Service_MT</scenario>
+        <type>ERR_SMPP_INTERWORKING_NOT_ALLOWED</type>
+        <causeCode>CC_FT_INTERWORKING_NOT_ALLOWED</causeCode>
+      </SvcErr_InterCc_map>
+<domainList>
+        <keyname>0</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+        <domainName>sha-st.mavenir.com</domainName>
+      </domainList>
+<domainList>
+        <keyname>1</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+        <domainName>visit-softbank.ne.jp</domainName>
+      </domainList>
+<domainList>
+        <keyname>10</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:48</timeStamp>
+        <domainName>softbank.ne.jp</domainName>
+      </domainList>
+<domainList>
+        <keyname>2</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+        <domainName>softbank.ne.jp</domainName>
+      </domainList>
+<domainList>
+        <keyname>20</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:58</timeStamp>
+        <domainName>sha-st.mavenir.com</domainName>
+      </domainList>
+<domainList>
+        <keyname>21</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:56</timeStamp>
+        <domainName>atcf14193.sha-st.mavenir.com</domainName>
+      </domainList>
+<domainList>
+        <keyname>3</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+        <domainName>v-softbank.ne.jp</domainName>
+      </domainList>
+<domainList>
+        <keyname>4</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+        <domainName>ibcf.mavenir.com</domainName>
+      </domainList>
+<domainList>
+        <keyname>5</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+        <domainName>ibcf.softbank.ne.jp</domainName>
+      </domainList>
+<domainList>
+        <keyname>6</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+        <domainName>atcf191.softbank.ne.jp</domainName>
+      </domainList>
+<ims_rmt_server>
+        <name>TCRA</name>
+        <server_type>IMS_SERVER_TYPE_TSC</server_type>
+        <protocol>IP_SERVICE_UNKNOWN</protocol>
+        <host>192.168.40.41</host>
+        <ip>192.168.40.41</ip>
+        <serverAddr>192.168.40.41</serverAddr>
+        <fkdomain>10</fkdomain>
+        <fkgroup>group-0</fkgroup>
+        <fkrealm>realm-RA</fkrealm>
+        <isTrusted>1</isTrusted>
+        <isBinarySupp>0</isBinarySupp>
+        <weight>100</weight>
+        <priority>PRIMARY</priority>
+        <retryTimes>1</retryTimes>
+        <port>50200</port>
+        <protoType>IP_PROTO_ANY</protoType>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:56</timeStamp>
+        <supportHealthCheck>FALSE</supportHealthCheck>
+        <skipOptions>FALSE</skipOptions>
+        <applyAutoSTG>FALSE</applyAutoSTG>
+        <trunkGroupSupport>FALSE</trunkGroupSupport>
+        <relayUnknownEgressTrunkGroup>FALSE</relayUnknownEgressTrunkGroup>
+      </ims_rmt_server>
+<app_service_port>
+        <name>1</name>
+        <external_port>50400</external_port>
+        <app_type>APP_TYPE_MPGC_H248</app_type>
+        <ip_service_type>IP_SERVICE_H248</ip_service_type>
+        <ip_proto_type>IP_PROTO_UDP</ip_proto_type>
+        <ip_port_type>IP_PORT_DEFAULT</ip_port_type>
+        <net_interface_type>NET_INTERFACE_RA</net_interface_type>
+        <isServer>1</isServer>
+        <internal_port>50400</internal_port>
+        <port_range>1</port_range>
+        <weight>100</weight>
+        <priority>1</priority>
+        <fkfqdn_local>h248</fkfqdn_local>
+        <fknodeid>ADM</fknodeid>
+        <fkdomain>10</fkdomain>
+        <fkrealm>realm-RA</fkrealm>
+        <fkgroup>group-0</fkgroup>
+        <trunkGroupSupport>FALSE</trunkGroupSupport>
+        <relayUnknownIngressTrunkGroup>TRUE</relayUnknownIngressTrunkGroup>
+	<staticMode>FALSE</staticMode>
+        <needNat>FALSE</needNat>
+	
+        <virtualServiceIp>H248</virtualServiceIp>
+      </app_service_port>
+<settingForSA>
+        <keyname>0</keyname>
+        <localPortForUDPEnc>4500</localPortForUDPEnc>
+        <peerPortForUDPEnc>65535</peerPortForUDPEnc>
+        <marginTimer>1000</marginTimer>
+        <saReplayWindown>0</saReplayWindown>
+        <saLifeTimeAllocations>4294967295</saLifeTimeAllocations>
+        <saSeqNumMargin>1000</saSeqNumMargin>
+        <saPollSeqTimer>300</saPollSeqTimer>
+      </settingForSA>
+<rtpCapNegConfig>
+        <keyname>100</keyname>
+        <name>rtpCapNegConfig-gm</name>
+        <fkrtpCapNegSetting>pcscf-gm</fkrtpCapNegSetting>
+      </rtpCapNegConfig>
+<rtpCapNegConfig>
+        <keyname>98</keyname>
+        <name>rtpCapNegConfig-mw</name>
+        <fkrtpCapNegSetting>pcscf-mw</fkrtpCapNegSetting>
+      </rtpCapNegConfig>
+<rtpCapNegConfig>
+        <keyname>99</keyname>
+        <name>rtpCapNegConfig-default</name>
+        <fkrtpCapNegSetting>pcscf-1</fkrtpCapNegSetting>
+      </rtpCapNegConfig>
+<mediaConfig>
+        <keyname>99</keyname>
+        <name>pcscf-1</name>
+        <fkMediaSetting>pcscf-1</fkMediaSetting>
+      </mediaConfig>
+<mediaSettings>
+        <name>pcscf-1</name>
+        <timeStamp>2016-10-26 09:21:49</timeStamp>
+        <versionID>0</versionID>
+        <enableUDPCheckSum>FALSE</enableUDPCheckSum>
+        <helpNATTravesal>TRUE</helpNATTravesal>
+        <allowRemotePortChange>FALSE</allowRemotePortChange>
+        <supportedIce>ICE_NONE</supportedIce>
+        <preferredIceRole>ICE_ROLE_CONTROLLER</preferredIceRole>
+        <supportPEMHeader>TRUE</supportPEMHeader>
+        <gatePEM>TRUE</gatePEM>
+        <directionForPEM>PEM_DIRT_NONE</directionForPEM>
+        <supportOMR>FALSE</supportOMR>
+        <enableLoopbackValidityCheck>TRUE</enableLoopbackValidityCheck>
+        <checkIncOmrRealm>TRUE</checkIncOmrRealm>
+      </mediaSettings>
+<msrpCapabilitySetting>
+        <name>0</name>
+        <transport>MSRP_TCP</transport>
+        <ipType>ipv4</ipType>
+        <setupRoleInAnswerSdp>ROLE_PASSIVE</setupRoleInAnswerSdp>
+        <setupRoleInOfferSdp>ROLE_ACTPASS</setupRoleInOfferSdp>
+      </msrpCapabilitySetting>
+<msrpCapabilitySetting>
+        <name>1</name>
+        <transport>MSRP_TLS</transport>
+        <ipType>ipv4</ipType>
+        <setupRoleInAnswerSdp>ROLE_PASSIVE</setupRoleInAnswerSdp>
+        <setupRoleInOfferSdp>ROLE_ACTPASS</setupRoleInOfferSdp>
+      </msrpCapabilitySetting>
+<msrpSettingsForRms>
+        <keyname>0</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:45</timeStamp>
+        <useMsrpPathIP>MSRP_TRUE</useMsrpPathIP>
+        <useMsrpPathPort>MSRP_TRUE</useMsrpPathPort>
+        <msrpInactivityTimer>120</msrpInactivityTimer>
+        <msrpSuccReportTimer>120</msrpSuccReportTimer>
+        <msrpFailReportTimer>30</msrpFailReportTimer>
+        <msrpContextStsTimer>3600</msrpContextStsTimer>
+        <contextInactivityTimer>10</contextInactivityTimer>
+        <idleProbTimer>3</idleProbTimer>
+        <termPendingTimer>5</termPendingTimer>
+        <msrpMsgGracefulWaitingTimer>35</msrpMsgGracefulWaitingTimer>
+        <iwMsgRspTimer>15</iwMsgRspTimer>
+        <msgGuardTimer>3</msgGuardTimer>
+        <msrpSessSwitchTimer>30</msrpSessSwitchTimer>
+        <msrpMsgSwitchTimer>10</msrpMsgSwitchTimer>
+        <msrpActConnTimer>30</msrpActConnTimer>
+        <msrpPasBindTimer>30</msrpPasBindTimer>
+        <msrpConnIdleTimer>30</msrpConnIdleTimer>
+        <msrpTransTimer>30</msrpTransTimer>
+        <msrpRetryTimer>1</msrpRetryTimer>
+        <msrpDnsQueryTimer>30</msrpDnsQueryTimer>
+        <maxSendSizePerSession>4096000</maxSendSizePerSession>
+        <maxSendSizePerMsg>2048</maxSendSizePerMsg>
+        <recvBufferSize>4096</recvBufferSize>
+        <segmentThreshold>2048</segmentThreshold>
+        <spliceThreshold>1024</spliceThreshold>
+        <sysMaxSize>1024000000</sysMaxSize>
+        <waitForRcptSend>MSRP_TRUE</waitForRcptSend>
+        <maxSizeSysMsgSupport>FALSE</maxSizeSysMsgSupport>
+        <dumpFlag>MSRP_TRUE</dumpFlag>
+        <retransNum>1</retransNum>
+        <readDelayTimer>50</readDelayTimer>
+        <sysMaxSizeIw>1024000000</sysMaxSizeIw>
+        <MaxsendSizePerChunk>10240</MaxsendSizePerChunk>
+        <useExactByteRange>FALSE</useExactByteRange>
+        <scanendofChunk>TRUE</scanendofChunk>
+        <stopArchOnGracefulRelease>0</stopArchOnGracefulRelease>
+        <stopArchOnForcefulRelease>0</stopArchOnForcefulRelease>
+        <waitArchOnGracefulRelease>0</waitArchOnGracefulRelease>
+        <checkingIncomingCpimTo>DISABLED_CHECK</checkingIncomingCpimTo>
+        <changeOutgoingCpimToForGroup>FOLLOW_CPM_ALWAYS</changeOutgoingCpimToForGroup>
+        <changeCpimToForSelfFwding>TRUE</changeCpimToForSelfFwding>
+        <disableAnyReportForSelfFwding>TRUE</disableAnyReportForSelfFwding>
+        <retryOnReport>TRUE</retryOnReport>
+        <allowAggregateChunkForRetry>TRUE</allowAggregateChunkForRetry>
+        <fwdMsgToMyself>TRUE</fwdMsgToMyself>
+        <setActivePort9>TRUE</setActivePort9>
+        <delayToSendSYNTimer>0</delayToSendSYNTimer>
+        <clientWaitForTLSHandshakeTimer>1</clientWaitForTLSHandshakeTimer>
+        <serverWaitForTLSHandshakeTimer>1</serverWaitForTLSHandshakeTimer>
+        <tryTLSHandshakeCount>3</tryTLSHandshakeCount>
+      </msrpSettingsForRms>
+<msrpOvld>
+        <keyname>0</keyname>
+        <overloadlevel>0</overloadlevel>
+        <delayrate>0</delayrate>
+      </msrpOvld>
+<msrpOvld>
+        <keyname>1</keyname>
+        <overloadlevel>1</overloadlevel>
+        <delayrate>30</delayrate>
+      </msrpOvld>
+<msrpOvld>
+        <keyname>2</keyname>
+        <overloadlevel>2</overloadlevel>
+        <delayrate>60</delayrate>
+      </msrpOvld>
+<msrpOvld>
+        <keyname>3</keyname>
+        <overloadlevel>3</overloadlevel>
+        <delayrate>90</delayrate>
+      </msrpOvld>
+<msrpOvld>
+        <keyname>4</keyname>
+        <overloadlevel>4</overloadlevel>
+        <delayrate>0</delayrate>
+      </msrpOvld>
+<rtpCapNegSetting>
+        <name>pcscf-1</name>
+        <supportAudioTranscoding>FALSE</supportAudioTranscoding>
+        <supportVideoTranscoding>FALSE</supportVideoTranscoding>
+        <priorityFromLocalConfiguration>FALSE</priorityFromLocalConfiguration>
+        <ipType>ipv4</ipType>
+        <supportedDTMF>inband</supportedDTMF>
+        <supportRtpRtcpMux>FALSE</supportRtpRtcpMux>
+        <supportBundle>FALSE</supportBundle>
+        <supportInbandDtmfRelay>FALSE</supportInbandDtmfRelay>
+        <supportOutbandDtmfRelay>FALSE</supportOutbandDtmfRelay>
+        <includePtime>TRUE</includePtime>
+        <ptime>20</ptime>
+        <includeMaxptime>TRUE</includeMaxptime>
+        <maxptime>20</maxptime>
+        <supportMultiCodecInAnswer>FALSE</supportMultiCodecInAnswer>
+        <offerCodecSelTypeInReNeg>RENEGOTIATE_CODEC_LIST</offerCodecSelTypeInReNeg>
+        <ASNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</ASNegotiateType>
+        <RSNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</RSNegotiateType>
+        <RRNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</RRNegotiateType>
+        <SessionASNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</SessionASNegotiateType>
+        <SessionRSNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</SessionRSNegotiateType>
+        <SessionRRNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</SessionRRNegotiateType>
+        <answerCodecSelType>PREFER_NON_TRANSCODING</answerCodecSelType>
+        <repeatSDPInFinalAnswer>TRUE</repeatSDPInFinalAnswer>
+      </rtpCapNegSetting>
+<rtpCapNegSetting>
+        <name>pcscf-gm</name>
+        <supportAudioTranscoding>FALSE</supportAudioTranscoding>
+        <supportVideoTranscoding>FALSE</supportVideoTranscoding>
+        <priorityFromLocalConfiguration>FALSE</priorityFromLocalConfiguration>
+        <ipType>ipv4</ipType>
+        <supportedDTMF>inband</supportedDTMF>
+        <supportRtpRtcpMux>FALSE</supportRtpRtcpMux>
+        <supportBundle>FALSE</supportBundle>
+        <supportInbandDtmfRelay>FALSE</supportInbandDtmfRelay>
+        <supportOutbandDtmfRelay>FALSE</supportOutbandDtmfRelay>
+        <includePtime>TRUE</includePtime>
+        <ptime>20</ptime>
+        <includeMaxptime>TRUE</includeMaxptime>
+        <maxptime>20</maxptime>
+        <supportMultiCodecInAnswer>FALSE</supportMultiCodecInAnswer>
+        <offerCodecSelTypeInReNeg>RENEGOTIATE_CODEC_LIST</offerCodecSelTypeInReNeg>
+        <ASNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</ASNegotiateType>
+        <RSNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</RSNegotiateType>
+        <RRNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</RRNegotiateType>
+        <SessionASNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</SessionASNegotiateType>
+        <SessionRSNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</SessionRSNegotiateType>
+        <SessionRRNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</SessionRRNegotiateType>
+        <answerCodecSelType>PREFER_NON_TRANSCODING</answerCodecSelType>
+        <repeatSDPInFinalAnswer>TRUE</repeatSDPInFinalAnswer>
+      </rtpCapNegSetting>
+<rtpCapNegSetting>
+        <name>pcscf-mw</name>
+        <supportAudioTranscoding>FALSE</supportAudioTranscoding>
+        <supportVideoTranscoding>FALSE</supportVideoTranscoding>
+        <priorityFromLocalConfiguration>FALSE</priorityFromLocalConfiguration>
+        <ipType>ipv4</ipType>
+        <supportRtpRtcpMux>FALSE</supportRtpRtcpMux>
+        <supportBundle>FALSE</supportBundle>
+        <supportInbandDtmfRelay>FALSE</supportInbandDtmfRelay>
+        <supportOutbandDtmfRelay>FALSE</supportOutbandDtmfRelay>
+        <includePtime>TRUE</includePtime>
+        <ptime>20</ptime>
+        <includeMaxptime>TRUE</includeMaxptime>
+        <maxptime>20</maxptime>
+        <supportMultiCodecInAnswer>FALSE</supportMultiCodecInAnswer>
+        <offerCodecSelTypeInReNeg>RENEGOTIATE_CODEC_LIST</offerCodecSelTypeInReNeg>
+        <RSNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</RSNegotiateType>
+        <SessionASNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</SessionASNegotiateType>
+        <SessionRSNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</SessionRSNegotiateType>
+        <SessionRRNegotiateType>SDP_NEGOTIATE_TYPE_USE_CALCULATED</SessionRRNegotiateType>
+        <answerCodecSelType>PREFER_NON_TRANSCODING</answerCodecSelType>
+        <repeatSDPInFinalAnswer>TRUE</repeatSDPInFinalAnswer>
+      </rtpCapNegSetting>
+<rtpProfileGroup>
+        <name>pcscf-1</name>
+      </rtpProfileGroup>
+<rtpProfileSetting>
+        <name>0</name>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:59</timeStamp>
+        <rtpProfile>RTP/AVP</rtpProfile>
+        <supportFingerprint>RTP_ATTR_SUPPORT_NONE</supportFingerprint>
+        <supportCrypto>RTP_ATTR_SUPPORT_NONE</supportCrypto>
+        <supportRtcpFb>RTP_ATTR_SUPPORT_NONE</supportRtcpFb>
+        <supportSetup>RTP_ATTR_SUPPORT_NONE</supportSetup>
+        <setupRoleInAnswerSdp>ROLE_PASSIVE</setupRoleInAnswerSdp>
+        <setupRoleInOfferSdp>ROLE_ACTPASS</setupRoleInOfferSdp>
+        <hashFunc>sha-1</hashFunc>
+      </rtpProfileSetting>
+<rtpProfileSetting>
+        <name>1</name>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:59</timeStamp>
+        <rtpProfile>RTP/AVP</rtpProfile>
+        <supportFingerprint>RTP_ATTR_SUPPORT_NONE</supportFingerprint>
+        <supportCrypto>RTP_ATTR_SUPPORT_NONE</supportCrypto>
+        <supportRtcpFb>RTP_ATTR_SUPPORT_NONE</supportRtcpFb>
+        <supportSetup>RTP_ATTR_SUPPORT_NONE</supportSetup>
+        <setupRoleInAnswerSdp>ROLE_PASSIVE</setupRoleInAnswerSdp>
+        <setupRoleInOfferSdp>ROLE_ACTPASS</setupRoleInOfferSdp>
+        <hashFunc>sha-1</hashFunc>
+      </rtpProfileSetting>
+<rtpSettings>
+        <keyname>0</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:59</timeStamp>
+        <contextStsTimer>60</contextStsTimer>
+        <contextInactivityTimer>10</contextInactivityTimer>
+        <streamInactivityTimer>20</streamInactivityTimer>
+        <streamInactivitySOTimer>400</streamInactivitySOTimer>
+        <streamInactivityROTimer>400</streamInactivityROTimer>
+        <getResourceTimer>1</getResourceTimer>
+        <allocResTimer>1</allocResTimer>
+        <termPendingTimer>5</termPendingTimer>
+        <loopbackSupported>TRUE</loopbackSupported>
+        <perfMonStsTimer>60</perfMonStsTimer>
+        <lowMediaAddressPoolWatermark>10</lowMediaAddressPoolWatermark>
+        <heavyMediaInactivityThreshold>60</heavyMediaInactivityThreshold>
+        <mppStatisticsTimer>10</mppStatisticsTimer>
+        <mppLogStatisticsTimer>0</mppLogStatisticsTimer>
+        <mppWaitForFirstPacketTimer>10</mppWaitForFirstPacketTimer>
+        <mppPortLearn>FALSE</mppPortLearn>
+        <libsrtpReplayWindow>6</libsrtpReplayWindow>
+        <SRTCPTAGLEN>32</SRTCPTAGLEN>
+        <useNitrox>FALSE</useNitrox>
+        <maxExceptionResetFP>600</maxExceptionResetFP>
+        <maxExceptionClearCall>100</maxExceptionClearCall>
+        <auditInterval>10</auditInterval>
+        <updateLocalPortInModify>FALSE</updateLocalPortInModify>
+        <IqPendingTimer>60</IqPendingTimer>
+        <isLoopbackPrior>TRUE</isLoopbackPrior>
+        <isPGWIntegration>FALSE</isPGWIntegration>
+        <maxTTL>4</maxTTL>
+        <maxInternalLoopErr>20</maxInternalLoopErr>
+        <sendRtpRule>RTP_SEND_ALWAYS</sendRtpRule>
+        <dtmfRFCSupported>DTMF_FOLLOW_RFC_4733</dtmfRFCSupported>
+      </rtpSettings>
+<settingForSdpOffer>
+        <keyname>0</keyname>
+        <net_interface_type>NET_INTERFACE_GM</net_interface_type>
+        <preferredSecurity>PREFERRED_NONE</preferredSecurity>
+        <preferredIpType>V4</preferredIpType>
+      </settingForSdpOffer>
+<server_group>
+        <name>group-0</name>
+        <timeStamp>2016-10-26 09:21:48</timeStamp>
+        <versionID>0</versionID>
+        <rjtCallForSessLimit>FALSE</rjtCallForSessLimit>
+        <routingSelection>ROUTING_PERCENT_ALLOCATION</routingSelection>
+      </server_group>
+<srtpNegSettingGroup>
+        <name>0</name>
+      </srtpNegSettingGroup>
+<srtpNegSetting>
+        <name>APP_TYPE_PCSCF</name>
+        <srtpLifeTimeEnabled>FALSE</srtpLifeTimeEnabled>
+        <srtcpLifeTimeEnabled>FALSE</srtcpLifeTimeEnabled>
+        <srtpLifeTime>20</srtpLifeTime>
+        <srtcpLifeTime>20</srtcpLifeTime>
+        <cryptoSuite>AES_CM_128_HMAC_SHA1_32</cryptoSuite>
+      </srtpNegSetting>
+<systemSetting>
+        <name>sys-1</name>
+        <allowVideoTranscoding>TRUE</allowVideoTranscoding>
+        <allowAudioTranscoding>TRUE</allowAudioTranscoding>
+        <allowDTMFTranscoding>TRUE</allowDTMFTranscoding>
+      </systemSetting>
+<systemSetting>
+        <name>sys-2</name>
+        <allowVideoTranscoding>FALSE</allowVideoTranscoding>
+        <allowAudioTranscoding>FALSE</allowAudioTranscoding>
+        <allowDTMFTranscoding>FALSE</allowDTMFTranscoding>
+      </systemSetting>
+<preferredCodecConfig>
+        <keyname>0</keyname>
+        <name>pcscf-1</name>
+        <codectype>UAGVIDEO</codectype>
+        <fkPreferredCodecGroup>pcscf-1</fkPreferredCodecGroup>
+      </preferredCodecConfig>
+<preferredCodecConfig>
+        <keyname>1</keyname>
+        <name>pcscf-2</name>
+        <codectype>UAGAUDIO</codectype>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+      </preferredCodecConfig>
+<preferredCodecGroup>
+        <name>pcscf-1</name>
+      </preferredCodecGroup>
+<preferredCodecGroup>
+        <name>pcscf-2</name>
+      </preferredCodecGroup>
+<preferredCodecMap>
+        <keyname>0</keyname>
+        <fkPreferredCodecGroup>pcscf-1</fkPreferredCodecGroup>
+        <fkCodec>0</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>1</keyname>
+        <fkPreferredCodecGroup>pcscf-1</fkPreferredCodecGroup>
+        <fkCodec>1</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>10</keyname>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+        <fkCodec>10</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>11</keyname>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+        <fkCodec>11</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>12</keyname>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+        <fkCodec>12</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>2</keyname>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+        <fkCodec>2</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>3</keyname>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+        <fkCodec>3</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>4</keyname>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+        <fkCodec>4</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>5</keyname>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+        <fkCodec>5</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>6</keyname>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+        <fkCodec>6</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>7</keyname>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+        <fkCodec>7</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>8</keyname>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+        <fkCodec>8</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<preferredCodecMap>
+        <keyname>9</keyname>
+        <fkPreferredCodecGroup>pcscf-2</fkPreferredCodecGroup>
+        <fkCodec>9</fkCodec>
+        <priority>0</priority>
+      </preferredCodecMap>
+<codec>
+        <keyname>0</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:40</timeStamp>
+        <codectype>UAGVIDEO</codectype>
+        <payloadtype>103</payloadtype>
+        <codecname>VP8</codecname>
+        <samplerate>90000</samplerate>
+        <bitrate>500000</bitrate>
+        <bandwidth>500000</bandwidth>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>1</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:40</timeStamp>
+        <codectype>UAGVIDEO</codectype>
+        <payloadtype>99</payloadtype>
+        <codecname>H264</codecname>
+        <samplerate>90000</samplerate>
+        <bitrate>500000</bitrate>
+        <bandwidth>500000</bandwidth>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>10</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:41</timeStamp>
+        <codectype>UAGAUDIO</codectype>
+        <payloadtype>114</payloadtype>
+        <codecname>G726-40</codecname>
+        <samplerate>8000</samplerate>
+        <bitrate>40000</bitrate>
+        <bandwidth>50000</bandwidth>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>11</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:41</timeStamp>
+        <codectype>UAGAUDIO</codectype>
+        <payloadtype>100</payloadtype>
+        <codecname>AMR</codecname>
+        <samplerate>8000</samplerate>
+        <bitrate>10200</bitrate>
+        <bandwidth>50000</bandwidth>
+        <fmtp>octet-align=1</fmtp>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>12</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:41</timeStamp>
+        <codectype>UAGAUDIO</codectype>
+        <payloadtype>101</payloadtype>
+        <codecname>AMR-WB</codecname>
+        <samplerate>16000</samplerate>
+        <bitrate>12650</bitrate>
+        <bandwidth>50000</bandwidth>
+        <fmtp>octet-align=1</fmtp>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>2</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:40</timeStamp>
+        <codectype>UAGAUDIO</codectype>
+        <payloadtype>0</payloadtype>
+        <codecname>PCMU</codecname>
+        <samplerate>8000</samplerate>
+        <bitrate>64000</bitrate>
+        <bandwidth>50000</bandwidth>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>3</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:40</timeStamp>
+        <codectype>UAGAUDIO</codectype>
+        <payloadtype>8</payloadtype>
+        <codecname>PCMA</codecname>
+        <samplerate>8000</samplerate>
+        <bitrate>64000</bitrate>
+        <bandwidth>50000</bandwidth>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>4</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:40</timeStamp>
+        <codectype>UAGAUDIO</codectype>
+        <payloadtype>97</payloadtype>
+        <codecname>AMR</codecname>
+        <samplerate>8000</samplerate>
+        <bitrate>10200</bitrate>
+        <bandwidth>50000</bandwidth>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>5</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:40</timeStamp>
+        <codectype>UAGAUDIO</codectype>
+        <payloadtype>98</payloadtype>
+        <codecname>AMR-WB</codecname>
+        <samplerate>16000</samplerate>
+        <bitrate>12650</bitrate>
+        <bandwidth>50000</bandwidth>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>6</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:40</timeStamp>
+        <codectype>UAGAUDIO</codectype>
+        <payloadtype>18</payloadtype>
+        <codecname>G729</codecname>
+        <samplerate>8000</samplerate>
+        <bitrate>8000</bitrate>
+        <bandwidth>50000</bandwidth>
+        <fmtp>annexb=no</fmtp>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>7</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:40</timeStamp>
+        <codectype>UAGAUDIO</codectype>
+        <payloadtype>111</payloadtype>
+        <codecname>G726-16</codecname>
+        <samplerate>8000</samplerate>
+        <bitrate>16000</bitrate>
+        <bandwidth>50000</bandwidth>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>8</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:40</timeStamp>
+        <codectype>UAGAUDIO</codectype>
+        <payloadtype>112</payloadtype>
+        <codecname>G726-24</codecname>
+        <samplerate>8000</samplerate>
+        <bitrate>24000</bitrate>
+        <bandwidth>50000</bandwidth>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<codec>
+        <keyname>9</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:40</timeStamp>
+        <codectype>UAGAUDIO</codectype>
+        <payloadtype>113</payloadtype>
+        <codecname>G726-32</codecname>
+        <samplerate>8000</samplerate>
+        <bitrate>32000</bitrate>
+        <bandwidth>50000</bandwidth>
+        <restrictModeSet>FALSE</restrictModeSet>
+      </codec>
+<oam_rx>
+        <keyname>0</keyname>
+        <maxRetry>2</maxRetry>
+        <retryInterval>3000</retryInterval>
+      </oam_rx>
+<gwSettings>
+        <keyname>TC_1</keyname>
+        <prefix>A</prefix>
+        <bitsOfNode>4</bitsOfNode>
+        <bitsOfInst>4</bitsOfInst>
+        <keepAlive>120</keepAlive>
+        <enable>TRUE</enable>
+        <fkAppServicePort>1</fkAppServicePort>
+        <fkMgc>TCRA</fkMgc>
+        <fkMgTimer>TC_1</fkMgTimer>
+        <fkCommon>TC_1</fkCommon>
+        <noEDInst>1</noEDInst>
+        <maxNumFdsPerSet>1024</maxNumFdsPerSet>
+        <maxNumCons>10240</maxNumCons>
+        <fkprot_grp>0</fkprot_grp>
+      </gwSettings>
+<nifProductMapping>
+        <keyname>TC</keyname>
+        <netInterface>NET_INTERFACE_GM</netInterface>
+        <app_type>APP_TYPE_PCSCF</app_type>
+        <net_intf_type>NET_INTERFACE_GM</net_intf_type>
+        <fkGw>TC_1</fkGw>
+      </nifProductMapping>
+<nifProductMapping>
+        <keyname>TC_1</keyname>
+        <netInterface>NET_INTERFACE_MW</netInterface>
+        <app_type>APP_TYPE_PCSCF</app_type>
+        <net_intf_type>NET_INTERFACE_MW</net_intf_type>
+        <fkGw>TC_1</fkGw>
+      </nifProductMapping>
+<omaSettingForUag>
+        <keyname>0</keyname>
+        <offlineChargingMode>OfflineChargingModeCDR</offlineChargingMode>
+        <acrSessionKeepAlive>FALSE</acrSessionKeepAlive>
+        <acrSessionKeepAliveInterval>30</acrSessionKeepAliveInterval>
+        <acrServiceContext>10.32260@3gpp.org</acrServiceContext>
+        <acrMaxRetry>3</acrMaxRetry>
+        <acrRetryInterval>5</acrRetryInterval>
+        <acrBufferMaxRetry>5</acrBufferMaxRetry>
+        <acrBufferRetryInterval>3</acrBufferRetryInterval>
+        <acrBufferMaxDuration>120</acrBufferMaxDuration>
+        <acrBufferBatchNum>30</acrBufferBatchNum>
+        <partialRecordTimestamps>PartialRecordTimestampsPartial</partialRecordTimestamps>
+        <generateCDROnCallEst>FALSE</generateCDROnCallEst>
+        <longCallDurationLimit>15</longCallDurationLimit>
+        <callDurationMeasurementTrigger>SIP_200_OK_INVITE</callDurationMeasurementTrigger>
+        <partialCDROnSrvChg>FALSE</partialCDROnSrvChg>
+        <alwaysRoundup>FALSE</alwaysRoundup>
+      </omaSettingForUag>
+<h248Common>
+        <keyname>TC_1</keyname>
+        <priAsJson>FALSE</priAsJson>
+        <priForAll>TRUE</priForAll>
+      </h248Common>
+<h248Timers>
+        <keyname>TC_1</keyname>
+        <initRetxTmr>30</initRetxTmr>
+        <provRspTmr>30</provRspTmr>
+        <atMostOnceTmr>30</atMostOnceTmr>
+        <maxRetxTimer>120</maxRetxTimer>
+        <maxMgCmdTimeOut>5</maxMgCmdTimeOut>
+        <edEncTmr>0</edEncTmr>
+        <edDecTmr>0</edDecTmr>
+      </h248Timers>
+<counterPeer>
+        <appType>APP_TYPE_PCSCF</appType>
+        <allowCustomPeer>TRUE</allowCustomPeer>
+        <moduleName>FALSE</moduleName>
+        <legType>FALSE</legType>
+        <peerAddress>FALSE</peerAddress>
+        <peerLevel>1</peerLevel>
+        <systemId>PCSCF</systemId>
+        <accessType>FALSE</accessType>
+        <netIntfType>FALSE</netIntfType>
+      </counterPeer>
+<resourcePrioritySetting>
+        <keyname>0</keyname>
+        <versionID>0</versionID>
+        <priorOrder>0</priorOrder>
+        <isEmergency>FALSE</isEmergency>
+        <queueType>RP_QUEUE_DROP</queueType>
+        <queueSize>0</queueSize>
+      </resourcePrioritySetting>
+<resourceMgrSetting>
+        <keyname>0</keyname>
+        <versionID>0</versionID>
+        <activeCallKeepAliveTimer>60</activeCallKeepAliveTimer>
+        <activeCallKeepAliveCounter>3</activeCallKeepAliveCounter>
+        <pendingCallKeepAliveTimer>5</pendingCallKeepAliveTimer>
+      </resourceMgrSetting>
+<centralDBReplication>
+        <name>0</name>
+        <enableCentralDB>FALSE</enableCentralDB>
+        <dbClientQueryTimer>10</dbClientQueryTimer>
+        <retryReplDelay>10</retryReplDelay>
+        <dbadapterInitFailedAction>CDB_ACT_TERMINATED</dbadapterInitFailedAction>
+        <appReplInternalTimer>500</appReplInternalTimer>
+        <mpcReplInternalTimer>500</mpcReplInternalTimer>
+      </centralDBReplication>
+<controller_remote_server>
+        <keyname>0</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:32</timeStamp>
+        <fkremote>TCRA</fkremote>
+      </controller_remote_server>
+<mppSetting>
+        <keyname>0</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:59</timeStamp>
+        <threadNum>2</threadNum>
+        <standbyUpTimer>180</standbyUpTimer>
+        <fkgroupIndex>0</fkgroupIndex>
+        <fknodeid>ADM</fknodeid>
+      </mppSetting>
+<mppGroupSetting>
+        <keyname>0</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:58</timeStamp>
+        <isExternal>TRUE</isExternal>
+        <fkResourceMgr>ADM</fkResourceMgr>
+      </mppGroupSetting>
+</appcommon>
+<h248mgr>
+<CodecList>
+        <keyname>0</keyname>
+        <codec_1>CODEC_TYPE_EVRC</codec_1>
+        <codec_2>CODEC_TYPE_UNDEFINED</codec_2>
+        <codec_3>CODEC_TYPE_UNDEFINED</codec_3>
+        <codec_4>CODEC_TYPE_UNDEFINED</codec_4>
+        <codec_5>CODEC_TYPE_UNDEFINED</codec_5>
+        <codec_6>CODEC_TYPE_UNDEFINED</codec_6>
+        <codec_7>CODEC_TYPE_UNDEFINED</codec_7>
+        <codec_8>CODEC_TYPE_UNDEFINED</codec_8>
+      </CodecList>
+<Gateway>
+        <keyname>0</keyname>
+        <keepalive_enable>KEEPALIVE_DISABLE</keepalive_enable>
+        <domainName>192.168.1.5</domainName>
+        <adminState>0</adminState>
+        <gwPort>60300</gwPort>
+        <variant>0</variant>
+        <fkprot_grp>ADM</fkprot_grp>
+        <fkGatewayProfile>0</fkGatewayProfile>
+        <fkproduct>tc</fkproduct>
+      </Gateway>
+<GatewayProfile>
+        <name>0</name>
+        <initDuration>1000</initDuration>
+        <initTerms>100</initTerms>
+        <h248Encoding>ME_TEXT</h248Encoding>
+        <h248Transport>MG_TRANSPORT_UDP</h248Transport>
+        <auditUnit>AUDIT_UNIT_TERMINATION</auditUnit>
+        <hangTermTimer>3600</hangTermTimer>
+        <hangTermAction>MGC</hangTermAction>
+        <gwPrefix>IP</gwPrefix>
+        <ifPrefix>s%d</ifPrefix>
+        <portPrefix>/c%d</portPrefix>
+        <ephPrefix>IP</ephPrefix>
+        <fkCodecList>0</fkCodecList>
+      </GatewayProfile>
+</h248mgr>
+<policy>
+<sessionSettings>
+        <keyname>98</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:55</timeStamp>
+        <name>session-egress</name>
+        <maxAllowedConcurrentSessionsTotal>0</maxAllowedConcurrentSessionsTotal>
+        <maxAllowedConcurrentSessionsPerPeer>0</maxAllowedConcurrentSessionsPerPeer>
+        <maxAllowedSustainedRateSessionsTotal>0</maxAllowedSustainedRateSessionsTotal>
+        <maxAllowedSustainedRateSessionsPerPeer>0</maxAllowedSustainedRateSessionsPerPeer>
+        <maxAllowedBurstRateSessionsTotal>0</maxAllowedBurstRateSessionsTotal>
+        <maxAllowedBurstRateSessionsPerPeer>0</maxAllowedBurstRateSessionsPerPeer>
+        <maxAllowedBurstInterval>0</maxAllowedBurstInterval>
+        <maxAllowedBurstTotal>1000</maxAllowedBurstTotal>
+        <maxTransitRatio>1000</maxTransitRatio>
+        <oIsInMediaPath>TRUE</oIsInMediaPath>
+        <tIsInMediaPath>TRUE</tIsInMediaPath>
+        <enablePRACKInterworking>TRUE</enablePRACKInterworking>
+        <enablePrecondition>TRUE</enablePrecondition>
+        <supportLMSD>FALSE</supportLMSD>
+        <sipRedirection>CCS_REDIRECTION_UNSUPPORT</sipRedirection>
+        <transparentRedirection>FALSE</transparentRedirection>
+        <raiseSessionMaxLimitThresholdAlarms>FALSE</raiseSessionMaxLimitThresholdAlarms>
+        <raiseMaxSustainedRateThresholdAlarms>FALSE</raiseMaxSustainedRateThresholdAlarms>
+        <raiseMaxBurstRateThresholdAlarms>FALSE</raiseMaxBurstRateThresholdAlarms>
+        <raiseMaxBurstTotalThresholdAlarms>FALSE</raiseMaxBurstTotalThresholdAlarms>
+        <respCodeForThrottlingReject>503</respCodeForThrottlingReject>
+      </sessionSettings>
+<sessionSettings>
+        <keyname>99</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:49</timeStamp>
+        <name>session-default</name>
+        <maxAllowedConcurrentSessionsTotal>0</maxAllowedConcurrentSessionsTotal>
+        <maxAllowedConcurrentSessionsPerPeer>0</maxAllowedConcurrentSessionsPerPeer>
+        <maxAllowedSustainedRateSessionsTotal>0</maxAllowedSustainedRateSessionsTotal>
+        <maxAllowedSustainedRateSessionsPerPeer>0</maxAllowedSustainedRateSessionsPerPeer>
+        <maxAllowedBurstRateSessionsTotal>0</maxAllowedBurstRateSessionsTotal>
+        <maxAllowedBurstRateSessionsPerPeer>0</maxAllowedBurstRateSessionsPerPeer>
+        <maxAllowedBurstInterval>0</maxAllowedBurstInterval>
+        <maxAllowedBurstTotal>1000</maxAllowedBurstTotal>
+        <maxTransitRatio>1000</maxTransitRatio>
+        <oIsInMediaPath>TRUE</oIsInMediaPath>
+        <tIsInMediaPath>TRUE</tIsInMediaPath>
+        <enablePRACKInterworking>TRUE</enablePRACKInterworking>
+        <enablePrecondition>TRUE</enablePrecondition>
+        <supportLMSD>FALSE</supportLMSD>
+        <sipRedirection>CCS_REDIRECTION_UNSUPPORT</sipRedirection>
+        <transparentRedirection>FALSE</transparentRedirection>
+        <raiseSessionMaxLimitThresholdAlarms>FALSE</raiseSessionMaxLimitThresholdAlarms>
+        <raiseMaxSustainedRateThresholdAlarms>FALSE</raiseMaxSustainedRateThresholdAlarms>
+        <raiseMaxBurstRateThresholdAlarms>FALSE</raiseMaxBurstRateThresholdAlarms>
+        <raiseMaxBurstTotalThresholdAlarms>FALSE</raiseMaxBurstTotalThresholdAlarms>
+        <respCodeForThrottlingReject>503</respCodeForThrottlingReject>
+      </sessionSettings>
+<protoThrottlingConfig>
+        <keyname>0</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:57</timeStamp>
+        <name>any method</name>
+        <method>SIP_METHOD_UNKNOWN</method>
+        <maxBurstInboundRateTotal>0</maxBurstInboundRateTotal>
+        <maxBurstInboundTotal>0</maxBurstInboundTotal>
+        <maxBurstInboundPerPeer>0</maxBurstInboundPerPeer>
+        <inboundBurstInterval>0</inboundBurstInterval>
+        <maxBurstOutboundRateTotal>0</maxBurstOutboundRateTotal>
+        <maxBurstOutboundTotal>0</maxBurstOutboundTotal>
+        <maxBurstOutboundPerPeer>0</maxBurstOutboundPerPeer>
+        <outboundBurstInterval>0</outboundBurstInterval>
+        <maxSustainedRateInboundTotal>0</maxSustainedRateInboundTotal>
+        <maxSustainedRateInboundPerPeer>0</maxSustainedRateInboundPerPeer>
+        <maxSustainedRateOutboundTotal>0</maxSustainedRateOutboundTotal>
+        <maxSustainedRateOutboundPerPeer>0</maxSustainedRateOutboundPerPeer>
+        <maxTransitRatio>1000</maxTransitRatio>
+      </protoThrottlingConfig>
+<protoThrottlingConfig>
+        <keyname>1</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:51</timeStamp>
+        <name>any method</name>
+        <method>SIP_METHOD_UNKNOWN</method>
+        <maxBurstInboundRateTotal>0</maxBurstInboundRateTotal>
+        <maxBurstInboundTotal>0</maxBurstInboundTotal>
+        <maxBurstInboundPerPeer>0</maxBurstInboundPerPeer>
+        <inboundBurstInterval>0</inboundBurstInterval>
+        <maxBurstOutboundRateTotal>0</maxBurstOutboundRateTotal>
+        <maxBurstOutboundTotal>0</maxBurstOutboundTotal>
+        <maxBurstOutboundPerPeer>0</maxBurstOutboundPerPeer>
+        <outboundBurstInterval>0</outboundBurstInterval>
+        <maxSustainedRateInboundTotal>0</maxSustainedRateInboundTotal>
+        <maxSustainedRateInboundPerPeer>0</maxSustainedRateInboundPerPeer>
+        <maxSustainedRateOutboundTotal>0</maxSustainedRateOutboundTotal>
+        <maxSustainedRateOutboundPerPeer>0</maxSustainedRateOutboundPerPeer>
+        <maxTransitRatio>1000</maxTransitRatio>
+      </protoThrottlingConfig>
+<dscp_tos_mapping>
+        <keyname>0</keyname>
+        <dscpValue>0</dscpValue>
+        <tosValue>0</tosValue>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:41</timeStamp>
+      </dscp_tos_mapping>
+<registerSettings>
+        <keyname>99</keyname>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:50</timeStamp>
+        <name>regSetting-default</name>
+        <maxAllowedConcurrentRegFlowsTotal>500</maxAllowedConcurrentRegFlowsTotal>
+        <maxAllowedConcurrentRegFlowsPerPeer>500</maxAllowedConcurrentRegFlowsPerPeer>
+      </registerSettings>
+<policyCategory>
+        <name>atcfSettings</name>
+      </policyCategory>
+<policyCategory>
+        <name>codecDscpConfig</name>
+      </policyCategory>
+<policyCategory>
+        <name>eatfSettings</name>
+      </policyCategory>
+<policyCategory>
+        <name>ecscfSettings</name>
+      </policyCategory>
+<policyCategory>
+        <name>ibcfSettings</name>
+      </policyCategory>
+<policyCategory>
+        <name>mediaConfig</name>
+      </policyCategory>
+<policyCategory>
+        <name>msrpCapabilityConfig</name>
+      </policyCategory>
+<policyCategory>
+        <name>normalizationSettings</name>
+      </policyCategory>
+<policyCategory>
+        <name>pcscfSettings</name>
+      </policyCategory>
+<policyCategory>
+        <name>preferredCodecConfig</name>
+      </policyCategory>
+<policyCategory>
+        <name>protoThrottlingConfig</name>
+      </policyCategory>
+<policyCategory>
+        <name>registerSettings</name>
+      </policyCategory>
+<policyCategory>
+        <name>rtpCapNegConfig</name>
+      </policyCategory>
+<policyCategory>
+        <name>rxProfile</name>
+      </policyCategory>
+<policyCategory>
+        <name>securitySetting</name>
+      </policyCategory>
+<policyCategory>
+        <name>sessionSettings</name>
+      </policyCategory>
+<policyCategory>
+        <name>sipTimerSettings</name>
+      </policyCategory>
+<policyCategory>
+        <name>sipiIsupParams</name>
+      </policyCategory>
+<policyCategory>
+        <name>srtpNegConfig</name>
+      </policyCategory>
+<policyCategory>
+        <name>sslTlsSettings</name>
+      </policyCategory>
+<policyCategory>
+        <name>trfSettings</name>
+      </policyCategory>
+</policy>
+<utimacoli>
+<UtimacoLiConfig>
+        <keyname>0</keyname>
+        <MaxSmsStored>0</MaxSmsStored>
+        <SmsLiEnabled>TRUE</SmsLiEnabled>
+        <LiTransportType>LI_TRANSPORT_NORMAL</LiTransportType>
+      </UtimacoLiConfig>
+<LIParams>
+        <keyname>0</keyname>
+        <LI_Flag>TRUE</LI_Flag>
+        <LI_X1_EncryptMode>LI_ENCRYPTION_MODE_NONE</LI_X1_EncryptMode>
+        <LI_X2_EncryptMode>LI_ENCRYPTION_MODE_NONE</LI_X2_EncryptMode>
+        <LI_X2_Ack_Time>60</LI_X2_Ack_Time>
+        <LI_X2_Conn_Retry_Time>60</LI_X2_Conn_Retry_Time>
+        <LI_X2_Retry_Num_Attempts>3</LI_X2_Retry_Num_Attempts>
+        <LI_X2_Buffer_Erase_Time>3600</LI_X2_Buffer_Erase_Time>
+        <LI_X2_General_InActivity_Time>180</LI_X2_General_InActivity_Time>
+        <LI_X2_Buffer_Size>1000</LI_X2_Buffer_Size>
+        <LI_X2_Enable_Encryption>FALSE</LI_X2_Enable_Encryption>
+        <LI_XCAP_Interrogation_Support>DISABLE</LI_XCAP_Interrogation_Support>
+        <LI_X3_Transport_Protocol>X3UDP</LI_X3_Transport_Protocol>
+        <LI_X3_Packet_Delivery_Mode>SINGLE</LI_X3_Packet_Delivery_Mode>
+        <LI_X2_EncodeSIPPDU>TRUE</LI_X2_EncodeSIPPDU>
+        <LI_X3_EncryptRTP>TRUE</LI_X3_EncryptRTP>
+        <LI_GLOBAL>FALSE</LI_GLOBAL>
+        <LI_GLOBAL_DF2_ADDRESS>10.2.13.41</LI_GLOBAL_DF2_ADDRESS>
+        <LI_GLOBAL_DF3_ADDRESS>10.2.13.41</LI_GLOBAL_DF3_ADDRESS>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:22:01</timeStamp>
+        <MatchTACandSNROnly>TRUE</MatchTACandSNROnly>
+        <AssociatedIdentityTapping>FALSE</AssociatedIdentityTapping>
+        <LegacyLi>FALSE</LegacyLi>
+        <ExtractOtherIdentities>TRUE</ExtractOtherIdentities>
+        <app_type>APP_TYPE_UNKNOWN</app_type>
+      </LIParams>
+<liTargetTypeMap>
+        <keyname>0</keyname>
+        <targetType>LI_TARGET_MSISDN</targetType>
+        <sipHeader>To</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MT</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>1</keyname>
+        <targetType>LI_TARGET_IMSI</targetType>
+        <sipHeader>To</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MT</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>10</keyname>
+        <targetType>LI_TARGET_MSISDN</targetType>
+        <sipHeader>P-Served-User</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MO</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>11</keyname>
+        <targetType>LI_TARGET_MSISDN</targetType>
+        <sipHeader>Authorization</sipHeader>
+        <targetRegion>LI_TARGET_REGION_ALL</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>12</keyname>
+        <targetType>LI_TARGET_MSISDN</targetType>
+        <sipHeader>Request-URI</sipHeader>
+        <targetRegion>LI_TARGET_REGION_ALL</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>13</keyname>
+        <targetType>LI_TARGET_MSISDN</targetType>
+        <sipHeader>History-Info</sipHeader>
+        <targetRegion>LI_TARGET_REGION_ALL</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>14</keyname>
+        <targetType>LI_TARGET_MSISDN</targetType>
+        <sipHeader>P-Associated-URI</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MO</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>2</keyname>
+        <targetType>LI_TARGET_MSISDN</targetType>
+        <sipHeader>From</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MO</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>3</keyname>
+        <targetType>LI_TARGET_IMSI</targetType>
+        <sipHeader>From</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MO</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>4</keyname>
+        <targetType>LI_TARGET_MSISDN</targetType>
+        <sipHeader>Contact</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MO</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>5</keyname>
+        <targetType>LI_TARGET_IMSI</targetType>
+        <sipHeader>Contact</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MO</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>6</keyname>
+        <targetType>LI_TARGET_IMEI</targetType>
+        <sipHeader>Contact</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MO</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>7</keyname>
+        <targetType>LI_TARGET_IMEISV</targetType>
+        <sipHeader>Contact</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MO</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>8</keyname>
+        <targetType>LI_TARGET_MSISDN</targetType>
+        <sipHeader>P-Asserted-Identity</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MO</targetRegion>
+      </liTargetTypeMap>
+<liTargetTypeMap>
+        <keyname>9</keyname>
+        <targetType>LI_TARGET_MSISDN</targetType>
+        <sipHeader>P-Preferred-Identity</sipHeader>
+        <targetRegion>LI_TARGET_REGION_MO</targetRegion>
+      </liTargetTypeMap>
+</utimacoli>
+<fpath>
+<dpMgr>
+        <keyname>0</keyname>
+        <compType>AM</compType>
+        <startup_params>fp_mask=-m0x3 fp_opts=-tc0=0,--nodsp,--tc_aMask=0x2,--tc_vMask=0x0</startup_params>
+        <initialGARPDelayTime>200</initialGARPDelayTime>
+        <initialGARPCount>4</initialGARPCount>
+        <refreshGARPInterval>1</refreshGARPInterval>
+        <refreshGARPMaxCount>600</refreshGARPMaxCount>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+      </dpMgr>
+<dpPrograms>
+        <name>cmgrd</name>
+        <type>DP_DAEMON_STATIC</type>
+        <execType>DP_CRITICALITY_LEVEL_NONCRITICAL</execType>
+        <keepAliveMaxRetry>5</keepAliveMaxRetry>
+        <keepAliveInterval>30</keepAliveInterval>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+      </dpPrograms>
+<dpPrograms>
+        <name>fpmd</name>
+        <type>DP_DAEMON_STATIC</type>
+        <execType>DP_CRITICALITY_LEVEL_NONCRITICAL</execType>
+        <keepAliveMaxRetry>5</keepAliveMaxRetry>
+        <keepAliveInterval>30</keepAliveInterval>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+      </dpPrograms>
+<dpPrograms>
+        <name>ifflagsd</name>
+        <type>DP_DAEMON_DYNAMIC</type>
+        <execType>DP_CRITICALITY_LEVEL_NONCRITICAL</execType>
+        <keepAliveMaxRetry>5</keepAliveMaxRetry>
+        <keepAliveInterval>30</keepAliveInterval>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+      </dpPrograms>
+<dpPrograms>
+        <name>xmsd</name>
+        <type>DP_DAEMON_STATIC</type>
+        <execType>DP_CRITICALITY_LEVEL_NONCRITICAL</execType>
+        <keepAliveMaxRetry>5</keepAliveMaxRetry>
+        <keepAliveInterval>30</keepAliveInterval>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+      </dpPrograms>
+<dpPrograms>
+        <name>zebra</name>
+        <type>DP_DAEMON_DYNAMIC</type>
+        <execType>DP_CRITICALITY_LEVEL_NONCRITICAL</execType>
+        <keepAliveMaxRetry>5</keepAliveMaxRetry>
+        <keepAliveInterval>30</keepAliveInterval>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+      </dpPrograms>
+<dpPhysicalPort>
+        <keyname>1</keyname>
+        <compType>AM</compType>
+        <name>eth1</name>
+        <type>DP_PORT_TYPE_MEDIA</type>
+        <isInFastPath>TRUE</isInFastPath>
+        <speed>1000</speed>
+        <autoNegotiation>TRUE</autoNegotiation>
+        <mtu>1500</mtu>
+        <versionID>0</versionID>
+        <timeStamp>2016-10-26 09:21:46</timeStamp>
+      </dpPhysicalPort>
+</fpath>
+<tc>
+<TcMgrSettings>
+        <keyname>0</keyname>
+        <equalizationBlockSize>8000</equalizationBlockSize>
+        <replicationResponseTimeout>10</replicationResponseTimeout>
+        <BatchEqualizationTimeout>10</BatchEqualizationTimeout>
+        <maxTranscoderCpuPercentage>80</maxTranscoderCpuPercentage>
+      </TcMgrSettings>
+</tc>
+</sys>

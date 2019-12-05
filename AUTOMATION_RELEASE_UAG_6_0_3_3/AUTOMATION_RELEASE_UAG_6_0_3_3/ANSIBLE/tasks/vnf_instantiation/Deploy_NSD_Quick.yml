@@ -1,0 +1,142 @@
+- include_tasks: query_db.yml QUERY="select nsd_descriptor.nsd_id, nsd_descriptor.name, nsd_descriptor.id, nsd_descriptor.version, nsd_descriptor.tenant, nsd_descriptor_status.status, lvnd_descriptor.version, lvnd_descriptor.lvnd_id, lvnd_descriptor.name, lvnd_descriptor.id, lvnd_descriptor_status.status, lvnd_descriptor_status.fk_lvnd_descriptor, nsd_descriptor_status.unique_id, (select version from cms_version LIMIT 1), (select ip_address from vnfm_config LIMIT 1) from nsd_descriptor INNER JOIN nsd_descriptor_status ON nsd_descriptor.id=nsd_descriptor_status.fk_nsd_descriptor INNER JOIN lvnd_descriptor ON lvnd_descriptor.fk_nsd_descriptor=nsd_descriptor.id INNER JOIN lvnd_descriptor_status ON lvnd_descriptor_status.fk_lvnd_descriptor=lvnd_descriptor.id where nsd_descriptor.name='{{NSD_Name}}' AND nsd_descriptor.version='{{NSD_VERSION}}'"
+
+- fail:
+    msg:
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####          NSD with NAME: {{NSD_Name }} and VERSION: {{NSD_VERSION}} NOT FOUND "
+      - "#####"
+      - "#####"
+      - "#####"
+      - "#####################################################################################################################################################"
+      - "#####################################################################################################################################################"
+  when: not RESP.stdout_lines.0 is defined
+
+- set_fact:
+    NSD_ID: "{{RESP.stdout_lines.0.split('\t')[0]}}"
+    NSD_NAME: "{{RESP.stdout_lines.0.split('\t')[1]}}"
+    NSD_DB_ID: "{{RESP.stdout_lines.0.split('\t')[2]}}"
+    NSD_DB_VERSION: "{{RESP.stdout_lines.0.split('\t')[3]}}"
+    NSD_TENANT_NAME: "{{RESP.stdout_lines.0.split('\t')[4]}}"
+    NSD_STATUS: "{{RESP.stdout_lines.0.split('\t')[5]}}"
+    LVND_DB_VERSION: "{{RESP.stdout_lines.0.split('\t')[6]}}"
+    LVND_ID: "{{RESP.stdout_lines.0.split('\t')[7]}}"
+    LVND_NAME: "{{RESP.stdout_lines.0.split('\t')[8]}}"
+    LVND_DB_ID: "{{RESP.stdout_lines.0.split('\t')[9]}}"
+    LVND_STATUS: "{{RESP.stdout_lines.0.split('\t')[10]}}"
+    LVND_FK: "{{RESP.stdout_lines.0.split('\t')[11]}}"
+    NSD_UNIQUE_ID: "{{RESP.stdout_lines.0.split('\t')[12]}}"
+    CMS_VERSION: "{{RESP.stdout_lines.0.split('\t')[13]}}"
+    VNFM_IP_ADDRESS: "{{RESP.stdout_lines.0.split('\t')[14]}}"
+
+# - fail:
+#     msg:
+#       - "#######################################################################################################################"
+#       - "#######################################################################################################################"
+#       - "#######################################################################################################################"
+#       - "########"
+#       - "########"
+#       - "########"
+#       - "########                                        NO ENTRY OF CMS_VERSION IN CMS                                         "
+#       - "########"
+#       - "########"
+#       - "########"
+#       - "#######################################################################################################################"
+#       - "#######################################################################################################################"
+#       - "#######################################################################################################################"
+#   when: CMS_VERSION|lower == "null"
+
+# - shell: "python -c \"print 7011500<=int(''.join(map(lambda x: x.zfill(2), '{{CMS_VERSION}}'.split('-')[1][1].split('_'))))\""
+#   register: RESULT
+#   delegate_to: localhost
+#
+# - set_fact:
+#     IS_NEWER_CMS: "{{RESULT.stdout_lines.0}}"
+
+- name: Getting Access Token
+  uri:
+      url: "{{LOGIN_URL}}"
+      method: "POST"
+      body: '{"authType": "LOCAL", "password": "{{CMS_WEB_PASSWORD}}", "username": "{{CMS_WEB_USER}}"}'
+      status_code:  200
+      body_format: json
+      validate_certs: no
+  register: login_response
+  delegate_to: localhost
+
+# - include_tasks: ./https_request_no_template_quick.yml
+#   vars:
+#     URL: "{{DEPLOY_NSD_URL}}"
+#     METHOD: "POST"
+#     PAYLOAD: "rowData={\"version\":\"{{NSD_DB_VERSION}}\",\"type\":\"NSD\",\"descriptorId\":\"{{NSD_ID}}\",\"namespace\":\"urn:mitel:params:xml:ns:yang:nsd\",\"name\":\"{{NSD_NAME}}\",\"id\":\"{{NSD_DB_ID}}\",\"uniqueId\":\"{{NSD_UNIQUE_ID}}\",\"status\":\"ONBOARDED\",\"cloudProfileID\":\"{{Cloud_Type}}-{{POP_IP}}-{{Tenant}}-{{Tenant_User_Name}}\"}"
+  # when: IS_NEWER_CMS|lower == 'false'
+
+- shell: "curl -s -k -X POST -d \"rowData={'version':'{{NSD_DB_VERSION}}','type':'NSD','descriptorId':'{{NSD_ID}}','namespace':'urn:mitel:params:xml:ns:yang:nsd','name':'{{NSD_NAME}}','id':'{{NSD_DB_ID}}','uniqueId':'{{NSD_UNIQUE_ID}}','status':'{{NSD_STATUS}}','cloudProfileID':'{{Cloud_Type}}-{{POP_IP}}-{{Tenant}}-{{Tenant_User_Name}}','deployType':'PRE_PRODUCTION','preferredVnfm':'{{VNFM_IP_ADDRESS}}'}\" --cookie '{{login_response.set_cookie}}' {{DEPLOY_NSD_URL}}"
+  register: http_resp
+  delegate_to: localhost
+
+- debug: msg="{{http_resp}}"
+# - include_tasks: ./https_request_no_template_quick.yml
+#   vars:
+#     URL: "{{DEPLOY_NSD_URL}}"
+#     METHOD: "POST"
+#     PAYLOAD: "rowData={'version':'{{NSD_DB_VERSION}}','type':'NSD','descriptorId':'{{NSD_ID}}','namespace':'urn:mitel:params:xml:ns:yang:nsd','name':'{{NSD_NAME}}','id':'{{NSD_DB_ID}}','uniqueId':'{{NSD_UNIQUE_ID}}','status':'{{NSD_STATUS}}','cloudProfileID':'{{Cloud_Type}}-{{POP_IP}}-{{Tenant}}-{{Tenant_User_Name}}','deployType':'PRE_PRODUCTION','preferredVnfm':'{{VNFM_IP_ADDRESS}}'}"
+  # when: IS_NEWER_CMS|lower == 'true'
+
+- include_tasks: ./query_db.yml
+  vars:
+     QUERY: "select status from nsd_descriptor_status where fk_nsd_descriptor='{{NSD_DB_ID}}'"
+  when: NSD_DB_ID is defined
+- set_fact: NSD_STATUS={{RESP.stdout_lines.0}}
+  when: RESP.stdout_lines.0 is defined
+
+- command: "mysql -u{{ MYSQL_USER }} -p{{ MYSQL_PASSWD }} {{ MYSQL_DB }} -sN -e \"select status from nsd_descriptor_status where fk_nsd_descriptor='{{NSD_DB_ID}}'\" "
+  register: NSD_STATUS_RES
+  remote_user: "{{CMS_IP_SYSUSER}}"
+  retries: "{{DESCRIPTOR_RETRIES}}"
+  delay: "{{ DELAY }}"
+  until: ( NSD_DB_ID is not defined) or ( NSD_STATUS_RES.stdout_lines.0|lower in "Deployed"|lower ) or ( NSD_STATUS_RES.stdout_lines.0|lower in "InUse"|lower ) or ( NSD_STATUS_RES.stdout_lines.0|lower in "DEPLOYFAILED"|lower )
+  ignore_errors: yes
+
+- name: fail the play if the previous command did not succeed
+  fail:
+    msg:
+    - ""
+    - ""
+    - "################################################################"
+    - "################################################################"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "###                 NSD STATUS: {{NSD_STATUS_RES['stdout_lines'][0].rjust(12)}}                 ###"
+    - "###     Somthing went wrong, Please check the logs or DB     ###"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "################################################################"
+    - "################################################################"
+    - ""
+    - ""
+  when: (not NSD_STATUS_RES.stdout_lines.0|lower in "Deployed"|lower) and (not NSD_STATUS_RES.stdout_lines.0|lower in "InUse"|lower)
+
+- debug:
+    msg:
+    - ""
+    - ""
+    - "################################################################"
+    - "################################################################"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "###             NSD DEPLOYEMENT WAS SUCCESSFUL!!!            ###"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "###                                                          ###"
+    - "################################################################"
+    - "################################################################"
+    - ""
+    - ""
+  when: (NSD_STATUS_RES.stdout_lines.0|lower in "Deployed"|lower) or  (NSD_STATUS_RES.stdout_lines.0|lower in "InUse"|lower )

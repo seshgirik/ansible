@@ -1,0 +1,42 @@
+- name: "Delete old host"
+  shell: "rm -rf ~/.ssh/known_hosts"
+  delegate_to: localhost
+  args:
+    warn: false
+- set_fact:
+    SSH_IP: "{{OAM_CONF[inventory_hostname]['OAM_IP']}}"
+
+- name: "Getting SSH KEY"
+  shell: "echo $(cat ~/.ssh/id_rsa.pub)"
+  register: id_rsa_pub
+  delegate_to: localhost
+
+- set_fact:
+    SSH_KEY: "{{id_rsa_pub.stdout}}"
+
+- fail:
+    msg: "SSH public key not found. Please generate the public key using ssh-keygen.{{SSH_KEY}}"
+  when: SSH_KEY==""
+
+- name: Setting up passwordless login
+  command: "sshpass -p {{WR_DFLT_PASS}} ssh-copy-id -o StrictHostKeyChecking=no {{WRUSER}}@{{SSH_IP}}"
+  register: lg_res
+  delegate_to: localhost
+  ignore_errors: yes
+
+- command: "sshpass -p {{WRPASS}} ssh-copy-id -o StrictHostKeyChecking=no {{WRUSER}}@{{SSH_IP}}"
+  register: lg1_res
+  when: lg_res.failed
+  delegate_to: localhost
+  ignore_errors: yes
+
+- set_fact:
+    fail_value: false
+
+- set_fact:
+    fail_value: "{{lg1_res.failed}}"
+  when: lg1_res.failed is defined
+
+- fail:
+    msg: "Failed to authenticate, please use the right WRUSER/WRPASS combination in the config file"
+  when: fail_value
