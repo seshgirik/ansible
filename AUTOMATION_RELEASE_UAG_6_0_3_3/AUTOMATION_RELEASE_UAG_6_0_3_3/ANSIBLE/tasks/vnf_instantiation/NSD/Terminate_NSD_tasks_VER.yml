@@ -1,7 +1,0 @@
----
-
-
-      - include_tasks : ./Terminate_NSD_tasks_VER_xml.yml NSD_Vers="{{ each_version }}"
-        with_items: "{{ NSD_Vers }}"
-        loop_control:
-            loop_var: each_version

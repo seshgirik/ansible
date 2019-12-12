@@ -1,8 +1,0 @@
----
-CREATE_FLAVOR :
-    - openstack flavor create sample --id 121 --ram 4096 --disk 30 --ephemeral 100 --swap 2 --vcpus 8 --rxtx-factor 1 --project softbank --private --property aggregate_instance_extra_specs:storage='local_image' --property hw:cpu_model='SandyBridge' --property hw:cpu_sockets='2' --property hw:numa_nodes='2' 
-
-    - openstack flavor create sample1 --id 122 --ram 4096 --disk 30 --ephemeral 100 --swap 2 --vcpus 8 --rxtx-factor 1 --project softbank --private --property aggregate_instance_extra_specs:storage='local_image' --property hw:cpu_model='SandyBridge' --property hw:cpu_sockets='2' --property hw:numa_nodes='2' 
-
-    - openstack flavor create sample2 --id 123 --ram 4096 --disk 30 --ephemeral 100 --swap 2 --vcpus 8 --rxtx-factor 1 --project softbank --private --property aggregate_instance_extra_specs:storage='local_image' --property hw:cpu_model='SandyBridge' --property hw:cpu_sockets='2' --property hw:numa_nodes='2' 
-

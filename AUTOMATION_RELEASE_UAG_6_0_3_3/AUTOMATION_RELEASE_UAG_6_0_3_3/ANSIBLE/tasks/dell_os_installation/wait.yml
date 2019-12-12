@@ -1,4 +1,0 @@
-- pause:
-    minutes: 3
-
-- include_tasks: watch_out.yml

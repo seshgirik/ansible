@@ -1,5 +1,0 @@
----
-
-
-      - include_tasks : ./Terminate_NSD_tasks_ID_xml.yml  NSD_DB_Id1="{{item}}"
-        with_items: "{{ NSD_DB_Id1 }}"

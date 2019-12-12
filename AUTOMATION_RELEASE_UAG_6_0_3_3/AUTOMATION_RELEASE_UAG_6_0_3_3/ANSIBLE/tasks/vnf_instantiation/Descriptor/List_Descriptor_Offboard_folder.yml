@@ -1,9 +1,0 @@
----
-
-      - include_tasks : ./Descriptor/List_Descriptor_Offboard_xml.yml
-                            XML_PATH="{{ PATH }}"
-                            XML_PATTERN="*{{ desc }}*.xml"
-
-        with_items: "{{ DESCRIPTOR_OFFBOARD_ORDER }}"
-        loop_control:
-            loop_var: desc

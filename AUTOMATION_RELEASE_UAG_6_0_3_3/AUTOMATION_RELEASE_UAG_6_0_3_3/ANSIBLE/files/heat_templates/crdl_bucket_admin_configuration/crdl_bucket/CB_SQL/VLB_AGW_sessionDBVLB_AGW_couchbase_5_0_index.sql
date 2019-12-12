@@ -1,5 +1,0 @@
-CREATE PRIMARY INDEX `sessionDBVLB_AGW_PK` ON `sessionDBVLB_AGW` USING GSI;
-CREATE INDEX `sessionDBVLB_AGW_idx1` ON `sessionDBVLB_AGW`(`VMID`,`Timestamp`,`OP_TYPE`) WHERE ((`KEYFLAG` = "1") and (`KTAB` = "SipData")) USING GSI;
-CREATE INDEX `sessionDBVLB_AGW_idx2` ON `sessionDBVLB_AGW`(`APP_OID`) WHERE (`KTAB` = "mNATMap") USING GSI;
-CREATE INDEX `sessionDBVLB_AGW_idx3` ON `sessionDBVLB_AGW`(`VNFID`,`TIMESTAMP`,`APP_OID`) WHERE (`KTAB` = "mNATMap") USING GSI;
-CREATE INDEX `sessionDBVLB_AGW_idx4` ON `sessionDBVLB_AGW`(`vlbappinterfaceids`) USING GSI;

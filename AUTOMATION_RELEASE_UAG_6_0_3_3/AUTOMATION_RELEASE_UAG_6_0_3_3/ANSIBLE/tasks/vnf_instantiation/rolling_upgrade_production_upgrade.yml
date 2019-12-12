@@ -1,9 +1,0 @@
-- hosts: cms
-  vars_files:
-    - ../../vars/vnf_instantiation/urls.yml
-    - ../../vars/vnf_instantiation/config.yml
-    - ../../vars/vnf_instantiation/Descriptor_ConfigFile_Yang.yml
-  gather_facts: no
-
-  tasks:
-    - include_tasks: ./vnfd_rolling_upgrade/prod_upgrade.yml

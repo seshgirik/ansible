@@ -1,3 +1,0 @@
-- shell: "{{SSH_CMD}} racadm set {{item.key}} {{item.value}}"
-  delegate_to: localhost
-  with_items: "{{BIOS_SETTINGS}}"

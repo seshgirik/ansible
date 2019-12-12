@@ -1,9 +1,0 @@
----
-
-      - include_tasks : ./List_Descriptor_Delete_xml.yml
-                            XML_PATH="{{ PATH }}"
-                            XML_PATTERN="*{{ desc }}*.xml"
-
-        with_items: "{{ DESCRIPTOR_DELETE_ORDER }}"
-        loop_control:
-            loop_var: desc

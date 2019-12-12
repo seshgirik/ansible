@@ -1,7 +1,0 @@
-MYSQL_USER: "controlDb"
-MYSQL_PASSWD: "mavenir"
-MYSQL_DB: "cms"
-CMS_IP_ADDR: "10.10.225.25"
-CMS_URL: "https://10.10.225.26:18080"
-CMS_IP_SYSUSER: "root"
-CMS_IP_SYSPASS: "mavenir"

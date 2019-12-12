@@ -1,8 +1,0 @@
-- name: "Checking if OAM is pingable"
-  shell: "ping -c 2 -W 10 {{OAM_CONF[inventory_hostname]['OAM_IP']}}"
-  register: ping_res
-  ignore_errors: yes
-  delegate_to: localhost
-
-- include_tasks: wait.yml
-  when: ping_res.failed

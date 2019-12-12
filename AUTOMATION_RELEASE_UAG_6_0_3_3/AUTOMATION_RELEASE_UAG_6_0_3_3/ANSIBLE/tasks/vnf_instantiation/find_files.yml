@@ -1,8 +1,0 @@
----
-
-- name: Find files
-  find:
-    paths: "{{ FILE_PATH }}"
-    patterns: "*{{ FILE_PATTERN }}*"
-  register: files_found
-  delegate_to: localhost

@@ -1,9 +1,0 @@
----
-
-- name: Save Descriptors
-
-  include_tasks : ./List_Descriptor_folder.yml
-  vars:
-      PATH: "{{ DESCRIPTOR_PATH }}{{ item }}/"
-
-  with_items: "{{ DESCRIPTOR_INFO }}"

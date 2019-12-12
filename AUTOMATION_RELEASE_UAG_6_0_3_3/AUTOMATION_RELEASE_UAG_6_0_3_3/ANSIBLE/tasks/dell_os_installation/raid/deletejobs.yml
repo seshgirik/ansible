@@ -1,3 +1,0 @@
-- name: "Deleting all jobs"
-  shell: "{{SSH_CMD}} racadm jobqueue delete --all"
-  delegate_to: localhost
