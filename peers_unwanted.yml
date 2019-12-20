@@ -3,17 +3,42 @@
   gather_facts: no
   tasks: 
 
+
+
+
+
+
     - name: searching sm nodes for unwanted GM-2260|MW-2260 and deleting using shell oneliner script
-      shell: "for entry in `/usr/IMS/current/bin/etcdctl get A z|egrep \"GM-|MW-\"|grep -v ipAddress`; do /usr/IMS/current/bin/etcdctl del $entry; done"
+      shell: "for entry in `/usr/IMS/current/bin/etcdctl get A z|egrep \"GM-|MW-\"|grep -v ipAddress|grep -v VSIX`; do /usr/IMS/current/bin/etcdctl del $entry; done"
+      #shell: "for entry in `/usr/IMS/current/bin/etcdctl get A z|egrep \"GM-|MW-\"|grep -v ipAddress`; do /usr/IMS/current/bin/etcdctl del $entry; done"
       register: smdelete 
 
     - debug: var=smdelete
 
 
 - name: print the date
-  hosts: scs
+  hosts: scs-sipres
+  #hosts: scs
   gather_facts: no
   tasks: 
+
+
+    - name: read the fqdn_local  file
+      #shell: cat /tmp/fqdn_local.xml
+      shell: cat ~/fqdn_local.xml
+      register: fqdn
+
+    - name: a task that only happens if entries in fqdn_local is missing 
+      when: 
+        - fqdn.stdout.find('private-wrgst-225.45-bang.ims.mnc875.mcc405.3gppnetwork.org') == -1 or  fqdn.stdout.find('10.69.22.156') == -1
+      #debug: msg="user hillsy exists"
+      shell: "/opt/confd/confdInstallDir/bin/confd_load -lm /data/fqdn_local.xml"
+      ignore_errors: true
+
+
+
+
+
 
     - name: writing peer_ip output to xml 
       shell: "/opt/confd/confdInstallDir/bin/confd_load -Fp -p /sys/platform/peer_ip > peer_ip.xml"
@@ -21,6 +46,7 @@
     - name: grep GM-2260|MW-2260 from peer_ip xml 
       shell: "egrep \"GM-2260|MW-2260\"  peer_ip.xml"
       register: peers 
+      ignore_errors: true
 
     - debug: var=peers.stdout_lines
     - debug: var=peers
@@ -37,32 +63,40 @@
        regexp: 'MW-2260|GM-2260'
        replace: 'unwanted'
       register: replace 
+      ignore_errors: true
       #backup: yes
 
     - debug: var=replace
 
     - name: loading peer_ips xml with changing peer ips with unwanted 
       shell: "/opt/confd/confdInstallDir/bin/confd_load -lm peer_ip.xml"
+      ignore_errors: true
       when: replace.changed
 #
     - name: loading fqdn_local xml with changing peer ips with unwanted 
       shell: "/opt/confd/confdInstallDir/bin/confd_load -lm /data/fqdn_local.xml"
+      ignore_errors: true
       when: replace.changed
 #
 
-#  shell -a "/opt/confd/confdInstallDir/bin/confd_load -Fp -p /sys/platform/peer_ip > peer_ip.xml "  scs
-#  shell -a "egrep \"GM-2260|MW-2260\"  peer_ip.xml "  scs >out
-#  shell -a "if [[ -s out ]] ;then     wall \"correct peer_ips in all scs , remove GM-2260 or MW-2260\"; else echo \"nothing\" ;fi" scs
-##if [[ -s diff.txt ]]; then wall "file has something"; else echo ""; fi
-##if grep -q FAILED out ;then     wall "correct peer_ips in all scs , remove GM-2260 or MW-2260"; fi
-#sleep 30
-#
-#
-#    - name: Set peers_count fact
-#      #set_fact: peers_count="peers_count+peers.stdout_lines"
-##      set_fact: peers_count={{ peers_count }}+{{ peers.stdout_lines }}
-#      set_fact: peers_count="{{ peers_count }} + [ '{{ peers.stdout_lines }}' ]"
-#
-#    - debug: var=peers_count
-#
-##    set_fact: peers_count="{{ peers_count }} + [ 'one' ]"
+    - name: writing fqdn_local output to xml
+      shell: "/opt/confd/confdInstallDir/bin/confd_load -Fp -p /sys/platform/fqdn_local > fqdn_local.xml"
+      ignore_errors: true
+
+  hosts: fe
+  gather_facts: False
+  tasks:
+
+    - name: check tshrk script runpcap.sh running or not  
+      shell: ps -aef|grep "[r]unpcap.sh"
+      ignore_errors: yes
+      register: tshark
+
+    - name: start tshark script in fe if not running 
+      #debug: var=tshark
+      ignore_errors: yes
+      shell: "cd /data && nohup /data/runpcap.sh  &"
+      #when: "'bash' not in item"
+      when: "tshark.rc != 0"
+      #with_items: "{{ tshark.stdout_lines }}"
+
