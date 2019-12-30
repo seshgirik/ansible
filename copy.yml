@@ -2,20 +2,20 @@
   hosts: all
   tasks: 
 
-    - name: create array reversed
-      set_fact: output_count=[]
+- name: create array reversed
+  set_fact: output_count=[]
 
-    - shell: "ls"
-      args: 
-          chdir: "/tmp"
-      register: output 
-    - debug: var=output.stdout_lines
+- shell: "ls"
+  args: 
+  chdir: "/tmp"
+  register: output 
+- debug: var=output.stdout_lines
 
-    - shell: "cp {{ item }} {{item}}_bkp"
-      with_items:
-        - "{{ output.stdout_lines }}"
+- shell: "cp {{ item }} {{item}}_bkp"
+  with_items:
+    - "{{ output.stdout_lines }}"
 
-      register: output 
+  register: output 
     - debug: var=output.stdout_lines
 
 
