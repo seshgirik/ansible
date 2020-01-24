@@ -1,0 +1,8 @@
+---
+# defaults file for apache
+    names:
+      - first: variable from default vars 
+        last: Thompson
+      - first: Rod
+        last: '11'
+

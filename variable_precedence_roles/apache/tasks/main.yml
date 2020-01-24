@@ -1,0 +1,17 @@
+# tasks file for apache
+#
+#
+#
+---
+
+    - name: install httpd
+      #yum: name=httpd state=absent
+      yum: name=httpd state=latest
+      notify: 
+        - restart httpd
+
+    - name: print variable
+      vars:
+        #names: tasks playbook variable inside roles/tasks/mail.yaml
+# names local variable overwrites vars defined in vars main.yml
+      debug: var=names
